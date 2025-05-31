@@ -1,1 +1,1 @@
-# Free Magic 1.20.1
+# MagicScience 1.20.1
