@@ -9,8 +9,9 @@ public class ModMessagesEnergy {
     private static int packetId = 0;
 
     public static void register() {
+        //noinspection removal
         CHANNEL = NetworkRegistry.newSimpleChannel(
-                ResourceLocation.parse("magicscience:energy"),
+                new ResourceLocation("magicscience", "energy"),
                 () -> "1.0",
                 s -> true,
                 s -> true
