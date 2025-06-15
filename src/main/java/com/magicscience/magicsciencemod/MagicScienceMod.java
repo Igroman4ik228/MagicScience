@@ -1,4 +1,4 @@
-package com.freemagic.freemagicmod;
+package com.magicscience.magicsciencemod;
 
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
@@ -14,15 +14,15 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import org.slf4j.Logger;
 
 // The value here should match an entry in the META-INF/mods.toml file
-@Mod(FreeMagicMod.MOD_ID)
-public class FreeMagicMod
+@Mod(MagicScienceMod.MOD_ID)
+public class MagicScienceMod
 {
     // Define mod id in a common place for everything to reference
-    public static final String MOD_ID = "freemagic";
+    public static final String MOD_ID = "magicscience";
     // Directly reference a slf4j logger
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    public FreeMagicMod(FMLJavaModLoadingContext context)
+    public MagicScienceMod(FMLJavaModLoadingContext context)
     {
         IEventBus modEventBus = context.getModEventBus();
 
