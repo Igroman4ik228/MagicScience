@@ -1,9 +1,12 @@
 package com.magicscience.magicsciencemod;
 
+import com.magicscience.magicsciencemod.CreativeTab.ModCreativeTab;
+import com.magicscience.magicsciencemod.items.ModItems;
+import com.magicscience.magicsciencemod.net.ModMessagesEnergy;
+import com.magicscience.magicsciencemod.particle.ModParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
-import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -26,32 +29,32 @@ public class MagicScienceMod
     {
         IEventBus modEventBus = context.getModEventBus();
 
+        ModItems.register(modEventBus);
+        ModCreativeTab.register(modEventBus);
+        ModParticles.register(modEventBus);
+
+        // .net пакеты
+        ModMessagesEnergy.register();
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
 
-        // Register the item to a creative tab
-        modEventBus.addListener(this::addCreative);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
     {
-
+        LOGGER.info("COMMON SETUP");
     }
 
-    // Add the example block item to the building blocks tab
-    private void addCreative(BuildCreativeModeTabContentsEvent event)
-    {
-
-    }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
-        
+        LOGGER.info("SERVER START");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -61,7 +64,7 @@ public class MagicScienceMod
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event)
         {
-
+            LOGGER.info("CLIENT SETUP");
         }
     }
 }
