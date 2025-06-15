@@ -62,9 +62,13 @@ public class EnergyParticle extends TextureSheetParticle {
         super.tick();
     }
 
-
     @Override
     public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_TRANSLUCENT;
+        return ParticleRenderType.PARTICLE_SHEET_LIT;
+    }
+
+    @Override
+    public int getLightColor(float partialTick) {
+        return 0xF000F0;  // Максимальное "свечение" для партикла
     }
 }

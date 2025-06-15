@@ -1,6 +1,7 @@
 package com.magicscience.magicsciencemod.particle;
 
 import com.magicscience.magicsciencemod.MagicScienceMod;
+import com.mojang.serialization.Codec;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.particles.SimpleParticleType;
 import net.minecraft.core.registries.Registries;
@@ -14,6 +15,15 @@ public class ModParticles {
 
     public static final RegistryObject<SimpleParticleType> ENERGY_PARTICLE =
             PARTICLE_TYPES.register("energy", () -> new SimpleParticleType(true));
+
+//    public static final RegistryObject<ParticleType<EnergyParticleData>> ENERGY_PARTICLE =
+//            PARTICLE_TYPES.register("energy_particle", () ->
+//                    new ParticleType<>(false, EnergyParticleData.DESERIALIZER) {
+//                        @Override
+//                        public Codec<EnergyParticleData> codec() {
+//                            return null;
+//                        }
+//                    });
 
     public static void register(IEventBus eventBus) {
         PARTICLE_TYPES.register(eventBus);

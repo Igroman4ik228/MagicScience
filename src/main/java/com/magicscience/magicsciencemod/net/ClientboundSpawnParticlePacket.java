@@ -72,6 +72,7 @@ public class ClientboundSpawnParticlePacket {
             double z = center.z + radius * Math.sin(phi) * Math.sin(theta);
 
             level.addParticle(ModParticles.ENERGY_PARTICLE.get(), x, y, z, direction.x, direction.y, direction.z);
+            //level.addParticle(new EnergyParticleData(direction.x, direction.y, direction.z, 1), x, y, z, direction.x, direction.y, direction.z);
         }
 
         LOGGER.info("Spawn!");
