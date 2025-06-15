@@ -47,10 +47,7 @@ public class ExampleSwordItem extends SwordItem {
             ModMessagesEnergy.CHANNEL.sendToServer(new ServerboundCastParticlePacket(position, direction, PARTICLE_COUNT, DAMAGE, PARTICLE_RADIUS));
         }
 
-        // Не работает
-        if (!level.isClientSide) {
-            player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
-        }
+        player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
     }
