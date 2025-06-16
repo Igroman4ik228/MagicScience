@@ -89,7 +89,6 @@ public class EnergyParticle extends TextureSheetParticle {
             }
         }
 
-
         // Коллизия с сущностями
         // Фильтр исключения предметов
         Predicate<Entity> nonItemEntities = entity -> !(entity instanceof ItemEntity);

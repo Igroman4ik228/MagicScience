@@ -1,17 +1,11 @@
 package com.magicscience.magicsciencemod.net;
 
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.BlockPos;
-import net.minecraft.core.Direction;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.Level;
-import net.minecraft.world.entity.item.PrimedTnt;
 import net.minecraft.world.entity.monster.Creeper;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Blocks;
-import net.minecraft.world.level.block.TntBlock;
 import net.minecraftforge.network.NetworkEvent;
 import org.slf4j.Logger;
 
@@ -23,7 +17,7 @@ public class ServerboundParticleCollisionPacket {
     private final float damage;
     private final int ownerId;
 
-    public ServerboundParticleCollisionPacket(int entityId, float damage) {
+    public ServerboundParticleCollisionPacket(int entityId, float damage, int ownerId) {
         this.entityId = entityId;
         this.damage = damage;
         this.ownerId = ownerId;
@@ -52,8 +46,15 @@ public class ServerboundParticleCollisionPacket {
             Entity target = level.getEntity(entityId);
             if (target == null) return;
 
+            // Получаем владельца частицы
+            Entity owner = level.getEntity(ownerId);
+            if (!(owner instanceof ServerPlayer ownerPlayer)) {
+                // Если владелец не игрок (или не найден), не наносим урон
+                return;
+            }
+
             // Дамаг и поджог
-            target.hurt(target.damageSources().playerAttack(player), damage);
+            target.hurt(target.damageSources().playerAttack(ownerPlayer), damage);
             target.setSecondsOnFire(5);
 
             if (target instanceof Creeper creeper) {
@@ -66,22 +67,5 @@ public class ServerboundParticleCollisionPacket {
         });
         ctx.get().setPacketHandled(true);
     }
-
-//    public void handle(Supplier<NetworkEvent.Context> ctx) {
-//        // Обработка коллиции(соприкосновение с другим энтити) на сервере
-//        ctx.get().enqueueWork(() -> {
-//            ServerPlayer player = ctx.get().getSender();
-//            if (player != null) {
-//                // Получение энтити, который  соприкоснулся
-//                Entity target = player.level().getEntity(entityId);
-//                if (target != null) {
-//                    // Дамаг и поджог
-//                    target.hurt(target.damageSources().playerAttack(), damage);
-//                    target.setSecondsOnFire(5);
-//                }
-//            }
-//        });
-//        ctx.get().setPacketHandled(true);
-//    }
 }
 
