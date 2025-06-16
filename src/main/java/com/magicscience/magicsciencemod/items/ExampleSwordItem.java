@@ -51,5 +51,4 @@ public class ExampleSwordItem extends SwordItem {
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
     }
-
 }

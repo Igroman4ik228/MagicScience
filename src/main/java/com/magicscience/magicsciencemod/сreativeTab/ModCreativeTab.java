@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.CreativeTab;
+package com.magicscience.magicsciencemod.сreativeTab;
 
 import com.magicscience.magicsciencemod.MagicScienceMod;
 import com.magicscience.magicsciencemod.items.ModItems;
@@ -7,7 +7,6 @@ import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.ItemStack;
 import net.minecraftforge.eventbus.api.IEventBus;
-import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
 

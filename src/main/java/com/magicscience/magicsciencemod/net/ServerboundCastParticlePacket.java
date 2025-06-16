@@ -50,9 +50,9 @@ public class ServerboundCastParticlePacket {
             if (player != null) {
                 // Отправка пакета клинту
                 ModMessagesEnergy.CHANNEL.send(
-                        // Радиус отправки пакета клинтам, может нескольким
+                        // Радиус отправки пакета клиентам, может нескольким
                         PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                        // Отправки пакета клинтам пакетов с партиками
+                        // Отправки пакета клиентам пакетов с партиками
                         new ClientboundSpawnParticlePacket(position, direction, particleCount, damage, radius)
                 );
             }

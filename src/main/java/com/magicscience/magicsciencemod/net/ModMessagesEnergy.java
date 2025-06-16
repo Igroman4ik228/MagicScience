@@ -32,6 +32,15 @@ public class ModMessagesEnergy {
                 ServerboundParticleCollisionPacket::new,
                 ServerboundParticleCollisionPacket::handle);
 
+        CHANNEL.registerMessage(packetId++, ServerboundPlaceLightPacket.class,
+                ServerboundPlaceLightPacket::toBytes,
+                ServerboundPlaceLightPacket::new,
+                ServerboundPlaceLightPacket::handle);
+
+        CHANNEL.registerMessage(packetId++, ServerboundRemoveLightPacket.class,
+                ServerboundRemoveLightPacket::toBytes,
+                ServerboundRemoveLightPacket::new,
+                ServerboundRemoveLightPacket::handle);
     }
 }
 
