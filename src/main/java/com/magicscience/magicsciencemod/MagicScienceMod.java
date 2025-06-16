@@ -1,13 +1,16 @@
 package com.magicscience.magicsciencemod;
 
-import com.magicscience.magicsciencemod.CreativeTab.ModCreativeTab;
+import com.magicscience.magicsciencemod.сreativeTab.ModCreativeTab;
+import com.magicscience.magicsciencemod.blocks.LightBlockManager;
 import com.magicscience.magicsciencemod.items.ModItems;
 import com.magicscience.magicsciencemod.net.ModMessagesEnergy;
 import com.magicscience.magicsciencemod.particle.ModParticles;
 import com.mojang.logging.LogUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -29,10 +32,10 @@ public class MagicScienceMod
     {
         IEventBus modEventBus = context.getModEventBus();
 
+        // Регистрация кастомных классов
         ModItems.register(modEventBus);
         ModCreativeTab.register(modEventBus);
         ModParticles.register(modEventBus);
-
         // .net пакеты
         ModMessagesEnergy.register();
 
@@ -41,7 +44,6 @@ public class MagicScienceMod
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
-
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)
@@ -49,12 +51,24 @@ public class MagicScienceMod
         LOGGER.info("COMMON SETUP");
     }
 
-
     // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event)
     {
         LOGGER.info("SERVER START");
+
+        ServerLevel level = event.getServer().overworld();
+        LightBlockManager.removeAllLights(level);
+        LOGGER.info("Все световые блоки удалены при запуске сервера");
+    }
+
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        ServerLevel level = event.getServer().overworld();
+        LightBlockManager.removeAllLights(level);
+        LOGGER.info("Все световые блоки удалены при остановке сервера");
+
+        LOGGER.info("SERVER STOP");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
