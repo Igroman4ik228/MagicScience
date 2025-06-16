@@ -41,6 +41,11 @@ public class ModMessagesEnergy {
                 ServerboundRemoveLightPacket::toBytes,
                 ServerboundRemoveLightPacket::new,
                 ServerboundRemoveLightPacket::handle);
+
+        CHANNEL.registerMessage(packetId++, ServerboundParticleBlockCollisionPacket.class,
+                ServerboundParticleBlockCollisionPacket::toBytes,
+                ServerboundParticleBlockCollisionPacket::new,
+                ServerboundParticleBlockCollisionPacket::handle);
     }
 }
 

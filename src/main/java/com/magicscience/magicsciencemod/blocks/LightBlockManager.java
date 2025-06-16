@@ -16,7 +16,7 @@ public class LightBlockManager {
     // Лучше использовать потокобезопасную Map для работы на сервере
     private static final Map<UUID, BlockPos> activeLightBlockPositions = new ConcurrentHashMap<>();
 
-    private static final int LIGHT_LEVEL = 15;
+    private static final int LIGHT_LEVEL = 12;
 
     /**
      * Флаги для обновления блока в мире:

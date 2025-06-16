@@ -56,6 +56,10 @@ public class MagicScienceMod
     public void onServerStarting(ServerStartingEvent event)
     {
         LOGGER.info("SERVER START");
+
+        ServerLevel level = event.getServer().overworld();
+        LightBlockManager.removeAllLights(level);
+        LOGGER.info("Все световые блоки удалены при запуске сервера");
     }
 
     @SubscribeEvent
