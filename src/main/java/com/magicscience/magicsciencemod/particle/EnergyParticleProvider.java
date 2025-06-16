@@ -4,9 +4,8 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
 import net.minecraft.client.particle.SpriteSet;
-import net.minecraft.core.particles.SimpleParticleType;
 
-public class EnergyParticleProvider implements ParticleProvider<SimpleParticleType> {
+public class EnergyParticleProvider implements ParticleProvider<EnergyParticleOptions> {
     private final SpriteSet sprites;
 
     public EnergyParticleProvider(SpriteSet sprites) {
@@ -14,10 +13,11 @@ public class EnergyParticleProvider implements ParticleProvider<SimpleParticleTy
     }
 
     @Override
-    public Particle createParticle(SimpleParticleType type, ClientLevel level,
+    public Particle createParticle(EnergyParticleOptions type, ClientLevel level,
                                    double x, double y, double z,
                                    double xd, double yd, double zd) {
-        return new EnergyParticle(level, x, y, z, xd, yd, zd, sprites);
+        return new EnergyParticle(level, x, y, z, xd, yd, zd,
+                type.damage(), type.ownerId(), sprites); // Передаем damage из Options
     }
 }
 

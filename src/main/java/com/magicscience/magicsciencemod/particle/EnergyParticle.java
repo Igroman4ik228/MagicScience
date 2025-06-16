@@ -17,13 +17,18 @@ import java.util.function.Predicate;
 
 public class EnergyParticle extends TextureSheetParticle {
 
-    private static final float DAMAGE = 6.0f;
+    private final float damage;
+    private final int ownerId;
 
-    protected EnergyParticle(ClientLevel level, double x, double y, double z, double dx, double dy, double dz, SpriteSet sprites) {
+    protected EnergyParticle(ClientLevel level, double x, double y, double z,
+                             double dx, double dy, double dz,
+                             float damage, int ownerId, SpriteSet sprites) {
         super(level, x, y, z);
         this.xd = dx;
         this.yd = dy;
         this.zd = dz;
+        this.damage = damage;
+        this.ownerId = ownerId;
         this.lifetime = 100;
         this.setSpriteFromAge(sprites);
     }
@@ -49,15 +54,11 @@ public class EnergyParticle extends TextureSheetParticle {
                 .forEach(entity -> {
                     // Отправка ивента коллизии на сервер
                     ModMessagesEnergy.CHANNEL.sendToServer(
-                            new ServerboundParticleCollisionPacket(entity.getId(), DAMAGE)
+                            new ServerboundParticleCollisionPacket(entity.getId(), this.damage, this.ownerId)
                     );
                     // Удаление партикла
                     this.remove();
                 });
-
-//        if (!level.noCollision(particleAABB)) {
-//            this.remove();
-//        }
 
         super.tick();
     }

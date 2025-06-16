@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.net;
 
-import com.magicscience.magicsciencemod.particle.ModParticles;
+import com.magicscience.magicsciencemod.particle.EnergyParticleOptions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.network.FriendlyByteBuf;
@@ -15,13 +15,16 @@ public class ClientboundSpawnParticlePacket {
 
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    private final int ownerId;
+
     private final Vec3 position;
     private final Vec3 direction;
     private final int particleCount;
     private final float damage;
     private final float radius;
 
-    public ClientboundSpawnParticlePacket(Vec3 position, Vec3 direction, int particleCount, float damage, float radius) {
+    public ClientboundSpawnParticlePacket(int ownerId, Vec3 position, Vec3 direction, int particleCount, float damage, float radius) {
+        this.ownerId = ownerId;
         this.position = position;
         this.direction = direction;
         this.particleCount = particleCount;
@@ -30,6 +33,7 @@ public class ClientboundSpawnParticlePacket {
     }
 
     public ClientboundSpawnParticlePacket(FriendlyByteBuf buf) {
+        this.ownerId = buf.readInt();
         this.position = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         this.direction = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         this.particleCount = buf.readInt();
@@ -38,6 +42,7 @@ public class ClientboundSpawnParticlePacket {
     }
 
     public void toBytes(FriendlyByteBuf buf) {
+        buf.writeInt(ownerId);
         buf.writeDouble(position.x);
         buf.writeDouble(position.y);
         buf.writeDouble(position.z);
@@ -71,8 +76,7 @@ public class ClientboundSpawnParticlePacket {
             double y = center.y + radius * Math.cos(phi);
             double z = center.z + radius * Math.sin(phi) * Math.sin(theta);
 
-            level.addParticle(ModParticles.ENERGY_PARTICLE.get(), x, y, z, direction.x, direction.y, direction.z);
-            //level.addParticle(new EnergyParticleData(direction.x, direction.y, direction.z, 1), x, y, z, direction.x, direction.y, direction.z);
+            level.addParticle(new EnergyParticleOptions(100, ownerId), x, y, z, direction.x, direction.y, direction.z);
         }
 
         LOGGER.info("Spawn!");

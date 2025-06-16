@@ -44,7 +44,7 @@ public class ExampleSwordItem extends SwordItem {
             LOGGER.info("bob = " + player.bob);
 
             // Отправка пакета на сервер
-            ModMessagesEnergy.CHANNEL.sendToServer(new ServerboundCastParticlePacket(position, direction, PARTICLE_COUNT, DAMAGE, PARTICLE_RADIUS));
+            ModMessagesEnergy.CHANNEL.sendToServer(new ServerboundCastParticlePacket(player.getId(), position, direction, PARTICLE_COUNT, DAMAGE, PARTICLE_RADIUS));
         }
 
         player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
