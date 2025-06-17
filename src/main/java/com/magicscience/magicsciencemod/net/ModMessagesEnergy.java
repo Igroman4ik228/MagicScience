@@ -46,6 +46,11 @@ public class ModMessagesEnergy {
                 ServerboundParticleBlockCollisionPacket::toBytes,
                 ServerboundParticleBlockCollisionPacket::new,
                 ServerboundParticleBlockCollisionPacket::handle);
+
+        CHANNEL.registerMessage(packetId++, ServerboundBoneMealPacket.class,
+                ServerboundBoneMealPacket::toBytes,
+                ServerboundBoneMealPacket::new,
+                ServerboundBoneMealPacket::handle);
     }
 }
 

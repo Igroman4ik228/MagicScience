@@ -17,6 +17,9 @@ public class ModItems {
     public static final RegistryObject<SwordItem> EXAMPLE_SWORD = ITEMS.register("example_sword",
             () -> new ExampleSwordItem(new CustomTier(), 7, -2.4F, new Item.Properties()));
 
+    public static final RegistryObject<Item> EXAMPLE_STICK = ITEMS.register("example_stick",
+            () -> new ExampleStick(new Item.Properties()));
+
     // Обязательная строка публичного метода
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

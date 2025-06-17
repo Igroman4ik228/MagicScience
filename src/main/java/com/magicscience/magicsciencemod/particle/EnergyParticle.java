@@ -7,12 +7,15 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.core.BlockPos;
+import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TntBlock;
+import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -24,13 +27,15 @@ public class EnergyParticle extends TextureSheetParticle {
 
     private final float damage;
     private final int ownerId;
+    private final boolean isStick;
+
     private BlockPos lightBlockPos = null;
 
     private final UUID particleUUID;
 
     protected EnergyParticle(ClientLevel level, double x, double y, double z,
                              double dx, double dy, double dz,
-                             float damage, int ownerId, SpriteSet sprites) {
+                             float damage, int ownerId, boolean isStick, SpriteSet sprites) {
         super(level, x, y, z);
         this.setSpriteFromAge(sprites);
         this.xd = dx;
@@ -38,6 +43,8 @@ public class EnergyParticle extends TextureSheetParticle {
         this.zd = dz;
         this.damage = damage;
         this.ownerId = ownerId;
+        this.isStick = isStick;
+
         this.lifetime = 100;
 
         this.particleUUID = UUID.randomUUID();
@@ -63,46 +70,82 @@ public class EnergyParticle extends TextureSheetParticle {
             ModMessagesEnergy.CHANNEL.sendToServer(new ServerboundPlaceLightPacket(particleUUID, pos));
         }
 
-
         Vec3 nextPosition = currentPosition.add(this.xd, this.yd, this.zd);
         // Область поиска коллизи партикла
         AABB particleAABB = new AABB(currentPosition, nextPosition);
 
-        // Коллизия с блоками
-        BlockHitResult blockHit = this.level.clip(new ClipContext(
-                currentPosition, nextPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
+        if (isStick){
+            // Основная позиция партикла
+            BlockPos centerPos = BlockPos.containing(this.x, this.y, this.z);
 
-        if (blockHit.getType() == HitResult.Type.BLOCK) {
-            BlockPos hitPos = blockHit.getBlockPos();
+            // Проверяем блоки в радиусе 3 блока под партиклом
+            for (int dy = 0; dy <= 3; dy++) {
+                BlockPos checkPos = centerPos.below(dy);
+                BlockState blockState = level.getBlockState(checkPos);
 
-            // Если блок содержит воду — удаляем партикл
-            if (this.level.getBlockState(hitPos).getFluidState().isSource()) {
-                playExtinguishSound(hitPos.getCenter());
-                this.remove();
+                // Проверяем только блок травы (GRASS_BLOCK)
+                if (blockState.is(Blocks.GRASS_BLOCK)) {
+                    BlockPos abovePos = checkPos.above();
+
+                    // Проверяем, что сверху можно что-то посадить
+                    if (level.isEmptyBlock(abovePos) ||
+                            level.getBlockState(abovePos).is(Blocks.GRASS) ||
+                            level.getBlockState(abovePos).is(Blocks.TALL_GRASS)) {
+
+                        // Отправляем пакет на сервер для применения костной муки
+                        ModMessagesEnergy.CHANNEL.sendToServer(
+                                new ServerboundBoneMealPacket(checkPos)
+                        );
+
+                        // Спавним частицы эффекта на клиенте
+                        level.addParticle(ParticleTypes.HAPPY_VILLAGER,
+                                checkPos.getX() + 0.5,
+                                checkPos.getY() + 1,
+                                checkPos.getZ() + 0.5,
+                                0, 0, 0);
+                    }
+                }
             }
 
-            if (this.level.getBlockState(hitPos).getBlock() instanceof TntBlock) {
-                ModMessagesEnergy.CHANNEL.sendToServer(
-                        new ServerboundParticleBlockCollisionPacket(hitPos)
-                );
-                this.remove();
-            }
         }
+        else {
 
-        // Коллизия с сущностями
-        // Фильтр исключения предметов
-        Predicate<Entity> nonItemEntities = entity -> !(entity instanceof ItemEntity);
+            // Коллизия с блоками
+            BlockHitResult blockHit = this.level.clip(new ClipContext(
+                    currentPosition, nextPosition, ClipContext.Block.COLLIDER, ClipContext.Fluid.NONE, null));
 
-        // (Entity) null - все сущности, нет исключений.
-        this.level.getEntities((Entity) null, particleAABB, nonItemEntities)
-                .forEach(entity -> {
-                    // Отправка ивента коллизии с entity на сервер
-                    ModMessagesEnergy.CHANNEL.sendToServer(
-                            new ServerboundParticleCollisionPacket(entity.getId(), this.damage, this.ownerId)
-                    );
-                    // Удаление партикла
+            if (blockHit.getType() == HitResult.Type.BLOCK) {
+                BlockPos hitPos = blockHit.getBlockPos();
+
+                // Если блок содержит воду — удаляем партикл
+                if (this.level.getBlockState(hitPos).getFluidState().isSource()) {
+                    playExtinguishSound(hitPos.getCenter());
                     this.remove();
-                });
+                }
+
+                if (this.level.getBlockState(hitPos).getBlock() instanceof TntBlock) {
+                    ModMessagesEnergy.CHANNEL.sendToServer(
+                            new ServerboundParticleBlockCollisionPacket(hitPos)
+                    );
+                    this.remove();
+                }
+            }
+
+            // Коллизия с сущностями
+            // Фильтр исключения предметов
+            Predicate<Entity> nonItemEntities = entity -> !(entity instanceof ItemEntity);
+
+            // (Entity) null - все сущности, нет исключений.
+            this.level.getEntities((Entity) null, particleAABB, nonItemEntities)
+                    .forEach(entity -> {
+                        // Отправка ивента коллизии с entity на сервер
+                        ModMessagesEnergy.CHANNEL.sendToServer(
+                                new ServerboundParticleCollisionPacket(entity.getId(), this.damage, this.ownerId)
+                        );
+                        // Удаление партикла
+                        this.remove();
+                    });
+        }
 
         super.tick();
     }

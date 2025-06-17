@@ -13,8 +13,8 @@ import java.util.function.Supplier;
 public class ServerboundCastParticlePacket {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-
     private final int ownerId;
+    private final boolean isStick;
 
     private final Vec3 position;
     private final Vec3 direction;
@@ -22,13 +22,14 @@ public class ServerboundCastParticlePacket {
     private final float damage;
     private final float radius;
 
-    public ServerboundCastParticlePacket(int ownerId, Vec3 position, Vec3 direction, int particleCount, float damage, float radius) {
+    public ServerboundCastParticlePacket(int ownerId, Vec3 position, Vec3 direction, int particleCount, float damage, float radius, boolean isStick) {
         this.ownerId = ownerId;
         this.position = position;
         this.direction = direction;
         this.particleCount = particleCount;
         this.damage = damage;
         this.radius = radius;
+        this.isStick = isStick;
     }
 
     public ServerboundCastParticlePacket(FriendlyByteBuf buf) {
@@ -38,6 +39,7 @@ public class ServerboundCastParticlePacket {
         this.particleCount = buf.readInt();
         this.damage = buf.readFloat();
         this.radius = buf.readFloat();
+        this.isStick = buf.readBoolean();
     }
 
     public void toBytes(FriendlyByteBuf buf) {
@@ -51,6 +53,7 @@ public class ServerboundCastParticlePacket {
         buf.writeInt(particleCount);
         buf.writeFloat(damage);
         buf.writeFloat(radius);
+        buf.writeBoolean(isStick);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
@@ -63,7 +66,7 @@ public class ServerboundCastParticlePacket {
                         // Радиус отправки пакета клинтам, может нескольким
                         PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
                         // Отправки пакета клинтам пакетов с партиками
-                        new ClientboundSpawnParticlePacket(ownerId, position, direction, particleCount, damage, radius)
+                        new ClientboundSpawnParticlePacket(ownerId, position, direction, particleCount, damage, radius, isStick)
                 );
                 LOGGER.info("Send to pl");
             }

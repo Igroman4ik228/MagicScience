@@ -6,7 +6,7 @@ import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 
-public record EnergyParticleOptions(float damage, int ownerId) implements ParticleOptions {
+public record EnergyParticleOptions(float damage, int ownerId, boolean isStick) implements ParticleOptions {
     public static final ParticleOptions.Deserializer<EnergyParticleOptions> DESERIALIZER =
             new ParticleOptions.Deserializer<EnergyParticleOptions>() {
                 @Override
@@ -16,13 +16,15 @@ public record EnergyParticleOptions(float damage, int ownerId) implements Partic
                     float damage = reader.readFloat();
                     reader.expect(' ');
                     int ownerId = reader.readInt();
-                    return new EnergyParticleOptions(damage, ownerId);
+                    reader.expect(' ');
+                    boolean isStick = reader.readBoolean();
+                    return new EnergyParticleOptions(damage, ownerId, isStick);
                 }
 
                 @Override
                 public EnergyParticleOptions fromNetwork(ParticleType<EnergyParticleOptions> type,
                                                          FriendlyByteBuf buf) {
-                    return new EnergyParticleOptions(buf.readFloat(), buf.readInt());
+                    return new EnergyParticleOptions(buf.readFloat(), buf.readInt(), buf.readBoolean());
                 }
             };
 
@@ -35,10 +37,11 @@ public record EnergyParticleOptions(float damage, int ownerId) implements Partic
     public void writeToNetwork(FriendlyByteBuf buf) {
         buf.writeFloat(damage);
         buf.writeInt(ownerId);
+        buf.writeBoolean(isStick);
     }
 
     @Override
     public String writeToString() {
-        return getType() + " " + damage + " " + ownerId;
+        return getType() + " " + damage + " " + ownerId + " " + isStick;
     }
 }

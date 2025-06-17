@@ -14,7 +14,8 @@ public class EnergyParticleType extends ParticleType<EnergyParticleOptions> {
         return RecordCodecBuilder.create(instance ->
                 instance.group(
                         Codec.FLOAT.fieldOf("damage").forGetter(EnergyParticleOptions::damage),
-                        Codec.INT.fieldOf("ownerId").forGetter(EnergyParticleOptions::ownerId)
+                        Codec.INT.fieldOf("ownerId").forGetter(EnergyParticleOptions::ownerId),
+                        Codec.BOOL.fieldOf("isStick").forGetter(EnergyParticleOptions::isStick)
                 ).apply(instance, EnergyParticleOptions::new)
         );
     }

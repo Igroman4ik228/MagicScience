@@ -21,7 +21,8 @@ public class ModCreativeTab {
                     .icon(() -> new ItemStack(ModItems.EXAMPLE_SWORD.get()))
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.EXAMPLE_SWORD.get());
-                        // Добавь сюда другие предметы
+                        output.accept(ModItems.EXAMPLE_STICK.get());
+                        // Cюда другие предметы
                     })
                     .build());
 

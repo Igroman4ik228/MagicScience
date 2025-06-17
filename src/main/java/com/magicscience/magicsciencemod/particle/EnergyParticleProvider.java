@@ -17,7 +17,7 @@ public class EnergyParticleProvider implements ParticleProvider<EnergyParticleOp
                                    double x, double y, double z,
                                    double xd, double yd, double zd) {
         return new EnergyParticle(level, x, y, z, xd, yd, zd,
-                type.damage(), type.ownerId(), sprites); // Передаем damage из Options
+                type.damage(), type.ownerId(), type.isStick(), sprites); // Передаем damage из Options
     }
 }
 
