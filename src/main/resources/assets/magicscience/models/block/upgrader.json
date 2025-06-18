@@ -1,0 +1,12 @@
+{
+"parent": "minecraft:block/cube",
+  "textures": {
+    "particle": "magicscience:block/crafting_table_front",
+    "north": "magicscience:block/crafting_table_front",
+    "south": "magicscience:block/crafting_table_front",
+    "east": "magicscience:block/crafting_table_side",
+    "west": "magicscience:block/crafting_table_side",
+    "up": "magicscience:block/crafting_table_top",
+    "down": "magicscience:block/crafting_table_bottom"
+  }
+}

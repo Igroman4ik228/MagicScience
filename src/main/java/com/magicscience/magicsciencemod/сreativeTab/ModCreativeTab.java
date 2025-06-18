@@ -22,6 +22,7 @@ public class ModCreativeTab {
                     .displayItems((parameters, output) -> {
                         output.accept(ModItems.EXAMPLE_SWORD.get());
                         output.accept(ModItems.EXAMPLE_STICK.get());
+                        output.accept(ModItems.UPGRADER_BLOCK.get());
                         // Cюда другие предметы
                     })
                     .build());

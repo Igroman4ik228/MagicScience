@@ -1,11 +1,16 @@
 package com.magicscience.magicsciencemod;
 
+import com.magicscience.magicsciencemod.blocks.ModBlocks;
+import com.magicscience.magicsciencemod.blocks.entity.ModBlockEntities;
+import com.magicscience.magicsciencemod.screen.ModMenuTypes;
+import com.magicscience.magicsciencemod.screen.UpgraderScreen;
 import com.magicscience.magicsciencemod.сreativeTab.ModCreativeTab;
 import com.magicscience.magicsciencemod.blocks.LightBlockManager;
 import com.magicscience.magicsciencemod.items.ModItems;
 import com.magicscience.magicsciencemod.net.ModMessagesEnergy;
 import com.magicscience.magicsciencemod.particle.ModParticles;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.gui.screens.MenuScreens;
 import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -36,11 +41,16 @@ public class MagicScienceMod
         ModItems.register(modEventBus);
         ModCreativeTab.register(modEventBus);
         ModParticles.register(modEventBus);
+        ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+        ModMenuTypes.register(modEventBus);
         // .net пакеты
         ModMessagesEnergy.register();
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
+
+        modEventBus.addListener(this::registerScreens);
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
@@ -49,6 +59,16 @@ public class MagicScienceMod
     private void commonSetup(final FMLCommonSetupEvent event)
     {
         LOGGER.info("COMMON SETUP");
+    }
+
+    private void registerScreens(final FMLClientSetupEvent event) {
+        // Используем лямбда-выражение с правильным количеством параметров
+        event.enqueueWork(() -> {
+            MenuScreens.register(
+                    ModMenuTypes.UPGRADER_MENU.get(),
+                    UpgraderScreen::new
+            );
+        });
     }
 
     // You can use SubscribeEvent and let the Event Bus discover methods to call

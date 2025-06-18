@@ -1,6 +1,8 @@
 package com.magicscience.magicsciencemod.items;
 
 import com.magicscience.magicsciencemod.MagicScienceMod;
+import com.magicscience.magicsciencemod.blocks.ModBlocks;
+import net.minecraft.world.item.BlockItem;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.SwordItem;
 import net.minecraftforge.eventbus.api.IEventBus;
@@ -19,6 +21,9 @@ public class ModItems {
 
     public static final RegistryObject<Item> EXAMPLE_STICK = ITEMS.register("example_stick",
             () -> new ExampleStick(new Item.Properties()));
+
+    public static final RegistryObject<Item> UPGRADER_BLOCK = ITEMS.register("upgrader",
+            () -> new BlockItem(ModBlocks.UPGRADER.get(), new Item.Properties()));
 
     // Обязательная строка публичного метода
     public static void register(IEventBus eventBus) {
