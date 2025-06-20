@@ -35,10 +35,10 @@ public class UpgraderMenu extends AbstractContainerMenu {
 
         if(blockEntity != null) {
             // Используем напрямую ItemStackHandler из BlockEntity
-            this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 0, 56, 17)); // Слот для меча/палки
-            this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 1, 56, 53)); // Слот для улучшаемого предмета
-            this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 2, 8, 53));  // Слот для топлива
-            this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 3, 116, 35)); // Слот для результата
+            this.addSlot(new ToolSlot(blockEntity.itemHandler, 0, 56, 17));     // Только меч или палка
+            this.addSlot(new UpgradeSlot(blockEntity.itemHandler, 1, 56, 53));  // Только светопыль или костная мука
+            this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 2, 8, 53));   // Топливо — без ограничений
+            this.addSlot(new SlotItemHandler(blockEntity.itemHandler, 3, 116, 35)); // Результат — без ограничений
         }
 
         addDataSlots(data);

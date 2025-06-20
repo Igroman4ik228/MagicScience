@@ -1,6 +1,5 @@
 package com.magicscience.magicsciencemod.screen;
 
-
 import com.magicscience.magicsciencemod.MagicScienceMod;
 import com.mojang.blaze3d.systems.RenderSystem;
 import net.minecraft.client.gui.GuiGraphics;

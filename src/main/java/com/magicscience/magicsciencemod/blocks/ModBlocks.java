@@ -3,8 +3,6 @@ package com.magicscience.magicsciencemod.blocks;
 import com.magicscience.magicsciencemod.MagicScienceMod;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.state.BlockBehaviour;
-import net.minecraft.world.level.material.MapColor;
-import net.minecraft.world.level.material.PushReaction;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.ForgeRegistries;
@@ -16,6 +14,11 @@ public class ModBlocks {
 
     public static final RegistryObject<Block> UPGRADER = BLOCKS.register("upgrader",
             () -> new UpgraderBlock(BlockBehaviour.Properties.of()
+                    .strength(3.5f)
+                    .requiresCorrectToolForDrops()));
+
+    public static final RegistryObject<Block> STICK_CRAFTER = BLOCKS.register("stick_crafter",
+            () -> new StickCrafterBlock(BlockBehaviour.Properties.of()
                     .strength(3.5f)
                     .requiresCorrectToolForDrops()));
 

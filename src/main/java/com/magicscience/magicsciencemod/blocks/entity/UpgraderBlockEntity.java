@@ -70,6 +70,8 @@ public class UpgraderBlockEntity extends BlockEntity implements MenuProvider {
             entity.itemHandler.extractItem(2, 1, false);
             setChanged(level, pos, state);
         }
+
+        entity.craftItem();
     }
 
     private static boolean hasFuelInFuelSlot(UpgraderBlockEntity entity) {
@@ -84,39 +86,57 @@ public class UpgraderBlockEntity extends BlockEntity implements MenuProvider {
         ItemStack upgrade = itemHandler.getStackInSlot(1);
         ItemStack result = itemHandler.getStackInSlot(3);
 
-        // Проверка для создания example_sword
-        if (tool.is(Items.DIAMOND_SWORD) && upgrade.is(Items.GLOWSTONE_DUST)) {
-            ItemStack output = new ItemStack(ModItems.EXAMPLE_SWORD.get());
-            if (result.isEmpty() || (result.is(ModItems.EXAMPLE_SWORD.get()) && result.getCount() < result.getMaxStackSize())) {
-                itemHandler.extractItem(0, 1, false);
-                itemHandler.extractItem(1, 1, false);
-                if (result.isEmpty()) {
-                    itemHandler.setStackInSlot(3, output);
-                } else {
-                    result.grow(1);
-                }
-                energy = 0;
+        // Проверка на невозможность добавить результат
+        boolean canOutputSword = result.isEmpty() || (result.is(ModItems.EXAMPLE_SWORD.get()) && result.getCount() < result.getMaxStackSize());
+        boolean canOutputStick = result.isEmpty() || (result.is(ModItems.EXAMPLE_STICK.get()) && result.getCount() < result.getMaxStackSize());
+
+        // Проверка для example_sword
+        if (tool.is(Items.DIAMOND_SWORD) && upgrade.is(Items.GLOWSTONE_DUST)
+                && tool.getCount() >= 1 && upgrade.getCount() >= 30
+                && canOutputSword) {
+
+            itemHandler.extractItem(0, 1, false);
+            itemHandler.extractItem(1, 30, false);
+
+            if (result.isEmpty()) {
+                itemHandler.setStackInSlot(3, new ItemStack(ModItems.EXAMPLE_SWORD.get()));
+            } else {
+                result.grow(1);
             }
+
+            energy = 0;
         }
-//        // Проверка для создания example_stick (если есть подключенный блок)
-//        else if (tool.is(Items.STICK) && upgrade.is(Items.REDSTONE) && hasConnectedBlock()) {
-//            ItemStack output = new ItemStack(ModItems.EXAMPLE_STICK.get());
-//            if (result.isEmpty() || (result.is(ModItems.EXAMPLE_STICK.get()) && result.getCount() < result.getMaxStackSize())) {
-//                itemHandler.extractItem(0, 1, false);
-//                itemHandler.extractItem(1, 1, false);
-//                if (result.isEmpty()) {
-//                    itemHandler.setStackInSlot(3, output);
-//                } else {
-//                    result.grow(1);
-//                }
-//                energy = 0;
-//            }
-//        }
+
+        // Проверка для example_stick
+        else if (tool.is(Items.STICK) && upgrade.is(Items.BONE_MEAL)
+                && tool.getCount() >= 1 && upgrade.getCount() >= 30
+                && hasConnectedBlock() && canOutputStick) {
+
+            itemHandler.extractItem(0, 1, false);
+            itemHandler.extractItem(1, 30, false);
+
+            if (result.isEmpty()) {
+                itemHandler.setStackInSlot(3, new ItemStack(ModItems.EXAMPLE_STICK.get()));
+            } else {
+                result.grow(1);
+            }
+
+            energy = 0;
+        }
     }
 
-//    private boolean hasConnectedBlock() {
-//        return level.getBlockState(worldPosition.below()).is(ModBlocks.SOME_CONNECTION_BLOCK.get());
-//    }
+    private boolean hasConnectedBlock() {
+        return isStickCrafterAt(worldPosition.above()) ||
+                isStickCrafterAt(worldPosition.below()) ||
+                isStickCrafterAt(worldPosition.north()) ||
+                isStickCrafterAt(worldPosition.south()) ||
+                isStickCrafterAt(worldPosition.west()) ||
+                isStickCrafterAt(worldPosition.east());
+    }
+
+    private boolean isStickCrafterAt(BlockPos pos) {
+        return level.getBlockState(pos).is(ModBlocks.STICK_CRAFTER.get());
+    }
 
     @Override
     public Component getDisplayName() {

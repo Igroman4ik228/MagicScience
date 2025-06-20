@@ -23,6 +23,7 @@ public class ModCreativeTab {
                         output.accept(ModItems.EXAMPLE_SWORD.get());
                         output.accept(ModItems.EXAMPLE_STICK.get());
                         output.accept(ModItems.UPGRADER_BLOCK.get());
+                        output.accept(ModItems.STICK_CRAFTER.get());
                         // Cюда другие предметы
                     })
                     .build());

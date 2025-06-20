@@ -25,6 +25,9 @@ public class ModItems {
     public static final RegistryObject<Item> UPGRADER_BLOCK = ITEMS.register("upgrader",
             () -> new BlockItem(ModBlocks.UPGRADER.get(), new Item.Properties()));
 
+    public static final RegistryObject<Item> STICK_CRAFTER = ITEMS.register("stick_crafter",
+            () -> new BlockItem(ModBlocks.STICK_CRAFTER.get(), new Item.Properties()));
+
     // Обязательная строка публичного метода
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);
