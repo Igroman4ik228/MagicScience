@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.registry;
 
+import com.magicscience.magicsciencemod.net.magicparticles.ClientboundSpawnParticlePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
@@ -10,7 +11,6 @@ public class ModMessagesMagicParticles {
     private static int packetId = 0;
 
     public static void register() {
-        //noinspection removal
         CHANNEL = NetworkRegistry.newSimpleChannel(
                 new ResourceLocation("magicscience", "magicparticles"),
                 () -> "1.0",
@@ -18,9 +18,18 @@ public class ModMessagesMagicParticles {
                 s -> true
         );
 
-        CHANNEL.registerMessage(packetId++, ServerboundCastParticlePacket.class,
+        CHANNEL.registerMessage(packetId++,
+                ServerboundCastParticlePacket.class,
                 ServerboundCastParticlePacket::encode,
                 ServerboundCastParticlePacket::new,
                 ServerboundCastParticlePacket::handle);
+
+        CHANNEL.registerMessage(
+                packetId++,
+                ClientboundSpawnParticlePacket.class,
+                ClientboundSpawnParticlePacket::encode,
+                ClientboundSpawnParticlePacket::new,
+                ClientboundSpawnParticlePacket::handle
+        );
     }
 }

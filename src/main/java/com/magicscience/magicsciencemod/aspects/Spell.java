@@ -10,18 +10,18 @@ import java.util.Collection;
 
 public class Spell implements IMagicAspect {
     private final IMagicCore magicCore;
-    private final Collection<IMagicAttribute> magicAttribute;
+    private final Collection<IMagicAttribute> magicAttributes;
     private final IMagicStructure magicStructure;
     private final int ownerId;
     private int particleSpeed;
 
     public Spell(
             IMagicCore magicCore,
-            Collection<IMagicAttribute> magicAttribute,
+            Collection<IMagicAttribute> magicAttributes,
             IMagicStructure magicStructure,
             int ownerId) {
         this.magicCore = magicCore;
-        this.magicAttribute = magicAttribute;
+        this.magicAttributes = magicAttributes;
         this.magicStructure = magicStructure;
         this.ownerId = ownerId;
 
@@ -29,8 +29,8 @@ public class Spell implements IMagicAspect {
         setParticleSpeed();
     }
 
-    public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttribute, int ownerId) {
-        this(magicCore, magicAttribute, null, ownerId);
+    public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttributes, int ownerId) {
+        this(magicCore, magicAttributes, null, ownerId);
     }
 
     public Spell(IMagicCore magicCore, int ownerId) {
@@ -41,8 +41,8 @@ public class Spell implements IMagicAspect {
     public int getManaCost() {
         int totalCost = magicCore.getManaCost();
 
-        if (magicAttribute != null) {
-            for (IMagicAttribute attribute : magicAttribute) {
+        if (magicAttributes != null) {
+            for (IMagicAttribute attribute : magicAttributes) {
                 totalCost += attribute.getManaCost();
             }
         }
@@ -59,8 +59,8 @@ public class Spell implements IMagicAspect {
             structureId = magicStructure.getCode();
 
         int[] attributeIds = new int[0];
-        if (magicAttribute != null) {
-            attributeIds = magicAttribute.stream()
+        if (magicAttributes != null) {
+            attributeIds = magicAttributes.stream()
                     .map(attr -> attr.getAttributeTypes().getCode())
                     .mapToInt(Integer::intValue)
                     .toArray();
@@ -79,7 +79,7 @@ public class Spell implements IMagicAspect {
     }
 
     public Collection<IMagicAttribute> getMagicAttributes() {
-        return magicAttribute;
+        return magicAttributes;
     }
 
     public IMagicStructure getStructure() {
@@ -87,13 +87,13 @@ public class Spell implements IMagicAspect {
     }
 
     public void setParticleSpeed() {
-        if (magicAttribute == null){
+        if (magicAttributes == null){
             particleSpeed = 0;
             return;
         }
 
         // ToDo: Calc with Math
-        for (IMagicAttribute attribute : magicAttribute) {
+        for (IMagicAttribute attribute : magicAttributes) {
             if (attribute.getAttributeTypes() == AttributeTypes.VECTOR){
                 particleSpeed = 10;
             }

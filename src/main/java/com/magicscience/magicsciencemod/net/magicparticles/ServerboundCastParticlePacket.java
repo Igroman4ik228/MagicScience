@@ -2,6 +2,7 @@ package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.Spell;
 import com.magicscience.magicsciencemod.aspects.SpellData;
+import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import io.netty.buffer.Unpooled;
 import net.minecraft.network.FriendlyByteBuf;
@@ -42,31 +43,10 @@ public class ServerboundCastParticlePacket {
         buf.writeInt(spellData.particleSpeed());
     }
 
-    public FriendlyByteBuf toBuffer() {
-        FriendlyByteBuf buf = new FriendlyByteBuf(Unpooled.buffer());
-        encode(buf);
-        return buf;
-    }
-
-    public SpellData getData() {
-        return spellData;
-    }
-
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        // Логика сервера
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
             if (player == null) return;
-
-
-                // Отправка пакета клинту
-//                ModMessagesEnergy.CHANNEL.send(
-//                        // Радиус отправки пакета клинтам, может нескольким
-//                        PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-//                        // Отправки пакета клинтам пакетов с партиками
-//                        new ClientboundSpawnParticlePacket(ownerId, position, direction, particleCount, damage, radius, isStick)
-//                );
-
 
             LOGGER.info("SpellData received:");
             LOGGER.info("  Owner ID: {}", spellData.ownerId());
@@ -77,6 +57,16 @@ public class ServerboundCastParticlePacket {
 
             LOGGER.info("Packet handled and data logged for player {}", player.getName().getString());
 
+            ModMessagesMagicParticles.CHANNEL.send(
+                    // Радиус отправки пакета клинтам, может нескольким
+                    PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+                    // Отправки пакета клинтам пакетов с партиками
+                    new ClientboundSpawnParticlePacket(
+                            spellData,
+                            player.position().add(0, 1, 0),
+                            player.getLookAngle().normalize()
+                    )
+            );
         });
         ctx.get().setPacketHandled(true);
     }
