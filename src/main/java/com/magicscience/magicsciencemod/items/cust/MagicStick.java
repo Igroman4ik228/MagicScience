@@ -1,6 +1,9 @@
 package com.magicscience.magicsciencemod.items.cust;
 
 import com.magicscience.magicsciencemod.aspects.Spell;
+import com.magicscience.magicsciencemod.aspects.cores.FireCore;
+import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
+import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -27,15 +30,21 @@ public class MagicStick extends Item implements ICast {
         // Проверка ведущей руки
         if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        if (level.isClientSide) {
-            Vec3 position = player.position().add(0, 1.0, 0);
-            Vec3 direction = player.getLookAngle().normalize().scale(spell.getParticleSpeed());
+        if (!level.isClientSide) return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-            LOGGER.info("stick use!" + "position = " + position + "direction" + direction);
+        var spell = new Spell(new FireCore(), player.getId());
 
-            // Отправка пакета на сервер
-            //ModMessagesEnergy.CHANNEL.sendToServer(new ServerboundCastParticlePacket(player.getId(), position, direction, PARTICLE_COUNT, DAMAGE, PARTICLE_RADIUS, true));
-        }
+        setSpell(spell);
+
+        Vec3 position = player.position().add(0, 1.0, 0);
+        Vec3 direction = player.getLookAngle().normalize().scale(this.spell.getParticleSpeed());
+
+        LOGGER.info("stick use!" + "position = " + position + "direction" + direction);
+
+
+        // Отправка пакета на сервер
+        ModMessagesMagicParticles.CHANNEL.sendToServer(new ServerboundCastParticlePacket(spell));
+
 
         // ToDo: Вынести в client/sound
         player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);

@@ -1,5 +1,8 @@
 package com.magicscience.magicsciencemod;
 
+import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
+import com.magicscience.magicsciencemod.registry.ModItems;
+import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -26,14 +29,24 @@ public class MagicScienceMod
     {
         IEventBus modEventBus = context.getModEventBus();
 
+        // Tabs
+        ModCreativeTab.register(modEventBus);
+
+        // Items
+        ModItems.register(modEventBus);
+
+        // Net
+        ModMessagesMagicParticles.register();
+
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
-
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+
+        // Register ourselves for server and other game events we are interested in
+        MinecraftForge.EVENT_BUS.register(this);
     }
 
     private void commonSetup(final FMLCommonSetupEvent event)

@@ -1,7 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 public class MagicAttribute implements IMagicAttribute {
-
     private final int manaCost;
 
     private final AttributeTypes attributeTypes;
@@ -9,6 +8,10 @@ public class MagicAttribute implements IMagicAttribute {
     public MagicAttribute(int attributeCode) {
         switch (attributeCode) {
             case 0 -> {
+                this.manaCost = 0;
+                this.attributeTypes = AttributeTypes.NONE;
+            }
+            case 1 -> {
                 this.manaCost = 10;
                 this.attributeTypes = AttributeTypes.VECTOR;
             }

@@ -1,7 +1,8 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 public enum AttributeTypes {
-    VECTOR(0);
+    NONE(0),
+    VECTOR(1);
 
     private final int code;
 

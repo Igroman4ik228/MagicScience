@@ -4,31 +4,37 @@ import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 
 import java.util.Collection;
 
-public class Spell implements IMagicAspect{
-
+public class Spell implements IMagicAspect {
     private final IMagicCore magicCore;
     private final Collection<IMagicAttribute> magicAttribute;
     private final IMagicStructure magicStructure;
+    private final int ownerId;
     private int particleSpeed;
 
-    public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttribute, IMagicStructure magicStructure) {
+    public Spell(
+            IMagicCore magicCore,
+            Collection<IMagicAttribute> magicAttribute,
+            IMagicStructure magicStructure,
+            int ownerId) {
         this.magicCore = magicCore;
         this.magicAttribute = magicAttribute;
         this.magicStructure = magicStructure;
+        this.ownerId = ownerId;
 
         // ToDo: Pattern builder
         setParticleSpeed();
     }
 
-    public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttribute) {
-        this(magicCore, magicAttribute, null);
+    public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttribute, int ownerId) {
+        this(magicCore, magicAttribute, null, ownerId);
     }
 
-    public Spell(IMagicCore magicCore) {
-        this(magicCore, null, null);
+    public Spell(IMagicCore magicCore, int ownerId) {
+        this(magicCore, null, null, ownerId);
     }
 
     @Override
@@ -47,7 +53,28 @@ public class Spell implements IMagicAspect{
         return totalCost;
     }
 
-    public IMagicCore getMagicCore(){
+    public SpellData toData() {
+        int structureId = StructureTypes.NONE.getCode();
+        if (magicStructure != null)
+            structureId = magicStructure.getCode();
+
+        int[] attributeIds = new int[0];
+        if (magicAttribute != null) {
+            attributeIds = magicAttribute.stream()
+                    .map(attr -> attr.getAttributeTypes().getCode())
+                    .mapToInt(Integer::intValue)
+                    .toArray();
+        }
+
+        return new SpellData(
+                ownerId,
+                magicCore.getCode(),
+                attributeIds,
+                structureId,
+                particleSpeed);
+    }
+
+    public IMagicCore getMagicCore() {
         return magicCore;
     }
 
