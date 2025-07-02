@@ -1,6 +1,10 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.SpellData;
+import com.magicscience.magicsciencemod.particles.MagicParticle;
+import com.magicscience.magicsciencemod.particles.MagicParticleOptions;
+import com.magicscience.magicsciencemod.particles.MagicParticleType;
+import com.magicscience.magicsciencemod.registry.ModParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -33,7 +37,8 @@ public class ClientboundSpawnParticlePacket {
                 buf.readVarInt(),            // coreId
                 buf.readVarIntArray(),       // attributeIds
                 buf.readVarInt(),            // structureId
-                buf.readInt()                // particleSpeed
+                buf.readInt(),                // particleSpeed
+                buf.readInt()                  // particleLifeTime
         );
         this.position = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         this.direction = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -48,6 +53,7 @@ public class ClientboundSpawnParticlePacket {
         }
         buf.writeVarInt(spellData.structureId());
         buf.writeInt(spellData.particleSpeed());
+        buf.writeInt(spellData.particleLifeTime());
 
         buf.writeDouble(position.x);
         buf.writeDouble(position.y);
@@ -83,12 +89,6 @@ public class ClientboundSpawnParticlePacket {
         var level = Minecraft.getInstance().level;
         if (level == null) return;
 
-        // ToDo: Сделать кастомные партиклы
-        var particleType = switch (spellData.coreId()) {
-            case 1 -> ParticleTypes.FLAME;
-            default -> ParticleTypes.CRIT;
-        };
-
         int particleCount = 10;
 
         boolean isWithStructure = spellData.structureId() != 0;
@@ -110,7 +110,14 @@ public class ClientboundSpawnParticlePacket {
                 double offsetZ = (Math.random() - 0.5) * spread;
 
                 level.addParticle(
-                        particleType,
+                        new MagicParticleOptions(
+                                spellData.ownerId(),
+                                spellData.coreId(),
+                                spellData.attributeIds(),
+                                spellData.structureId(),
+                                spellData.particleSpeed(),
+                                spellData.particleLifeTime()
+                        ),
                         position.x + offsetX,
                         position.y + offsetY,
                         position.z + offsetZ,

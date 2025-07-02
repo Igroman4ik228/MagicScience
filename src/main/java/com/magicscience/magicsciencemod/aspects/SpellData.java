@@ -5,5 +5,6 @@ public record SpellData(
         int coreId,
         int[] attributeIds,
         int structureId,
-        int particleSpeed) {
+        int particleSpeed,
+        int particleLifeTime) {
 }

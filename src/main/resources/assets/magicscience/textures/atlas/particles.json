@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "sources": [
+    {
+      "type": "directory",
+      "source": "textures/particle"
+    }
+  ]
+}

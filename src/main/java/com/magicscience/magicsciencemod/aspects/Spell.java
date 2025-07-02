@@ -14,6 +14,7 @@ public class Spell implements IMagicAspect {
     private final IMagicStructure magicStructure;
     private final int ownerId;
     private int particleSpeed;
+    private int particleLifeTime;
 
     public Spell(
             IMagicCore magicCore,
@@ -27,6 +28,7 @@ public class Spell implements IMagicAspect {
 
         // ToDo: Pattern builder
         setParticleSpeed();
+        setParticleLifeTime();
     }
 
     public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttributes, int ownerId) {
@@ -71,7 +73,8 @@ public class Spell implements IMagicAspect {
                 magicCore.getCode(),
                 attributeIds,
                 structureId,
-                particleSpeed);
+                particleSpeed,
+                particleLifeTime);
     }
 
     public IMagicCore getMagicCore() {
@@ -98,6 +101,14 @@ public class Spell implements IMagicAspect {
                 particleSpeed = 10;
             }
         }
+    }
+
+    private void setParticleLifeTime() {
+        particleLifeTime = magicCore.getParticleLifeTime();
+    }
+
+    public int getParticleLifeTime() {
+        return particleLifeTime;
     }
 
     public int getParticleSpeed() {

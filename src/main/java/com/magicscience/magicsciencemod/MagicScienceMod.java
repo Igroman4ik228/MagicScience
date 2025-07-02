@@ -3,6 +3,7 @@ package com.magicscience.magicsciencemod;
 import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
 import com.magicscience.magicsciencemod.registry.ModItems;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
+import com.magicscience.magicsciencemod.registry.ModParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
@@ -38,6 +39,8 @@ public class MagicScienceMod
         // Net
         ModMessagesMagicParticles.register();
 
+        // Particles
+        ModParticles.register(modEventBus);
 
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);

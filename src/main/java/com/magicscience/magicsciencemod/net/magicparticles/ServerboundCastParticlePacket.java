@@ -29,9 +29,17 @@ public class ServerboundCastParticlePacket {
         int[] attrs = new int[attrCount];
         for (int i = 0; i < attrCount; i++) attrs[i] = buf.readVarInt();
         int structureId = buf.readVarInt();
-        int speed = buf.readInt();
+        int particleSpeed = buf.readInt();
+        int particleLifeTime = buf.readInt();
 
-        this.spellData = new SpellData(ownerId, coreId, attrs, structureId, speed);
+        this.spellData = new SpellData(
+                ownerId,
+                coreId,
+                attrs,
+                structureId,
+                particleSpeed,
+                particleLifeTime
+        );
     }
 
     public void encode(FriendlyByteBuf buf) {
@@ -41,6 +49,7 @@ public class ServerboundCastParticlePacket {
         for (int id : spellData.attributeIds()) buf.writeVarInt(id);
         buf.writeVarInt(spellData.structureId());
         buf.writeInt(spellData.particleSpeed());
+        buf.writeInt(spellData.particleLifeTime());
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
