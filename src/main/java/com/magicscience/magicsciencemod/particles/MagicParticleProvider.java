@@ -10,7 +10,6 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 
 @OnlyIn(Dist.CLIENT)
 public class MagicParticleProvider implements ParticleProvider<MagicParticleOptions> {
-
     private final SpriteSet spriteSet;
 
     public MagicParticleProvider(SpriteSet spriteSet) {
