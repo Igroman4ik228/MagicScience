@@ -12,4 +12,13 @@ public enum CoreTypes {
     public int getCode(){
         return code;
     }
+
+    public static CoreTypes fromCode(int code) {
+        for (CoreTypes type : CoreTypes.values()) {
+            if (type.getCode() == code) {
+                return type;
+            }
+        }
+        throw new IllegalArgumentException("Unknown code: " + code);
+    }
 }

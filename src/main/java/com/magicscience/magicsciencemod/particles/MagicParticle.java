@@ -33,13 +33,13 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
-
+        // ToDo: Переписать в отдельный метод это ГОВНИЩЕ
         int coreIndex = spellData.coreId() - 1;
 
         // Всего картинок
         int frameCount = 3;
 
-        // рассчитываем возраст, дающий нужный кадр ПИЗДЕЦ:
+        // рассчитываем возраст, дающий нужный кадр:
         int ageForSprite = coreIndex * this.lifetime / (frameCount - 1);
         TextureAtlasSprite sprite = sprites.get(ageForSprite, this.lifetime);
 
@@ -48,7 +48,22 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
+
+
+
         super.tick();
+    }
+
+    public ClientLevel getLevel() {
+        return level;
+    }
+
+    public SpellData getSpellData() {
+        return spellData;
+    }
+
+    public Vec3 getDirectionPos() {
+        return new Vec3(xd, yd, zd);
     }
 
     @Override

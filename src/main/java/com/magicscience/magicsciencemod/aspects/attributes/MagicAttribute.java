@@ -15,6 +15,10 @@ public class MagicAttribute implements IMagicAttribute {
                 this.manaCost = 10;
                 this.attributeTypes = AttributeTypes.VECTOR;
             }
+            case 2 -> {
+                this.manaCost = 20;
+                this.attributeTypes = AttributeTypes.SELF_SPECTRE;
+            }
             default -> throw new IllegalArgumentException("Unknown attribute code: " + attributeCode);
         }
     }
