@@ -63,14 +63,14 @@ public class Spell implements IMagicAspect {
         int[] attributeIds = new int[0];
         if (magicAttributes != null) {
             attributeIds = magicAttributes.stream()
-                    .map(attr -> attr.getAttributeTypes().getCode())
+                    .map(attr -> attr.getType().getCode())
                     .mapToInt(Integer::intValue)
                     .toArray();
         }
 
         return new SpellData(
                 ownerId,
-                magicCore.getCode(),
+                magicCore.getTypeCode(),
                 attributeIds,
                 structureId,
                 particleSpeed,
@@ -97,7 +97,7 @@ public class Spell implements IMagicAspect {
 
         // ToDo: Calc with Math
         for (IMagicAttribute attribute : magicAttributes) {
-            if (attribute.getAttributeTypes() == AttributeTypes.VECTOR){
+            if (attribute.getType() == AttributeTypes.VECTOR){
                 particleSpeed = 10;
             }
         }

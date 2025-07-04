@@ -37,7 +37,12 @@ public class FireCore implements IMagicCore {
     }
 
     @Override
-    public int getCode() {
+    public int getTypeCode() {
         return coreType.getCode();
+    }
+
+    @Override
+    public CoreTypes getType() {
+        return coreType;
     }
 }
