@@ -1,6 +1,9 @@
 package com.magicscience.magicsciencemod.particles;
 
 import com.magicscience.magicsciencemod.aspects.SpellData;
+import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
+import com.magicscience.magicsciencemod.particles.aspecthandlers.AspectProcessor;
+import com.magicscience.magicsciencemod.particles.aspecthandlers.CoreHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -16,6 +19,9 @@ public class MagicParticle extends TextureSheetParticle {
     private static final int FRAME_COUNT = 3;
 
     private final SpellData spellData;
+    private final IMagicCore magicCore;
+
+    private final AspectProcessor aspectProcessor;
 
     public MagicParticle(
         ClientLevel level,
@@ -33,6 +39,8 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
+        this.magicCore = CoreHandler.handle(spellData);
+
         // В будущем может быть усложнение взятия индекса спрайта
         int spriteIndex = Math.max(spellData.coreId() - 1, 0);
         this.setSprite(
@@ -42,6 +50,11 @@ public class MagicParticle extends TextureSheetParticle {
                 sprites
             )
         );
+
+        LOGGER.info("MagicParticle");
+        LOGGER.info("spellData: " + spellData);
+
+        this.aspectProcessor = new AspectProcessor(this);
     }
 
     private static TextureAtlasSprite selectSprite(int index, int lifetime, SpriteSet sprites) {
@@ -52,6 +65,7 @@ public class MagicParticle extends TextureSheetParticle {
     @Override
     public void tick() {
         // Logic
+        this.aspectProcessor.processing(magicCore);
 
         super.tick();
     }

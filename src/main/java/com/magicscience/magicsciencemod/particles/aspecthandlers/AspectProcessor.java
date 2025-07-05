@@ -1,7 +1,10 @@
 package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
 import com.magicscience.magicsciencemod.aspects.attributes.*;
+import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
+import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.particles.MagicParticle;
+import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
@@ -18,20 +21,28 @@ public class AspectProcessor {
         this.magicParticle = magicParticle;
     }
 
-    public void processing() {
+    public void processing(IMagicCore magicCore) {
         // ToDO:
-        //AABB -> pos
-        //filter_base
-        //filter_attr
-        //for loop
-        //MP damage
         //Effects?
 
         AABB particleAABB = calculateAABB();
         Predicate<Entity> filteredEntity = getBaseFilteredEntity()
             .and(getAttributeFilteredEntity());
 
-
+        // (Entity) null - все сущности, нет исключений.
+        magicParticle.getLevel().getEntities((Entity) null, particleAABB, filteredEntity)
+            .forEach(entity -> {
+                // Отправка ивента коллизии с entity на сервер
+                ModMessagesMagicParticles.CHANNEL.sendToServer(
+                    new ServerboundParticleDamagePacket(
+                        entity.getId(),
+                        magicCore.getDamage(),
+                        magicParticle.getSpellData().ownerId()
+                    )
+                );
+                // Удаление партикла
+                magicParticle.remove();
+            });
     }
 
     private AABB calculateAABB() {

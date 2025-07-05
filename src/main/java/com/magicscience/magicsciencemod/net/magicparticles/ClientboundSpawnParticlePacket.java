@@ -93,33 +93,32 @@ public class ClientboundSpawnParticlePacket {
         for (int i = 0; i < particleCount; i++) {
             double velocityX, velocityY, velocityZ;
 
-            if (!isWithStructure && !isWithAttribute) {
-                // ToDo: Вычисления перенести в Math
-                double spread = 0.3; // размер разброса позиции
-                velocityX = 0;
-                velocityY = 0;
-                velocityZ = 0;
+            // ToDo: Вычисления перенести в Math
+            double spread = 0.3; // размер разброса позиции
+            velocityX = 0;
+            velocityY = 0;
+            velocityZ = 0;
 
-                // Смещение позиции будет учитываться при добавлении частицы ниже
-                double offsetX = (Math.random() - 0.5) * spread;
-                double offsetY = (Math.random() - 0.5) * spread;
-                double offsetZ = (Math.random() - 0.5) * spread;
+            // Смещение позиции будет учитываться при добавлении частицы ниже
+            double offsetX = (Math.random() - 0.5) * spread;
+            double offsetY = (Math.random() - 0.5) * spread;
+            double offsetZ = (Math.random() - 0.5) * spread;
 
-                level.addParticle(
-                    new MagicParticleOptions(
-                        spellData.ownerId(),
-                        spellData.coreId(),
-                        spellData.attributeIds(),
-                        spellData.structureId(),
-                        spellData.particleSpeed(),
-                        spellData.particleLifeTime()
-                    ),
-                    position.x + offsetX,
-                    position.y + offsetY,
-                    position.z + offsetZ,
-                    velocityX, velocityY, velocityZ
-                );
-            }
+            level.addParticle(
+                new MagicParticleOptions(
+                    spellData.ownerId(),
+                    spellData.coreId(),
+                    spellData.attributeIds(),
+                    spellData.structureId(),
+                    spellData.particleSpeed(),
+                    spellData.particleLifeTime()
+                ),
+                position.x + offsetX,
+                position.y + offsetY,
+                position.z + offsetZ,
+                velocityX, velocityY, velocityZ
+            );
+
         }
     }
 }

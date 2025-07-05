@@ -7,7 +7,7 @@ import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
 
 public class CoreHandler {
 
-    public IMagicCore handle(SpellData spellData) {
+    public static IMagicCore handle(SpellData spellData) {
         int coreId = spellData.coreId();
         CoreTypes coreType = CoreTypes.fromId(coreId);
 

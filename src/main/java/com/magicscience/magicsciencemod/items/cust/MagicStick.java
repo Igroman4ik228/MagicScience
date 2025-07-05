@@ -1,6 +1,8 @@
 package com.magicscience.magicsciencemod.items.cust;
 
 import com.magicscience.magicsciencemod.aspects.Spell;
+import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
+import com.magicscience.magicsciencemod.aspects.attributes.SelfSpectreAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.FireCore;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
@@ -15,6 +17,8 @@ import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.Collections;
 
 public class MagicStick extends Item implements ICast {
 
@@ -32,7 +36,7 @@ public class MagicStick extends Item implements ICast {
 
         if (!level.isClientSide) return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        var spell = new Spell(new FireCore(), player.getId());
+        var spell = new Spell(new FireCore(), Collections.singletonList(new SelfSpectreAttribute()), player.getId());
 
         setSpell(spell);
 
