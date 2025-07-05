@@ -3,8 +3,11 @@ package com.magicscience.magicsciencemod.aspects.cores;
 import com.magicscience.magicsciencemod.aspects.IMagicAspect;
 
 public interface IMagicCore extends IMagicAspect {
-    public int getDamage();
-    public int getParticleLifeTime();
-    public int getTypeCode();
-    public CoreTypes getType();
+    int getDamage();
+
+    int getParticleLifeTime();
+
+    int getTypeId();
+
+    CoreTypes getType();
 }

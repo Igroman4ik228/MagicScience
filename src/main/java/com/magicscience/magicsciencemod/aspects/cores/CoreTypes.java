@@ -3,22 +3,20 @@ package com.magicscience.magicsciencemod.aspects.cores;
 public enum CoreTypes {
     FIRE(1);
 
-    private final int code;
+    private final int id;
 
-    CoreTypes(int code) {
-        this.code = code;
+    CoreTypes(int id) {
+        this.id = id;
     }
 
-    public int getCode(){
-        return code;
-    }
-
-    public static CoreTypes fromCode(int code) {
+    public static CoreTypes fromId(int id) {
         for (CoreTypes type : CoreTypes.values()) {
-            if (type.getCode() == code) {
-                return type;
-            }
+            if (type.getId() == id) return type;
         }
-        throw new IllegalArgumentException("Unknown code: " + code);
+        throw new IllegalArgumentException("Unknown id: " + id);
+    }
+
+    public int getId() {
+        return id;
     }
 }

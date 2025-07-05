@@ -9,7 +9,7 @@ public class CoreHandler {
 
     public IMagicCore handle(SpellData spellData) {
         int coreId = spellData.coreId();
-        CoreTypes coreType = CoreTypes.fromCode(coreId);
+        CoreTypes coreType = CoreTypes.fromId(coreId);
 
         return switch (coreType) {
             case FIRE -> new FireCore();

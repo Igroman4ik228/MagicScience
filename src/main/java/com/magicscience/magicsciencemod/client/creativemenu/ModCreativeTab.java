@@ -12,19 +12,19 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModCreativeTab {
     public static final DeferredRegister<CreativeModeTab> CREATIVE_MODE_TABS =
-            DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MagicScienceMod.MOD_ID);
+        DeferredRegister.create(Registries.CREATIVE_MODE_TAB, MagicScienceMod.MOD_ID);
 
     public static final RegistryObject<CreativeModeTab> MAGIC_SCIENCE_TAB = CREATIVE_MODE_TABS.register(
-            "magic_science_tab",
-            () -> CreativeModeTab.builder()
-                    .title(Component.translatable("creativetab.magic_science_tab"))
-                    .icon(() -> new ItemStack(ModItems.MAGIC_STICK.get()))
-                    .displayItems(ModCreativeTab::registerDisplayItems)
-                    .build());
+        "magic_science_tab",
+        () -> CreativeModeTab.builder()
+            .title(Component.translatable("creativetab.magic_science_tab"))
+            .icon(() -> new ItemStack(ModItems.MAGIC_STICK.get()))
+            .displayItems(ModCreativeTab::registerDisplayItems)
+            .build());
 
     private static void registerDisplayItems(
-            CreativeModeTab.ItemDisplayParameters parameters,
-            CreativeModeTab.Output output) {
+        CreativeModeTab.ItemDisplayParameters parameters,
+        CreativeModeTab.Output output) {
         output.accept(ModItems.MAGIC_STICK.get());
     }
 

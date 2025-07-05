@@ -1,26 +1,11 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
-public class VectorAttribute implements IMagicAttribute {
-    private final int manaCost;
-    private final AttributeTypes attributeType;
-
+public class VectorAttribute extends BaseMagicAttribute {
     public VectorAttribute() {
-        manaCost = 20;
-        attributeType = AttributeTypes.VECTOR;
+        this(20);
     }
 
-    @Override
-    public int getManaCost() {
-        return manaCost;
-    }
-
-    @Override
-    public int getTypeCode() {
-        return attributeType.getCode();
-    }
-
-    @Override
-    public AttributeTypes getType() {
-        return attributeType;
+    public VectorAttribute(int manaCost) {
+        super(manaCost, AttributeTypes.VECTOR);
     }
 }

@@ -1,14 +1,10 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.SpellData;
-import com.magicscience.magicsciencemod.particles.MagicParticle;
 import com.magicscience.magicsciencemod.particles.MagicParticleOptions;
-import com.magicscience.magicsciencemod.particles.MagicParticleType;
-import com.magicscience.magicsciencemod.registry.ModParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
-import net.minecraft.core.particles.ParticleTypes;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
@@ -33,12 +29,12 @@ public class ClientboundSpawnParticlePacket {
 
     public ClientboundSpawnParticlePacket(FriendlyByteBuf buf) {
         this.spellData = new SpellData(
-                buf.readInt(),               // ownerId
-                buf.readVarInt(),            // coreId
-                buf.readVarIntArray(),       // attributeIds
-                buf.readVarInt(),            // structureId
-                buf.readInt(),                // particleSpeed
-                buf.readInt()                  // particleLifeTime
+            buf.readInt(),               // ownerId
+            buf.readVarInt(),            // coreId
+            buf.readVarIntArray(),       // attributeIds
+            buf.readVarInt(),            // structureId
+            buf.readInt(),                // particleSpeed
+            buf.readInt()                  // particleLifeTime
         );
         this.position = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         this.direction = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
@@ -110,18 +106,18 @@ public class ClientboundSpawnParticlePacket {
                 double offsetZ = (Math.random() - 0.5) * spread;
 
                 level.addParticle(
-                        new MagicParticleOptions(
-                                spellData.ownerId(),
-                                spellData.coreId(),
-                                spellData.attributeIds(),
-                                spellData.structureId(),
-                                spellData.particleSpeed(),
-                                spellData.particleLifeTime()
-                        ),
-                        position.x + offsetX,
-                        position.y + offsetY,
-                        position.z + offsetZ,
-                        velocityX, velocityY, velocityZ
+                    new MagicParticleOptions(
+                        spellData.ownerId(),
+                        spellData.coreId(),
+                        spellData.attributeIds(),
+                        spellData.structureId(),
+                        spellData.particleSpeed(),
+                        spellData.particleLifeTime()
+                    ),
+                    position.x + offsetX,
+                    position.y + offsetY,
+                    position.z + offsetZ,
+                    velocityX, velocityY, velocityZ
                 );
             }
         }

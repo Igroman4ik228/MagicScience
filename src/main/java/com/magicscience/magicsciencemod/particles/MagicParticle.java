@@ -7,23 +7,23 @@ import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
-import net.minecraft.sounds.SoundEvents;
-import net.minecraft.sounds.SoundSource;
 import net.minecraft.world.phys.Vec3;
-
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 public class MagicParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogUtils.getLogger();
+    private static final int FRAME_COUNT = 3;
 
     private final SpellData spellData;
 
     public MagicParticle(
-            ClientLevel level,
-            double x, double y, double z,
-            double xd, double yd, double zd,
-            SpriteSet sprites,
-            SpellData spellData) {
+        ClientLevel level,
+        double x, double y, double z,
+        double xd, double yd, double zd,
+        SpriteSet sprites,
+        SpellData spellData
+    ) {
         super(level, x, y, z);
 
         this.xd = xd;
@@ -33,25 +33,32 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
-        // ToDo: Переписать в отдельный метод это ГОВНИЩЕ
-        int coreIndex = spellData.coreId() - 1;
+        // В будущем может быть усложнение взятия индекса спрайта
+        int spriteIndex = Math.max(spellData.coreId() - 1, 0);
+        this.setSprite(
+            selectSprite(
+                spriteIndex,
+                this.lifetime,
+                sprites
+            )
+        );
+    }
 
-        // Всего картинок
-        int frameCount = 3;
-
-        // рассчитываем возраст, дающий нужный кадр:
-        int ageForSprite = coreIndex * this.lifetime / (frameCount - 1);
-        TextureAtlasSprite sprite = sprites.get(ageForSprite, this.lifetime);
-
-        this.setSprite(sprite);
+    private static TextureAtlasSprite selectSprite(int index, int lifetime, SpriteSet sprites) {
+        int ageForSprite = index * lifetime / (FRAME_COUNT - 1);
+        return sprites.get(ageForSprite, lifetime);
     }
 
     @Override
     public void tick() {
-
-
+        // Logic
 
         super.tick();
+    }
+
+    @Override
+    public @NotNull ParticleRenderType getRenderType() {
+        return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
     public ClientLevel getLevel() {
@@ -64,19 +71,5 @@ public class MagicParticle extends TextureSheetParticle {
 
     public Vec3 getDirectionPos() {
         return new Vec3(xd, yd, zd);
-    }
-
-    @Override
-    public ParticleRenderType getRenderType() {
-        return ParticleRenderType.PARTICLE_SHEET_LIT;
-    }
-
-    private void playExtinguishSound(Vec3 pos) {
-        this.level.playLocalSound(pos.x, pos.y, pos.z,
-                SoundEvents.FIRE_EXTINGUISH,
-                SoundSource.BLOCKS,
-                0.5F,  // громкость
-                1.0F,  // питч
-                false);
     }
 }

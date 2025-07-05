@@ -1,18 +1,13 @@
 package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
 import com.magicscience.magicsciencemod.aspects.attributes.*;
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
-import com.magicscience.magicsciencemod.aspects.cores.FireCore;
-import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
 import com.magicscience.magicsciencemod.particles.MagicParticle;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
-import org.apache.commons.lang3.ObjectUtils;
 
 import java.util.List;
-import java.util.Map;
 import java.util.function.Predicate;
 
 public class AspectProcessor {
@@ -24,16 +19,17 @@ public class AspectProcessor {
     }
 
     public void processing() {
+        // ToDO:
         //AABB -> pos
         //filter_base
         //filter_attr
         //for loop
-        //  MP damage
+        //MP damage
+        //Effects?
 
         AABB particleAABB = calculateAABB();
         Predicate<Entity> filteredEntity = getBaseFilteredEntity()
-                .and(getAttributeFilteredEntity());
-
+            .and(getAttributeFilteredEntity());
 
 
     }
@@ -43,9 +39,9 @@ public class AspectProcessor {
 
         var directionPos = magicParticle.getDirectionPos();
         Vec3 nextPosition = currentPosition.add(
-                directionPos.x,
-                directionPos.y,
-                directionPos.z
+            directionPos.x,
+            directionPos.y,
+            directionPos.z
         );
 
         // Область поиска коллизи партикла
@@ -70,7 +66,7 @@ public class AspectProcessor {
         Predicate<Entity> combined = entity -> true;
 
         for (int attrId : attributeIds) {
-            AttributeTypes attrType = AttributeTypes.fromCode(attrId);
+            AttributeTypes attrType = AttributeTypes.fromId(attrId);
 
             IMagicAttribute attr = switch (attrType) {
                 case VECTOR -> new VectorAttribute();
@@ -80,7 +76,6 @@ public class AspectProcessor {
 
             if (attr == null) continue;
 
-
             if (attr instanceof IFilterMagicAttribute filterAttr) {
                 Predicate<Entity> filter = filterAttr.getFilteredEntity(List.of(ownerId));
                 combined = combined.and(filter);
@@ -89,5 +84,4 @@ public class AspectProcessor {
 
         return combined;
     }
-
 }

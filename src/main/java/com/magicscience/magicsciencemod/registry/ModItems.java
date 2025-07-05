@@ -10,10 +10,10 @@ import net.minecraftforge.registries.RegistryObject;
 
 public class ModItems {
     public static final DeferredRegister<Item> ITEMS =
-            DeferredRegister.create(ForgeRegistries.ITEMS, MagicScienceMod.MOD_ID);
+        DeferredRegister.create(ForgeRegistries.ITEMS, MagicScienceMod.MOD_ID);
 
     public static final RegistryObject<Item> MAGIC_STICK = ITEMS.register("magic_stick",
-            () -> new MagicStick(new Item.Properties()));
+        () -> new MagicStick(new Item.Properties()));
 
     public static void register(IEventBus eventBus) {
         ITEMS.register(eventBus);

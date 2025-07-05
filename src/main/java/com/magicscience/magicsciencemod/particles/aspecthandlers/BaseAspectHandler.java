@@ -38,7 +38,7 @@ public abstract class BaseAspectHandler {
         Predicate<Entity> nonItemEntities = entity -> !(entity instanceof ItemEntity);
 
         int coreId = magicParticle.getSpellData().coreId();
-        CoreTypes core = CoreTypes.fromCode(coreId);
+        CoreTypes core = CoreTypes.fromId(coreId);
 
         IMagicCore magicCore = switch (core) {
             case FIRE -> new FireCore();
@@ -46,15 +46,15 @@ public abstract class BaseAspectHandler {
 
         // (Entity) null - все сущности, нет исключений.
         magicParticle.getLevel().getEntities((Entity) null, particleAABB, nonItemEntities)
-                .forEach(entity -> {
+            .forEach(entity -> {
 
-                    // Отправка ивента коллизии с entity на сервер
-                    ModMessagesMagicParticles.CHANNEL.sendToServer(
-                            new ServerboundParticleDamagePacket(entity.getId(), magicCore.getDamage(), magicParticle.getSpellData().ownerId())
-                    );
-                    // Удаление партикла
-                    magicParticle.remove();
-                });
+                // Отправка ивента коллизии с entity на сервер
+                ModMessagesMagicParticles.CHANNEL.sendToServer(
+                    new ServerboundParticleDamagePacket(entity.getId(), magicCore.getDamage(), magicParticle.getSpellData().ownerId())
+                );
+                // Удаление партикла
+                magicParticle.remove();
+            });
     }
 
     protected void collisionBlock() {

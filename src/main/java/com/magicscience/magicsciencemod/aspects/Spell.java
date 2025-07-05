@@ -13,22 +13,22 @@ public class Spell implements IMagicAspect {
     private final Collection<IMagicAttribute> magicAttributes;
     private final IMagicStructure magicStructure;
     private final int ownerId;
-    private int particleSpeed;
-    private int particleLifeTime;
+    private final int particleSpeed;
+    private final int particleLifeTime;
 
     public Spell(
-            IMagicCore magicCore,
-            Collection<IMagicAttribute> magicAttributes,
-            IMagicStructure magicStructure,
-            int ownerId) {
+        IMagicCore magicCore,
+        Collection<IMagicAttribute> magicAttributes,
+        IMagicStructure magicStructure,
+        int ownerId
+    ) {
         this.magicCore = magicCore;
         this.magicAttributes = magicAttributes;
         this.magicStructure = magicStructure;
         this.ownerId = ownerId;
-
-        // ToDo: Pattern builder
-        setParticleSpeed();
-        setParticleLifeTime();
+        // ToDo: Math and mb pattern builder
+        this.particleSpeed = calculateParticleSpeed();
+        this.particleLifeTime = calculateParticleLifeTime();
     }
 
     public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttributes, int ownerId) {
@@ -37,6 +37,29 @@ public class Spell implements IMagicAspect {
 
     public Spell(IMagicCore magicCore, int ownerId) {
         this(magicCore, null, null, ownerId);
+    }
+
+    public SpellData toData() {
+        int structureId = StructureTypes.NONE.getId();
+        if (magicStructure != null)
+            structureId = magicStructure.getId();
+
+        int[] attributeIds = new int[0];
+        if (magicAttributes != null) {
+            attributeIds = magicAttributes.stream()
+                .map(attr -> attr.getType().getId())
+                .mapToInt(Integer::intValue)
+                .toArray();
+        }
+
+        return new SpellData(
+            ownerId,
+            magicCore.getTypeId(),
+            attributeIds,
+            structureId,
+            particleSpeed,
+            particleLifeTime
+        );
     }
 
     @Override
@@ -55,28 +78,6 @@ public class Spell implements IMagicAspect {
         return totalCost;
     }
 
-    public SpellData toData() {
-        int structureId = StructureTypes.NONE.getCode();
-        if (magicStructure != null)
-            structureId = magicStructure.getCode();
-
-        int[] attributeIds = new int[0];
-        if (magicAttributes != null) {
-            attributeIds = magicAttributes.stream()
-                    .map(attr -> attr.getType().getCode())
-                    .mapToInt(Integer::intValue)
-                    .toArray();
-        }
-
-        return new SpellData(
-                ownerId,
-                magicCore.getTypeCode(),
-                attributeIds,
-                structureId,
-                particleSpeed,
-                particleLifeTime);
-    }
-
     public IMagicCore getMagicCore() {
         return magicCore;
     }
@@ -89,29 +90,28 @@ public class Spell implements IMagicAspect {
         return magicStructure;
     }
 
-    public void setParticleSpeed() {
-        if (magicAttributes == null){
-            particleSpeed = 0;
-            return;
-        }
+    private int calculateParticleSpeed() {
+        if (magicAttributes == null) return 0;
 
         // ToDo: Calc with Math
         for (IMagicAttribute attribute : magicAttributes) {
-            if (attribute.getType() == AttributeTypes.VECTOR){
-                particleSpeed = 10;
+            if (attribute.getType() == AttributeTypes.VECTOR) {
+                return 10;
             }
         }
+
+        return 0;
     }
 
-    private void setParticleLifeTime() {
-        particleLifeTime = magicCore.getParticleLifeTime();
-    }
-
-    public int getParticleLifeTime() {
-        return particleLifeTime;
+    private int calculateParticleLifeTime() {
+        return magicCore.getParticleLifeTime();
     }
 
     public int getParticleSpeed() {
         return particleSpeed;
+    }
+
+    public int getParticleLifeTime() {
+        return particleLifeTime;
     }
 }

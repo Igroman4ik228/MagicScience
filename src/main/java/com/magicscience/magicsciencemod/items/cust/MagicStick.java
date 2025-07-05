@@ -53,12 +53,12 @@ public class MagicStick extends Item implements ICast {
     }
 
     @Override
-    public void setSpell(Spell newSpell) {
-        spell = newSpell;
+    public Spell getSpell() {
+        return spell;
     }
 
     @Override
-    public Spell getSpell() {
-        return spell;
+    public void setSpell(Spell newSpell) {
+        spell = newSpell;
     }
 }

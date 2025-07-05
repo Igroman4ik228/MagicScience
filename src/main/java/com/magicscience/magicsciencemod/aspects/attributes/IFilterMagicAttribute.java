@@ -10,5 +10,6 @@ public interface IFilterMagicAttribute {
     default Predicate<Entity> getFilteredEntity() {
         return getFilteredEntity(Collections.emptyList());
     }
-    public Predicate<Entity> getFilteredEntity(Collection<Integer> targetIds);
+
+    Predicate<Entity> getFilteredEntity(Collection<Integer> targetIds);
 }

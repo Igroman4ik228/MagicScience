@@ -13,33 +13,33 @@ public class ModMessagesMagicParticles {
 
     public static void register() {
         CHANNEL = NetworkRegistry.newSimpleChannel(
-                new ResourceLocation("magicscience", "magicparticles"),
-                () -> "1.0",
-                s -> true,
-                s -> true
+            new ResourceLocation("magicscience", "magicparticles"),
+            () -> "1.0",
+            s -> true,
+            s -> true
         );
 
         CHANNEL.registerMessage(packetId++,
-                ServerboundCastParticlePacket.class,
-                ServerboundCastParticlePacket::encode,
-                ServerboundCastParticlePacket::new,
-                ServerboundCastParticlePacket::handle
+            ServerboundCastParticlePacket.class,
+            ServerboundCastParticlePacket::encode,
+            ServerboundCastParticlePacket::new,
+            ServerboundCastParticlePacket::handle
         );
 
         CHANNEL.registerMessage(
-                packetId++,
-                ClientboundSpawnParticlePacket.class,
-                ClientboundSpawnParticlePacket::encode,
-                ClientboundSpawnParticlePacket::new,
-                ClientboundSpawnParticlePacket::handle
+            packetId++,
+            ClientboundSpawnParticlePacket.class,
+            ClientboundSpawnParticlePacket::encode,
+            ClientboundSpawnParticlePacket::new,
+            ClientboundSpawnParticlePacket::handle
         );
 
         CHANNEL.registerMessage(
-                packetId++,
-                ServerboundParticleDamagePacket.class,
-                ServerboundParticleDamagePacket::encode,
-                ServerboundParticleDamagePacket::new,
-                ServerboundParticleDamagePacket::handle
+            packetId++,
+            ServerboundParticleDamagePacket.class,
+            ServerboundParticleDamagePacket::encode,
+            ServerboundParticleDamagePacket::new,
+            ServerboundParticleDamagePacket::handle
         );
     }
 }

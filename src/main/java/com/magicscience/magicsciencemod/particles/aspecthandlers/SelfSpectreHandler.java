@@ -31,22 +31,22 @@ public class SelfSpectreHandler extends BaseAspectHandler {
         int ownerId = magicParticle.getSpellData().ownerId();
 
         Predicate<Entity> nonItemEntities = entity ->
-                !(entity instanceof ItemEntity) &&
-                        entity.getId() != ownerId;
+            !(entity instanceof ItemEntity) &&
+                entity.getId() != ownerId;
 
         int coreId = magicParticle.getSpellData().coreId();
-        CoreTypes core = CoreTypes.fromCode(coreId);
+        CoreTypes core = CoreTypes.fromId(coreId);
 
         IMagicCore magicCore = switch (core) {
             case FIRE -> new FireCore();
         };
 
         magicParticle.getLevel().getEntities((Entity) null, particleAABB, nonItemEntities)
-                .forEach(entity -> {
-                    ModMessagesMagicParticles.CHANNEL.sendToServer(
-                            new ServerboundParticleDamagePacket(entity.getId(), magicCore.getDamage(), ownerId)
-                    );
-                    magicParticle.remove();
-                });
+            .forEach(entity -> {
+                ModMessagesMagicParticles.CHANNEL.sendToServer(
+                    new ServerboundParticleDamagePacket(entity.getId(), magicCore.getDamage(), ownerId)
+                );
+                magicParticle.remove();
+            });
     }
 }

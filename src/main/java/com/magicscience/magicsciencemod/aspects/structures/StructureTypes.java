@@ -4,13 +4,20 @@ public enum StructureTypes {
     NONE(0),
     CLOT(1);
 
-    private final int code;
+    private final int id;
 
-    StructureTypes(int code) {
-        this.code = code;
+    StructureTypes(int id) {
+        this.id = id;
     }
 
-    public int getCode(){
-        return code;
+    public static StructureTypes fromId(int id) {
+        for (StructureTypes type : StructureTypes.values()) {
+            if (type.getId() == id) return type;
+        }
+        throw new IllegalArgumentException("Unknown id: " + id);
+    }
+
+    public int getId() {
+        return id;
     }
 }
