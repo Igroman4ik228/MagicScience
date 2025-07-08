@@ -86,10 +86,7 @@ public class ClientboundSpawnParticlePacket {
         if (level == null) return;
 
         int particleCount = 10;
-
-        boolean isWithStructure = spellData.structureId() != 0;
-        boolean isWithAttribute = spellData.attributeIds().length != 0;
-
+        
         for (int i = 0; i < particleCount; i++) {
             double velocityX, velocityY, velocityZ;
 

@@ -1,9 +1,9 @@
 package com.magicscience.magicsciencemod.items.cust;
 
 import com.magicscience.magicsciencemod.aspects.Spell;
-import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
-import com.magicscience.magicsciencemod.aspects.attributes.SelfSpectreAttribute;
-import com.magicscience.magicsciencemod.aspects.cores.FireCore;
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.registry.AspectsRegistry;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
@@ -36,7 +36,12 @@ public class MagicStick extends Item implements ICast {
 
         if (!level.isClientSide) return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        var spell = new Spell(new FireCore(), Collections.singletonList(new SelfSpectreAttribute()), player.getId());
+        var spell = new Spell(
+            AspectsRegistry.getCore(CoreTypes.FIRE.getId()),
+            Collections.singletonList(
+                AspectsRegistry.getAttribute(AttributeTypes.SELF_SPECTRE.getId())
+            ),
+            player.getId());
 
         setSpell(spell);
 

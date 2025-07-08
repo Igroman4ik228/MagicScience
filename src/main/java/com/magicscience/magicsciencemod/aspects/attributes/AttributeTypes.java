@@ -1,6 +1,9 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 public enum AttributeTypes {
+    // ToDO:?
+    // VECTOR(1, VectorAttribute::new),
+    // SELF_SPECTRE(2, SelfSpectreAttribute::new);
     NONE(0),
     VECTOR(1),
     SELF_SPECTRE(2);

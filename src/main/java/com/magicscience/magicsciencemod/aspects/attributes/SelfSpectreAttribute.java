@@ -11,7 +11,7 @@ public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterM
     }
 
     public SelfSpectreAttribute(int manaCost) {
-        super(manaCost, AttributeTypes.SELF_SPECTRE);
+        super(manaCost);
     }
 
     @Override

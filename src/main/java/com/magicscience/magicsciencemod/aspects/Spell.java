@@ -3,6 +3,7 @@ package com.magicscience.magicsciencemod.aspects;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
+import com.magicscience.magicsciencemod.aspects.registry.AspectsRegistry;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 
@@ -42,19 +43,19 @@ public class Spell implements IMagicAspect {
     public SpellData toData() {
         int structureId = StructureTypes.NONE.getId();
         if (magicStructure != null)
-            structureId = magicStructure.getId();
+            structureId = AspectsRegistry.getStructureTypeId(magicStructure);
 
         int[] attributeIds = new int[0];
         if (magicAttributes != null) {
             attributeIds = magicAttributes.stream()
-                .map(attr -> attr.getType().getId())
+                .map(AspectsRegistry::getAttributeTypeId)
                 .mapToInt(Integer::intValue)
                 .toArray();
         }
 
         return new SpellData(
             ownerId,
-            magicCore.getTypeId(),
+            AspectsRegistry.getCoreTypeId(magicCore),
             attributeIds,
             structureId,
             particleSpeed,
@@ -95,7 +96,8 @@ public class Spell implements IMagicAspect {
 
         // ToDo: Calc with Math
         for (IMagicAttribute attribute : magicAttributes) {
-            if (attribute.getType() == AttributeTypes.VECTOR) {
+
+            if (AspectsRegistry.getAttributeTypeId(attribute) == AttributeTypes.VECTOR.getId()) {
                 return 10;
             }
         }

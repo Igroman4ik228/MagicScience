@@ -54,8 +54,7 @@ public class ServerboundParticleDamagePacket {
 
             // Если владелец не игрок (или не найден), не наносим урон
             if (!(owner instanceof ServerPlayer ownerPlayer)) return;
-
-
+            
             LOGGER.info("ownerId: " + ownerId);
 
             // Дамаг

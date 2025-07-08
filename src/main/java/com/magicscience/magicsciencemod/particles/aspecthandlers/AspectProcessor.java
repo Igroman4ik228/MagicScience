@@ -1,7 +1,8 @@
 package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
-import com.magicscience.magicsciencemod.aspects.attributes.*;
+import com.magicscience.magicsciencemod.aspects.attributes.IFilterMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
+import com.magicscience.magicsciencemod.aspects.registry.AspectsRegistry;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.particles.MagicParticle;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
@@ -77,14 +78,7 @@ public class AspectProcessor {
         Predicate<Entity> combined = entity -> true;
 
         for (int attrId : attributeIds) {
-            AttributeTypes attrType = AttributeTypes.fromId(attrId);
-
-            IMagicAttribute attr = switch (attrType) {
-                case VECTOR -> new VectorAttribute();
-                case SELF_SPECTRE -> new SelfSpectreAttribute();
-                case NONE -> null;
-            };
-
+            var attr = AspectsRegistry.getAttribute(attrId);
             if (attr == null) continue;
 
             if (attr instanceof IFilterMagicAttribute filterAttr) {

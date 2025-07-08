@@ -2,8 +2,8 @@ package com.magicscience.magicsciencemod.particles;
 
 import com.magicscience.magicsciencemod.aspects.SpellData;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
+import com.magicscience.magicsciencemod.aspects.registry.AspectsRegistry;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.AspectProcessor;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.CoreHandler;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -39,7 +39,7 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
-        this.magicCore = CoreHandler.handle(spellData);
+        this.magicCore = AspectsRegistry.getCore(spellData.coreId());
 
         // В будущем может быть усложнение взятия индекса спрайта
         int spriteIndex = Math.max(spellData.coreId() - 1, 0);

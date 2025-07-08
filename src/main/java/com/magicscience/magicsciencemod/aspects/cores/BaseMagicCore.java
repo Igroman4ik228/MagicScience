@@ -4,18 +4,15 @@ public class BaseMagicCore implements IMagicCore {
     private final int manaCost;
     private final int damage;
     private final int particleLifeTime;
-    private final CoreTypes coreType;
 
     public BaseMagicCore(
         int manaCost,
         int damage,
-        int particleLifeTime,
-        CoreTypes coreType
+        int particleLifeTime
     ) {
         this.manaCost = manaCost;
         this.damage = damage;
         this.particleLifeTime = particleLifeTime;
-        this.coreType = coreType;
     }
 
     @Override
@@ -31,15 +28,5 @@ public class BaseMagicCore implements IMagicCore {
     @Override
     public int getParticleLifeTime() {
         return particleLifeTime;
-    }
-
-    @Override
-    public int getTypeId() {
-        return coreType.getId();
-    }
-
-    @Override
-    public CoreTypes getType() {
-        return coreType;
     }
 }
