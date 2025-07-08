@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.particles;
 
-import com.magicscience.magicsciencemod.aspects.SpellData;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -19,7 +19,7 @@ public class MagicParticleProvider implements ParticleProvider<MagicParticleOpti
 
     @Override
     public Particle createParticle(
-        MagicParticleOptions data,
+        @NotNull MagicParticleOptions data,
         @NotNull ClientLevel level,
         double x, double y, double z,
         double xd, double yd, double zd

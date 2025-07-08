@@ -1,24 +1,45 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
+import javax.annotation.Nullable;
+import java.util.Objects;
+
 public enum AttributeTypes {
-    // ToDO:?
-    // VECTOR(1, VectorAttribute::new),
-    // SELF_SPECTRE(2, SelfSpectreAttribute::new);
     NONE(0),
-    VECTOR(1),
-    SELF_SPECTRE(2);
+    VECTOR(1, new VectorAttribute()),
+    SELF_SPECTRE(2, new SelfSpectreAttribute());
 
     private final int id;
+    private final @Nullable IMagicAttribute instance;
 
     AttributeTypes(int id) {
-        this.id = id;
+        this(id, null);
     }
 
-    public static AttributeTypes fromId(int id) {
-        for (AttributeTypes type : AttributeTypes.values()) {
-            if (type.getId() == id) return type;
+    AttributeTypes(int id, @Nullable IMagicAttribute instance) {
+        this.id = id;
+        this.instance = instance;
+    }
+
+    @Nullable
+    public static IMagicAttribute getInstance(int id) {
+        for (AttributeTypes type : values()) {
+            if (type.id == id)
+                return type.instance;
         }
-        throw new IllegalArgumentException("Unknown id: " + id);
+        throw new IllegalArgumentException("Не удалось найти экземпляр по ID: " + id);
+    }
+
+    public static int getId(@Nullable IMagicAttribute instance) {
+        for (AttributeTypes type : values()) {
+            if (Objects.equals(type.instance, instance))
+                return type.id;
+        }
+        throw new IllegalArgumentException("Не удалось найти ID для экземпляра: " + (instance != null ? instance.getClass().getName() : null));
+    }
+
+    @Nullable
+    public IMagicAttribute getInstance() {
+        return instance;
     }
 
     public int getId() {

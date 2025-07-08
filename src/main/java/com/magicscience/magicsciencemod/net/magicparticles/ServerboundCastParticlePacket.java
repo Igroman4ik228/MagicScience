@@ -1,13 +1,15 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
-import com.magicscience.magicsciencemod.aspects.Spell;
-import com.magicscience.magicsciencemod.aspects.SpellData;
+import com.magicscience.magicsciencemod.aspects.spell.Spell;
+import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.PacketDistributor;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -15,10 +17,10 @@ import java.util.function.Supplier;
 public class ServerboundCastParticlePacket {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final SpellData spellData;
+    private final @NotNull SpellData spellData;
 
     public ServerboundCastParticlePacket(Spell spell) {
-        this.spellData = spell.toData();
+        this.spellData = SpellConverter.toData(spell);
     }
 
     public ServerboundCastParticlePacket(FriendlyByteBuf buf) {

@@ -6,6 +6,7 @@ import com.mojang.brigadier.exceptions.CommandSyntaxException;
 import net.minecraft.core.particles.ParticleOptions;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.NotNull;
 
 public record MagicParticleOptions(
     int ownerId,
@@ -19,8 +20,11 @@ public record MagicParticleOptions(
         new ParticleOptions.Deserializer<>() {
 
             @Override
-            public MagicParticleOptions fromCommand(ParticleType<MagicParticleOptions> type,
-                                                    StringReader reader) throws CommandSyntaxException {
+            @NotNull
+            public MagicParticleOptions fromCommand(
+                @NotNull ParticleType<MagicParticleOptions> type,
+                StringReader reader
+            ) throws CommandSyntaxException {
                 reader.expect(' ');
                 int ownerId = reader.readInt();
                 reader.expect(' ');
@@ -42,8 +46,11 @@ public record MagicParticleOptions(
             }
 
             @Override
-            public MagicParticleOptions fromNetwork(ParticleType<MagicParticleOptions> type,
-                                                    FriendlyByteBuf buf) {
+            @NotNull
+            public MagicParticleOptions fromNetwork(
+                @NotNull ParticleType<MagicParticleOptions> type,
+                FriendlyByteBuf buf
+            ) {
                 int ownerId = buf.readInt();
                 int coreId = buf.readInt();
                 int structureId = buf.readInt();
@@ -61,6 +68,7 @@ public record MagicParticleOptions(
 
 
     @Override
+    @NotNull
     public ParticleType<?> getType() {
         return ModParticles.MAGIC_PARTICLE.get();
     }
@@ -80,6 +88,7 @@ public record MagicParticleOptions(
     }
 
     @Override
+    @NotNull
     public String writeToString() {
         StringBuilder sb = new StringBuilder();
         sb.append(ownerId).append(" ")

@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
-import com.magicscience.magicsciencemod.aspects.SpellData;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.particles.MagicParticleOptions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -86,7 +86,7 @@ public class ClientboundSpawnParticlePacket {
         if (level == null) return;
 
         int particleCount = 10;
-        
+
         for (int i = 0; i < particleCount; i++) {
             double velocityX, velocityY, velocityZ;
 

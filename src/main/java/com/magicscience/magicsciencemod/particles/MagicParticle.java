@@ -1,8 +1,6 @@
 package com.magicscience.magicsciencemod.particles;
 
-import com.magicscience.magicsciencemod.aspects.SpellData;
-import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
-import com.magicscience.magicsciencemod.aspects.registry.AspectsRegistry;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.AspectProcessor;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -18,10 +16,9 @@ public class MagicParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FRAME_COUNT = 3;
 
-    private final SpellData spellData;
-    private final IMagicCore magicCore;
+    private final @NotNull SpellData spellData;
 
-    private final AspectProcessor aspectProcessor;
+    private final @NotNull AspectProcessor aspectProcessor;
 
     public MagicParticle(
         ClientLevel level,
@@ -31,7 +28,6 @@ public class MagicParticle extends TextureSheetParticle {
         SpellData spellData
     ) {
         super(level, x, y, z);
-
         this.xd = xd;
         this.yd = yd;
         this.zd = zd;
@@ -39,33 +35,35 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
-        this.magicCore = AspectsRegistry.getCore(spellData.coreId());
-
         // В будущем может быть усложнение взятия индекса спрайта
         int spriteIndex = Math.max(spellData.coreId() - 1, 0);
         this.setSprite(
             selectSprite(
                 spriteIndex,
-                this.lifetime,
+                lifetime,
                 sprites
             )
         );
 
         LOGGER.info("MagicParticle");
-        LOGGER.info("spellData: " + spellData);
+        LOGGER.info("spellData: {}", spellData);
 
         this.aspectProcessor = new AspectProcessor(this);
     }
 
-    private static TextureAtlasSprite selectSprite(int index, int lifetime, SpriteSet sprites) {
+    @NotNull
+    private static TextureAtlasSprite selectSprite(
+        int index,
+        int lifetime,
+        @NotNull SpriteSet sprites
+    ) {
         int ageForSprite = index * lifetime / (FRAME_COUNT - 1);
         return sprites.get(ageForSprite, lifetime);
     }
 
     @Override
     public void tick() {
-        // Logic
-        this.aspectProcessor.processing(magicCore);
+        this.aspectProcessor.process();
 
         super.tick();
     }
@@ -75,15 +73,15 @@ public class MagicParticle extends TextureSheetParticle {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-    public ClientLevel getLevel() {
+    public @NotNull ClientLevel getLevel() {
         return level;
     }
 
-    public SpellData getSpellData() {
+    public @NotNull SpellData getSpellData() {
         return spellData;
     }
 
-    public Vec3 getDirectionPos() {
+    public @NotNull Vec3 getDirectionPos() {
         return new Vec3(xd, yd, zd);
     }
 }
