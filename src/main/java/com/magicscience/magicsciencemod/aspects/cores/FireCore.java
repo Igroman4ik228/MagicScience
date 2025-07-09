@@ -6,6 +6,6 @@ public class FireCore extends BaseMagicCore {
     }
 
     public FireCore(int manaCost, int damage, int particleLifeTime) {
-        super(manaCost, damage, particleLifeTime, CoreTypes.FIRE);
+        super(manaCost, damage, particleLifeTime);
     }
 }

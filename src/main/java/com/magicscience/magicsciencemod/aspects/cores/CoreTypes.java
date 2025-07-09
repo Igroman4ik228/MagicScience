@@ -1,22 +1,33 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
-public enum CoreTypes {
-    FIRE(1);
+import com.magicscience.magicsciencemod.aspects.IMagicType;
+import org.jetbrains.annotations.NotNull;
 
-    private final int id;
+public enum CoreTypes implements IMagicType<IMagicCore> {
+    FIRE(new FireCore());
 
-    CoreTypes(int id) {
-        this.id = id;
+    private final @NotNull IMagicCore instance;
+
+    CoreTypes(@NotNull IMagicCore instance) {
+        this.instance = instance;
     }
 
-    public static CoreTypes fromId(int id) {
-        for (CoreTypes type : CoreTypes.values()) {
-            if (type.getId() == id) return type;
-        }
-        throw new IllegalArgumentException("Unknown id: " + id);
+    @NotNull
+    public static IMagicCore getInstance(int id) {
+        return IMagicType.findInstance(id, CoreTypes.class);
+    }
+
+    public static int getId(@NotNull IMagicCore instance) {
+        return IMagicType.findId(instance, CoreTypes.class);
+    }
+
+    @NotNull
+    public IMagicCore getInstance() {
+        return instance;
     }
 
     public int getId() {
-        return id;
+        // Not index, because not null
+        return ordinal() + 1;
     }
 }

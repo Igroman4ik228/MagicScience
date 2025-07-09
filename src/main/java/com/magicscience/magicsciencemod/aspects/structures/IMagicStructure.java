@@ -6,8 +6,4 @@ public interface IMagicStructure extends IMagicAspect {
     int getCountParticles();
 
     int getSpawnParticlesRadius();
-
-    int getId();
-
-    StructureTypes getType();
 }

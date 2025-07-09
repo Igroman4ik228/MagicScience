@@ -1,23 +1,38 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
-public enum StructureTypes {
-    NONE(0),
-    CLOT(1);
+import com.magicscience.magicsciencemod.aspects.IMagicType;
 
-    private final int id;
+import javax.annotation.Nullable;
 
-    StructureTypes(int id) {
-        this.id = id;
+public enum StructureTypes implements IMagicType<IMagicStructure> {
+    NONE(),
+    CLOT(new ClotStructure());
+
+    private final @Nullable IMagicStructure instance;
+
+    StructureTypes() {
+        this(null);
     }
 
-    public static StructureTypes fromId(int id) {
-        for (StructureTypes type : StructureTypes.values()) {
-            if (type.getId() == id) return type;
-        }
-        throw new IllegalArgumentException("Unknown id: " + id);
+    StructureTypes(@Nullable IMagicStructure instance) {
+        this.instance = instance;
+    }
+
+    @Nullable
+    public static IMagicStructure getInstance(int id) {
+        return IMagicType.findInstance(id, StructureTypes.class);
+    }
+
+    public static int getId(@Nullable IMagicStructure instance) {
+        return IMagicType.findId(instance, StructureTypes.class);
+    }
+
+    @Nullable
+    public IMagicStructure getInstance() {
+        return instance;
     }
 
     public int getId() {
-        return id;
+        return ordinal();
     }
 }

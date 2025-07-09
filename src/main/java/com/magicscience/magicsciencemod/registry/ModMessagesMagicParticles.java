@@ -26,16 +26,14 @@ public class ModMessagesMagicParticles {
             ServerboundCastParticlePacket::handle
         );
 
-        CHANNEL.registerMessage(
-            packetId++,
+        CHANNEL.registerMessage(packetId++,
             ClientboundSpawnParticlePacket.class,
             ClientboundSpawnParticlePacket::encode,
             ClientboundSpawnParticlePacket::new,
             ClientboundSpawnParticlePacket::handle
         );
 
-        CHANNEL.registerMessage(
-            packetId++,
+        CHANNEL.registerMessage(packetId++,
             ServerboundParticleDamagePacket.class,
             ServerboundParticleDamagePacket::encode,
             ServerboundParticleDamagePacket::new,

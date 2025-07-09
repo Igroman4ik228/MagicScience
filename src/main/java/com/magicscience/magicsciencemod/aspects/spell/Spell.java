@@ -1,72 +1,80 @@
-package com.magicscience.magicsciencemod.aspects;
+package com.magicscience.magicsciencemod.aspects.spell;
 
+import com.magicscience.magicsciencemod.aspects.IMagicAspect;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
-import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class Spell implements IMagicAspect {
-    private final IMagicCore magicCore;
-    private final Collection<IMagicAttribute> magicAttributes;
-    private final IMagicStructure magicStructure;
+    final @NotNull IMagicCore magicCore;
+    private final @NotNull Collection<IMagicAttribute> magicAttributes;
+    private final @Nullable IMagicStructure magicStructure;
     private final int ownerId;
     private final int particleSpeed;
     private final int particleLifeTime;
 
+
     public Spell(
-        IMagicCore magicCore,
-        Collection<IMagicAttribute> magicAttributes,
-        IMagicStructure magicStructure,
+        @NotNull IMagicCore magicCore,
+        @NotNull Collection<IMagicAttribute> magicAttributes,
+        @Nullable IMagicStructure magicStructure,
         int ownerId
     ) {
         this.magicCore = magicCore;
         this.magicAttributes = magicAttributes;
         this.magicStructure = magicStructure;
         this.ownerId = ownerId;
+
         // ToDo: Math and mb pattern builder
         this.particleSpeed = calculateParticleSpeed();
         this.particleLifeTime = calculateParticleLifeTime();
     }
 
-    public Spell(IMagicCore magicCore, Collection<IMagicAttribute> magicAttributes, int ownerId) {
+    public Spell(
+        @NotNull IMagicCore magicCore,
+        @NotNull Collection<IMagicAttribute> magicAttributes,
+        int ownerId
+    ) {
         this(magicCore, magicAttributes, null, ownerId);
     }
 
-    public Spell(IMagicCore magicCore, int ownerId) {
-        this(magicCore, null, null, ownerId);
+    public Spell(
+        @NotNull IMagicCore magicCore,
+        int ownerId
+    ) {
+        this(magicCore, new ArrayList<>(), null, ownerId);
     }
 
-    public SpellData toData() {
-        int structureId = StructureTypes.NONE.getId();
-        if (magicStructure != null)
-            structureId = magicStructure.getId();
+    private int calculateParticleLifeTime() {
+        return magicCore.getParticleLifeTime();
+    }
 
-        int[] attributeIds = new int[0];
-        if (magicAttributes != null) {
-            attributeIds = magicAttributes.stream()
-                .map(attr -> attr.getType().getId())
-                .mapToInt(Integer::intValue)
-                .toArray();
+    private int calculateParticleSpeed() {
+        if (magicAttributes.isEmpty())
+            return 0;
+
+        // ToDo: Calc with Math
+        for (IMagicAttribute attribute : magicAttributes) {
+
+            if (AttributeTypes.getId(attribute) == AttributeTypes.VECTOR.getId()) {
+                return 10;
+            }
         }
 
-        return new SpellData(
-            ownerId,
-            magicCore.getTypeId(),
-            attributeIds,
-            structureId,
-            particleSpeed,
-            particleLifeTime
-        );
+        return 0;
     }
 
     @Override
     public int getManaCost() {
         int totalCost = magicCore.getManaCost();
 
-        if (magicAttributes != null) {
+        if (!magicAttributes.isEmpty()) {
             for (IMagicAttribute attribute : magicAttributes) {
                 totalCost += attribute.getManaCost();
             }
@@ -78,33 +86,23 @@ public class Spell implements IMagicAspect {
         return totalCost;
     }
 
+    @NotNull
     public IMagicCore getMagicCore() {
         return magicCore;
     }
 
+    @NotNull
     public Collection<IMagicAttribute> getMagicAttributes() {
         return magicAttributes;
     }
 
+    @Nullable
     public IMagicStructure getStructure() {
         return magicStructure;
     }
 
-    private int calculateParticleSpeed() {
-        if (magicAttributes == null) return 0;
-
-        // ToDo: Calc with Math
-        for (IMagicAttribute attribute : magicAttributes) {
-            if (attribute.getType() == AttributeTypes.VECTOR) {
-                return 10;
-            }
-        }
-
-        return 0;
-    }
-
-    private int calculateParticleLifeTime() {
-        return magicCore.getParticleLifeTime();
+    public int getOwnerId() {
+        return ownerId;
     }
 
     public int getParticleSpeed() {

@@ -6,6 +6,6 @@ public class VectorAttribute extends BaseMagicAttribute {
     }
 
     public VectorAttribute(int manaCost) {
-        super(manaCost, AttributeTypes.VECTOR);
+        super(manaCost);
     }
 }

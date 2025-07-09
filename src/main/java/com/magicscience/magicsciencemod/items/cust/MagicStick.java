@@ -1,9 +1,8 @@
 package com.magicscience.magicsciencemod.items.cust;
 
-import com.magicscience.magicsciencemod.aspects.Spell;
-import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
-import com.magicscience.magicsciencemod.aspects.attributes.SelfSpectreAttribute;
-import com.magicscience.magicsciencemod.aspects.cores.FireCore;
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
@@ -15,13 +14,14 @@ import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.Collections;
 
 public class MagicStick extends Item implements ICast {
-
     private static final Logger LOGGER = LogUtils.getLogger();
     private Spell spell;
 
@@ -30,13 +30,26 @@ public class MagicStick extends Item implements ICast {
     }
 
     @Override
-    public @NotNull InteractionResultHolder<ItemStack> use(@NotNull Level level, @NotNull Player player, @NotNull InteractionHand hand) {
-        // Проверка ведущей руки
-        if (hand != InteractionHand.MAIN_HAND) return InteractionResultHolder.pass(player.getItemInHand(hand));
+    @NotNull
+    @OnlyIn(Dist.CLIENT)
+    public InteractionResultHolder<ItemStack> use(
+        @NotNull Level level,
+        @NotNull Player player,
+        @NotNull InteractionHand hand
+    ) {
+        // Check main hand
+        if (hand != InteractionHand.MAIN_HAND)
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        if (!level.isClientSide) return InteractionResultHolder.pass(player.getItemInHand(hand));
-
-        var spell = new Spell(new FireCore(), Collections.singletonList(new SelfSpectreAttribute()), player.getId());
+        // ToDo: сделать отдельный класс
+        // Dynamic create spell
+        var spell = new Spell(
+            CoreTypes.getInstance(CoreTypes.FIRE.getId()),
+            Collections.singletonList(
+                AttributeTypes.getInstance(AttributeTypes.SELF_SPECTRE.getId())
+            ),
+            player.getId()
+        );
 
         setSpell(spell);
 
@@ -46,9 +59,9 @@ public class MagicStick extends Item implements ICast {
         LOGGER.info("stick use!" + "position = " + position + "direction" + direction);
 
 
-        // Отправка пакета на сервер
-        ModMessagesMagicParticles.CHANNEL.sendToServer(new ServerboundCastParticlePacket(spell));
-
+        ModMessagesMagicParticles.CHANNEL.sendToServer(
+            new ServerboundCastParticlePacket(spell)
+        );
 
         // ToDo: Вынести в client/sound
         player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);

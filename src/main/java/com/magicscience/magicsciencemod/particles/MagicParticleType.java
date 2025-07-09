@@ -3,6 +3,7 @@ package com.magicscience.magicsciencemod.particles;
 import com.mojang.serialization.Codec;
 import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.particles.ParticleType;
+import org.jetbrains.annotations.NotNull;
 
 public class MagicParticleType extends ParticleType<MagicParticleOptions> {
     public MagicParticleType(boolean overrideLimiter) {
@@ -10,6 +11,7 @@ public class MagicParticleType extends ParticleType<MagicParticleOptions> {
     }
 
     @Override
+    @NotNull
     public Codec<MagicParticleOptions> codec() {
         return RecordCodecBuilder.create(instance ->
             instance.group(

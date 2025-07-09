@@ -6,8 +6,4 @@ public interface IMagicCore extends IMagicAspect {
     int getDamage();
 
     int getParticleLifeTime();
-
-    int getTypeId();
-
-    CoreTypes getType();
 }

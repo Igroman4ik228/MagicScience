@@ -1,24 +1,41 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
-public enum AttributeTypes {
-    NONE(0),
-    VECTOR(1),
-    SELF_SPECTRE(2);
+import com.magicscience.magicsciencemod.aspects.IMagicType;
 
-    private final int id;
+import javax.annotation.Nullable;
 
-    AttributeTypes(int id) {
-        this.id = id;
+public enum AttributeTypes implements IMagicType<IMagicAttribute> {
+    NONE(),
+    VECTOR(new VectorAttribute()),
+    SELF_SPECTRE(new SelfSpectreAttribute());
+
+    private final @Nullable IMagicAttribute instance;
+
+    AttributeTypes() {
+        this(null);
     }
 
-    public static AttributeTypes fromId(int id) {
-        for (AttributeTypes type : AttributeTypes.values()) {
-            if (type.getId() == id) return type;
-        }
-        throw new IllegalArgumentException("Unknown id: " + id);
+    AttributeTypes(@Nullable IMagicAttribute instance) {
+        this.instance = instance;
     }
 
+    @Nullable
+    public static IMagicAttribute getInstance(int id) {
+        return IMagicType.findInstance(id, AttributeTypes.class);
+    }
+
+    public static int getId(@Nullable IMagicAttribute instance) {
+        return IMagicType.findId(instance, AttributeTypes.class);
+    }
+
+    @Override
+    @Nullable
+    public IMagicAttribute getInstance() {
+        return instance;
+    }
+
+    @Override
     public int getId() {
-        return id;
+        return ordinal();
     }
 }

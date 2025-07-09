@@ -1,7 +1,9 @@
 package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
-import com.magicscience.magicsciencemod.aspects.attributes.*;
-import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
+import com.magicscience.magicsciencemod.aspects.attributes.IFilterMagicAttribute;
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.particles.MagicParticle;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
@@ -9,90 +11,81 @@ import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.ItemEntity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
 import java.util.function.Predicate;
 
 public class AspectProcessor {
 
-    private final MagicParticle magicParticle;
+    private final @NotNull MagicParticle particle;
+    private final @NotNull SpellData spellData;
 
-    public AspectProcessor(MagicParticle magicParticle) {
-        this.magicParticle = magicParticle;
+    private final @NotNull Predicate<Entity> entityFilter;
+    private final int damage;
+
+    public AspectProcessor(@NotNull MagicParticle particle) {
+        this.particle = particle;
+        this.spellData = particle.getSpellData();
+
+        this.entityFilter = getBaseEntityFilter()
+            .and(getAttributesEntityFilter());
+        this.damage = CoreTypes.getInstance(spellData.coreId()).getDamage();
     }
 
-    public void processing(IMagicCore magicCore) {
+    public void process() {
         // ToDO:
         //Effects?
+        AABB collisionBox = calculateCollisionBox();
 
-        AABB particleAABB = calculateAABB();
-        Predicate<Entity> filteredEntity = getBaseFilteredEntity()
-            .and(getAttributeFilteredEntity());
-
-        // (Entity) null - все сущности, нет исключений.
-        magicParticle.getLevel().getEntities((Entity) null, particleAABB, filteredEntity)
-            .forEach(entity -> {
-                // Отправка ивента коллизии с entity на сервер
-                ModMessagesMagicParticles.CHANNEL.sendToServer(
-                    new ServerboundParticleDamagePacket(
-                        entity.getId(),
-                        magicCore.getDamage(),
-                        magicParticle.getSpellData().ownerId()
-                    )
-                );
-                // Удаление партикла
-                magicParticle.remove();
-            });
+        particle.getLevel()
+            .getEntities((Entity) null, collisionBox, entityFilter)
+            .forEach(this::handleCollision);
     }
 
-    private AABB calculateAABB() {
-        var currentPosition = magicParticle.getPos();
+    @NotNull
+    private AABB calculateCollisionBox() {
+        var currentPosition = particle.getPos();
 
-        var directionPos = magicParticle.getDirectionPos();
-        Vec3 nextPosition = currentPosition.add(
-            directionPos.x,
-            directionPos.y,
-            directionPos.z
-        );
+        var directionPos = particle.getDirectionPos();
+        Vec3 nextPosition = currentPosition.add(directionPos);
 
-        // Область поиска коллизи партикла
         return new AABB(currentPosition, nextPosition);
     }
 
-    private Predicate<Entity> getBaseFilteredEntity() {
+    @NotNull
+    private Predicate<Entity> getBaseEntityFilter() {
         return entity -> !(entity instanceof ItemEntity);
     }
 
-    private Predicate<Entity> getAttributeFilteredEntity() {
-        // ToDo:
-        // pars attr form spellData
-        // if attr change filter param -> add to returned filter
-        int[] attributeIds = magicParticle.getSpellData().attributeIds();
-        int ownerId = magicParticle.getSpellData().ownerId();
+    @NotNull
+    private Predicate<Entity> getAttributesEntityFilter() {
+        Predicate<Entity> filter = entity -> true;
 
-        if (attributeIds == null || attributeIds.length == 0) {
-            return entity -> true; // нет фильтра
-        }
-
-        Predicate<Entity> combined = entity -> true;
+        int ownerId = spellData.ownerId();
+        int[] attributeIds = spellData.attributeIds();
 
         for (int attrId : attributeIds) {
-            AttributeTypes attrType = AttributeTypes.fromId(attrId);
-
-            IMagicAttribute attr = switch (attrType) {
-                case VECTOR -> new VectorAttribute();
-                case SELF_SPECTRE -> new SelfSpectreAttribute();
-                case NONE -> null;
-            };
-
-            if (attr == null) continue;
+            var attr = AttributeTypes.getInstance(attrId);
 
             if (attr instanceof IFilterMagicAttribute filterAttr) {
-                Predicate<Entity> filter = filterAttr.getFilteredEntity(List.of(ownerId));
-                combined = combined.and(filter);
+                filter = filter.and(filterAttr.getFilteredEntity(List.of(ownerId)));
             }
         }
 
-        return combined;
+        return filter;
+    }
+
+    private void handleCollision(Entity entity) {
+        ModMessagesMagicParticles.CHANNEL.sendToServer(
+            // Отправка ивента коллизии с entity на сервер
+            new ServerboundParticleDamagePacket(
+                entity.getId(),
+                damage,
+                spellData.ownerId()
+            )
+        );
+        // Удаление партикла
+        particle.remove();
     }
 }
