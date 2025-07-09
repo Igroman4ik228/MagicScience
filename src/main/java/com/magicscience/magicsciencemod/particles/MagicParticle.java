@@ -28,7 +28,8 @@ public class MagicParticle extends TextureSheetParticle {
         double x, double y, double z,
         double xd, double yd, double zd,
         SpriteSet sprites,
-        SpellData spellData
+        SpellData spellData,
+        IMagicCore magicCore
     ) {
         super(level, x, y, z);
 
@@ -39,7 +40,8 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
-        this.magicCore = CoreHandler.handle(spellData);
+
+        this.magicCore = magicCore;
 
         // В будущем может быть усложнение взятия индекса спрайта
         int spriteIndex = Math.max(spellData.coreId() - 1, 0);

@@ -1,6 +1,7 @@
 package com.magicscience.magicsciencemod.particles;
 
 import com.magicscience.magicsciencemod.aspects.SpellData;
+import com.magicscience.magicsciencemod.aspects.cores.FireCore;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.Particle;
 import net.minecraft.client.particle.ParticleProvider;
@@ -33,6 +34,6 @@ public class MagicParticleProvider implements ParticleProvider<MagicParticleOpti
             data.particleLifeTime()
         );
 
-        return new MagicParticle(level, x, y, z, xd, yd, zd, spriteSet, spellData);
+        return new MagicParticle(level, x, y, z, xd, yd, zd, spriteSet, spellData, new FireCore());
     }
 }
