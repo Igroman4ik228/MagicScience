@@ -37,12 +37,12 @@ public class MagicStick extends Item implements ICast {
         @NotNull Player player,
         @NotNull InteractionHand hand
     ) {
-        // Проверка ведущей руки
+        // Check main hand
         if (hand != InteractionHand.MAIN_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
         // ToDo: сделать отдельный класс
-        // Динамическое создание заклинания
+        // Dynamic create spell
         var spell = new Spell(
             CoreTypes.getInstance(CoreTypes.FIRE.getId()),
             Collections.singletonList(
@@ -58,11 +58,10 @@ public class MagicStick extends Item implements ICast {
 
         LOGGER.info("stick use!" + "position = " + position + "direction" + direction);
 
-        // Отправка пакета на сервер
+
         ModMessagesMagicParticles.CHANNEL.sendToServer(
             new ServerboundCastParticlePacket(spell)
         );
-
 
         // ToDo: Вынести в client/sound
         player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);

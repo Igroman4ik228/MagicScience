@@ -12,12 +12,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class Spell implements IMagicAspect {
-    @NotNull
-    final IMagicCore magicCore;
-    @NotNull
-    private final Collection<IMagicAttribute> magicAttributes;
-    @Nullable
-    private final IMagicStructure magicStructure;
+    final @NotNull IMagicCore magicCore;
+    private final @NotNull Collection<IMagicAttribute> magicAttributes;
+    private final @Nullable IMagicStructure magicStructure;
     private final int ownerId;
     private final int particleSpeed;
     private final int particleLifeTime;
@@ -59,7 +56,8 @@ public class Spell implements IMagicAspect {
     }
 
     private int calculateParticleSpeed() {
-        if (magicAttributes.isEmpty()) return 0;
+        if (magicAttributes.isEmpty())
+            return 0;
 
         // ToDo: Calc with Math
         for (IMagicAttribute attribute : magicAttributes) {

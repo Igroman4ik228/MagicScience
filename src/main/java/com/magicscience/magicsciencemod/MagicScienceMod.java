@@ -1,6 +1,5 @@
 package com.magicscience.magicsciencemod;
 
-import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
 import com.magicscience.magicsciencemod.registry.ModItems;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
@@ -27,8 +26,6 @@ public class MagicScienceMod {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public MagicScienceMod(FMLJavaModLoadingContext context) {
-        LOGGER.info("AttributeTypes: {}", AttributeTypes.VECTOR.getId());
-
         IEventBus modEventBus = context.getModEventBus();
 
         // Tabs

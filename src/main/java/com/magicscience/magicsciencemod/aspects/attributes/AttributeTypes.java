@@ -1,48 +1,41 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
+import com.magicscience.magicsciencemod.aspects.IMagicType;
+
 import javax.annotation.Nullable;
-import java.util.Objects;
 
-public enum AttributeTypes {
-    NONE(0),
-    VECTOR(1, new VectorAttribute()),
-    SELF_SPECTRE(2, new SelfSpectreAttribute());
+public enum AttributeTypes implements IMagicType<IMagicAttribute> {
+    NONE(),
+    VECTOR(new VectorAttribute()),
+    SELF_SPECTRE(new SelfSpectreAttribute());
 
-    private final int id;
     private final @Nullable IMagicAttribute instance;
 
-    AttributeTypes(int id) {
-        this(id, null);
+    AttributeTypes() {
+        this(null);
     }
 
-    AttributeTypes(int id, @Nullable IMagicAttribute instance) {
-        this.id = id;
+    AttributeTypes(@Nullable IMagicAttribute instance) {
         this.instance = instance;
     }
 
     @Nullable
     public static IMagicAttribute getInstance(int id) {
-        for (AttributeTypes type : values()) {
-            if (type.id == id)
-                return type.instance;
-        }
-        throw new IllegalArgumentException("Не удалось найти экземпляр по ID: " + id);
+        return IMagicType.findInstance(id, AttributeTypes.class);
     }
 
     public static int getId(@Nullable IMagicAttribute instance) {
-        for (AttributeTypes type : values()) {
-            if (Objects.equals(type.instance, instance))
-                return type.id;
-        }
-        throw new IllegalArgumentException("Не удалось найти ID для экземпляра: " + (instance != null ? instance.getClass().getName() : null));
+        return IMagicType.findId(instance, AttributeTypes.class);
     }
 
+    @Override
     @Nullable
     public IMagicAttribute getInstance() {
         return instance;
     }
 
+    @Override
     public int getId() {
-        return id;
+        return ordinal();
     }
 }

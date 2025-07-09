@@ -1,35 +1,24 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
+import com.magicscience.magicsciencemod.aspects.IMagicType;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Objects;
+public enum CoreTypes implements IMagicType<IMagicCore> {
+    FIRE(new FireCore());
 
-public enum CoreTypes {
-    FIRE(1, new FireCore());
-
-    private final int id;
     private final @NotNull IMagicCore instance;
 
-    CoreTypes(int id, @NotNull IMagicCore instance) {
-        this.id = id;
+    CoreTypes(@NotNull IMagicCore instance) {
         this.instance = instance;
     }
 
     @NotNull
     public static IMagicCore getInstance(int id) {
-        for (CoreTypes type : values()) {
-            if (type.id == id)
-                return type.instance;
-        }
-        throw new IllegalArgumentException("Не удалось найти экземпляр по ID: " + id);
+        return IMagicType.findInstance(id, CoreTypes.class);
     }
 
     public static int getId(@NotNull IMagicCore instance) {
-        for (CoreTypes type : values()) {
-            if (Objects.equals(type.instance, instance))
-                return type.id;
-        }
-        throw new IllegalArgumentException("Не удалось найти ID для экземпляра: " + instance.getClass().getName());
+        return IMagicType.findId(instance, CoreTypes.class);
     }
 
     @NotNull
@@ -38,6 +27,7 @@ public enum CoreTypes {
     }
 
     public int getId() {
-        return id;
+        // Not index, because not null
+        return ordinal() + 1;
     }
 }
