@@ -73,8 +73,8 @@ public class ServerboundCastParticlePacket {
                 // Отправки пакета клинтам пакетов с партиками
                 new ClientboundSpawnParticlePacket(
                     spellData,
-                    player.position().add(0, 1, 0),
-                    player.getLookAngle().normalize()
+                    player.position().add(0, 1.4, 0),
+                    player.getLookAngle().normalize().scale(SpellConverter.toSpell(spellData).getParticleSpeed())
                 )
             );
         });

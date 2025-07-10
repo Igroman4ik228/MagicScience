@@ -19,7 +19,10 @@ import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.ArrayList;
 import java.util.Collections;
+import java.util.List;
+import java.util.Objects;
 
 public class MagicStick extends Item implements ICast {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -45,19 +48,14 @@ public class MagicStick extends Item implements ICast {
         // Dynamic create spell
         var spell = new Spell(
             CoreTypes.getInstance(CoreTypes.FIRE.getId()),
-            Collections.singletonList(
-                AttributeTypes.getInstance(AttributeTypes.SELF_SPECTRE.getId())
+            List.of(
+                Objects.requireNonNull(AttributeTypes.getInstance(AttributeTypes.SELF_SPECTRE.getId())),
+                Objects.requireNonNull(AttributeTypes.getInstance(AttributeTypes.VECTOR.getId()))
             ),
             player.getId()
         );
 
         setSpell(spell);
-
-        Vec3 position = player.position().add(0, 1.0, 0);
-        Vec3 direction = player.getLookAngle().normalize().scale(this.spell.getParticleSpeed());
-
-        LOGGER.info("stick use!" + "position = " + position + "direction" + direction);
-
 
         ModMessagesMagicParticles.CHANNEL.sendToServer(
             new ServerboundCastParticlePacket(spell)

@@ -35,7 +35,11 @@ public class AspectProcessor {
 
     public void process() {
         // ToDO:
-        //Effects?
+        // Effects!
+        // Stack aspects!
+        // Mana
+        // Collision with block
+        // Craft spell
         AABB collisionBox = calculateCollisionBox();
 
         particle.getLevel()

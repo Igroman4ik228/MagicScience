@@ -2,6 +2,7 @@ package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.particles.MagicParticleOptions;
+import com.magicscience.magicsciencemod.particles.aspecthandlers.MagicParticleCreator;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -75,47 +76,9 @@ public class ClientboundSpawnParticlePacket {
             LOGGER.info("  Position: x = {}, y = {}, z = {}", position.x, position.y, position.z);
             LOGGER.info("  Direction: x = {}, y = {}, z = {}", direction.x, direction.y, direction.z);
 
-            spawnParticles();
+            var particleCreator = new MagicParticleCreator(spellData, position, direction);
+            particleCreator.create();
         });
         ctx.get().setPacketHandled(true);
-    }
-
-    @OnlyIn(Dist.CLIENT)
-    private void spawnParticles() {
-        var level = Minecraft.getInstance().level;
-        if (level == null) return;
-
-        int particleCount = 10;
-
-        for (int i = 0; i < particleCount; i++) {
-            double velocityX, velocityY, velocityZ;
-
-            // ToDo: Вычисления перенести в Math
-            double spread = 0.3; // размер разброса позиции
-            velocityX = 0;
-            velocityY = 0;
-            velocityZ = 0;
-
-            // Смещение позиции будет учитываться при добавлении частицы ниже
-            double offsetX = (Math.random() - 0.5) * spread;
-            double offsetY = (Math.random() - 0.5) * spread;
-            double offsetZ = (Math.random() - 0.5) * spread;
-
-            level.addParticle(
-                new MagicParticleOptions(
-                    spellData.ownerId(),
-                    spellData.coreId(),
-                    spellData.attributeIds(),
-                    spellData.structureId(),
-                    spellData.particleSpeed(),
-                    spellData.particleLifeTime()
-                ),
-                position.x + offsetX,
-                position.y + offsetY,
-                position.z + offsetZ,
-                velocityX, velocityY, velocityZ
-            );
-
-        }
     }
 }

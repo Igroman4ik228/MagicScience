@@ -13,7 +13,6 @@ public class SpellConverter {
     @NotNull
     public static SpellData toData(Spell spell) {
         Collection<IMagicAttribute> attributes = spell.getMagicAttributes();
-
         int[] attributeIds = attributes.stream()
             .mapToInt(AttributeTypes::getId)
             .toArray();

@@ -19,7 +19,6 @@ public class Spell implements IMagicAspect {
     private final int particleSpeed;
     private final int particleLifeTime;
 
-
     public Spell(
         @NotNull IMagicCore magicCore,
         @NotNull Collection<IMagicAttribute> magicAttributes,
@@ -63,7 +62,7 @@ public class Spell implements IMagicAspect {
         for (IMagicAttribute attribute : magicAttributes) {
 
             if (AttributeTypes.getId(attribute) == AttributeTypes.VECTOR.getId()) {
-                return 10;
+                return 2;
             }
         }
 

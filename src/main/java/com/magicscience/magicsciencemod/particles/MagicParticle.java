@@ -32,7 +32,6 @@ public class MagicParticle extends TextureSheetParticle {
         this.yd = yd;
         this.zd = zd;
         this.lifetime = spellData.particleLifeTime();
-
         this.spellData = spellData;
 
         // В будущем может быть усложнение взятия индекса спрайта
