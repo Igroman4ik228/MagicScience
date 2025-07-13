@@ -1,7 +1,9 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
-import com.magicscience.magicsciencemod.aspects.cores.effects.BaseMagicEffect;
+import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
+import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.Collection;
 
 public class BaseMagicCore implements IMagicCore {
@@ -10,7 +12,7 @@ public class BaseMagicCore implements IMagicCore {
     private final int particleLifeTime;
     private final int particleCount;
     private final float size;
-    private Collection<BaseMagicEffect> effects;
+    private @NotNull Collection<IMagicEffect> effects = new ArrayList<>();
 
     public BaseMagicCore(
         int manaCost,
@@ -26,7 +28,7 @@ public class BaseMagicCore implements IMagicCore {
         this.size = size;
     }
 
-    protected void setEffects(Collection<BaseMagicEffect> effects){
+    protected void setEffects(@NotNull Collection<IMagicEffect> effects) {
         this.effects = effects;
     }
 
@@ -56,7 +58,8 @@ public class BaseMagicCore implements IMagicCore {
     }
 
     @Override
-    public Collection<BaseMagicEffect> getMagicEffects() {
+    @NotNull
+    public Collection<IMagicEffect> getMagicEffects() {
         return effects;
     }
 }

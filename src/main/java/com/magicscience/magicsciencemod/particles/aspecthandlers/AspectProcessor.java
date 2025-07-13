@@ -3,8 +3,6 @@ package com.magicscience.magicsciencemod.particles.aspecthandlers;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.IFilterMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
-import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
-import com.magicscience.magicsciencemod.aspects.cores.effects.BaseMagicEffect;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleEffectsPacket;
@@ -16,7 +14,6 @@ import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Collection;
 import java.util.List;
 import java.util.function.Predicate;
 
@@ -24,7 +21,6 @@ public class AspectProcessor {
 
     private final @NotNull MagicParticle particle;
     private final @NotNull SpellData spellData;
-    private final @NotNull Collection<BaseMagicEffect> effects;
 
     private final @NotNull Predicate<Entity> entityFilter;
     private final int damage;
@@ -32,8 +28,6 @@ public class AspectProcessor {
     public AspectProcessor(@NotNull MagicParticle particle) {
         this.particle = particle;
         this.spellData = particle.getSpellData();
-
-        this.effects = CoreTypes.getInstance(spellData.coreId()).getMagicEffects();
 
         this.entityFilter = getBaseEntityFilter()
             .and(getAttributesEntityFilter());
@@ -88,6 +82,15 @@ public class AspectProcessor {
     }
 
     private void handleCollision(Entity entity) {
+        // Send effects
+        ModMessagesMagicParticles.CHANNEL.sendToServer(
+            // Отправка ивента коллизии с entity на сервер
+            new ServerboundParticleEffectsPacket(
+                entity.getId(),
+                spellData.coreId()
+            )
+        );
+
         // Send damage
         ModMessagesMagicParticles.CHANNEL.sendToServer(
             // Отправка ивента коллизии с entity на сервер
@@ -95,15 +98,6 @@ public class AspectProcessor {
                 entity.getId(),
                 damage,
                 spellData.ownerId()
-            )
-        );
-
-        // Send effects
-        ModMessagesMagicParticles.CHANNEL.sendToServer(
-            // Отправка ивента коллизии с entity на сервер
-            new ServerboundParticleEffectsPacket(
-                entity.getId(),
-                spellData.coreId()
             )
         );
 

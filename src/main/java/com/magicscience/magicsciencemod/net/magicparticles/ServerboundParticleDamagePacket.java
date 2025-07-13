@@ -36,7 +36,6 @@ public class ServerboundParticleDamagePacket {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        // Обработка коллиции(соприкосновение с другим энтити) на сервере
         ctx.get().enqueueWork(() -> {
 
             LOGGER.info("ServerboundParticleDamagePacket start");
@@ -44,7 +43,7 @@ public class ServerboundParticleDamagePacket {
             ServerPlayer player = ctx.get().getSender();
             if (player == null) return;
 
-            // Получение энтити, который  соприкоснулся
+            // get entity with collision
             Level level = player.level();
             Entity target = level.getEntity(entityId);
             if (target == null) return;
@@ -54,7 +53,7 @@ public class ServerboundParticleDamagePacket {
 
             // Если владелец не игрок (или не найден), не наносим урон
             if (!(owner instanceof ServerPlayer ownerPlayer)) return;
-            
+
             LOGGER.info("ownerId: " + ownerId);
 
             // Дамаг

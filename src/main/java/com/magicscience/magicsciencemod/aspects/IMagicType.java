@@ -17,13 +17,13 @@ public interface IMagicType<T> {
     /**
      * Unified search for ID by instance
      */
-    static <E extends Enum<E> & IMagicType<T>, T> int findId(T value, Class<E> enumClass) {
+    static <E extends Enum<E> & IMagicType<T>, T> int findId(T instance, Class<E> enumClass) {
         for (E type : enumClass.getEnumConstants()) {
-            if (Objects.equals(type.getInstance(), value))
+            if (Objects.equals(type.getInstance(), instance))
                 return type.getId();
         }
         throw new IllegalArgumentException("Failed to find ID for instance: " +
-            (value != null ? value.getClass().getName() : null));
+            (instance != null ? instance.getClass().getName() : null));
     }
 
     /**

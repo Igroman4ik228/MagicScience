@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
-import com.magicscience.magicsciencemod.aspects.cores.effects.BaseMagicEffect;
+import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -34,7 +34,6 @@ public class ServerboundParticleEffectsPacket {
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctx) {
-        // Обработка коллиции(соприкосновение с другим энтити) на сервере
         ctx.get().enqueueWork(() -> {
 
             LOGGER.info("ServerboundParticleEffectsPacket start");
@@ -51,7 +50,7 @@ public class ServerboundParticleEffectsPacket {
             var effects = CoreTypes.getInstance(coreId).getMagicEffects();
 
             // apply effects
-            for (BaseMagicEffect effect : effects) {
+            for (IMagicEffect effect : effects) {
                 effect.applyEffect(target);
             }
 
