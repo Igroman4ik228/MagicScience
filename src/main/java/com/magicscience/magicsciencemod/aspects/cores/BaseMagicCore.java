@@ -1,11 +1,16 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
+import com.magicscience.magicsciencemod.aspects.cores.effects.BaseMagicEffect;
+
+import java.util.Collection;
+
 public class BaseMagicCore implements IMagicCore {
     private final int manaCost;
     private final int damage;
     private final int particleLifeTime;
     private final int particleCount;
     private final float size;
+    private Collection<BaseMagicEffect> effects;
 
     public BaseMagicCore(
         int manaCost,
@@ -19,6 +24,10 @@ public class BaseMagicCore implements IMagicCore {
         this.particleLifeTime = particleLifeTime;
         this.particleCount = particleCount;
         this.size = size;
+    }
+
+    protected void setEffects(Collection<BaseMagicEffect> effects){
+        this.effects = effects;
     }
 
     @Override
@@ -44,5 +53,10 @@ public class BaseMagicCore implements IMagicCore {
     @Override
     public float getSize() {
         return size;
+    }
+
+    @Override
+    public Collection<BaseMagicEffect> getMagicEffects() {
+        return effects;
     }
 }

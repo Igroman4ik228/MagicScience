@@ -1,8 +1,13 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
+import com.magicscience.magicsciencemod.aspects.cores.effects.BornEffect;
+
+import java.util.List;
+
 public class FireCore extends BaseMagicCore {
     public FireCore() {
         this(10, 10, 300, 10, 1);
+        setEffects(List.of(new BornEffect()));
     }
 
     public FireCore(

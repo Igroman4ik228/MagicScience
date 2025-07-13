@@ -3,6 +3,7 @@ package com.magicscience.magicsciencemod.registry;
 import com.magicscience.magicsciencemod.net.magicparticles.ClientboundSpawnParticlePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
+import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleEffectsPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
@@ -38,6 +39,13 @@ public class ModMessagesMagicParticles {
             ServerboundParticleDamagePacket::encode,
             ServerboundParticleDamagePacket::new,
             ServerboundParticleDamagePacket::handle
+        );
+
+        CHANNEL.registerMessage(packetId++,
+            ServerboundParticleEffectsPacket.class,
+            ServerboundParticleEffectsPacket::encode,
+            ServerboundParticleEffectsPacket::new,
+            ServerboundParticleEffectsPacket::handle
         );
     }
 }
