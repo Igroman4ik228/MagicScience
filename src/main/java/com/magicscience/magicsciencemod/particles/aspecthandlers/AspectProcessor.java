@@ -55,11 +55,12 @@ public class AspectProcessor {
         var directionPos = particle.getDirectionPos();
         Vec3 nextPosition = currentPosition.add(directionPos);
 
-        return new AABB(currentPosition, nextPosition);
+        return new AABB(currentPosition, nextPosition).inflate(0.1);
     }
 
     @NotNull
     private Predicate<Entity> getBaseEntityFilter() {
+        // ToDo: add blacklist Entity and other MODS
         return entity -> !(entity instanceof ItemEntity);
     }
 
@@ -84,7 +85,6 @@ public class AspectProcessor {
     private void handleCollision(Entity entity) {
         // Send effects
         ModMessagesMagicParticles.CHANNEL.sendToServer(
-            // Отправка ивента коллизии с entity на сервер
             new ServerboundParticleEffectsPacket(
                 entity.getId(),
                 spellData.coreId()
@@ -93,7 +93,6 @@ public class AspectProcessor {
 
         // Send damage
         ModMessagesMagicParticles.CHANNEL.sendToServer(
-            // Отправка ивента коллизии с entity на сервер
             new ServerboundParticleDamagePacket(
                 entity.getId(),
                 damage,
@@ -101,7 +100,6 @@ public class AspectProcessor {
             )
         );
 
-        // Удаление партикла
         particle.remove();
     }
 }

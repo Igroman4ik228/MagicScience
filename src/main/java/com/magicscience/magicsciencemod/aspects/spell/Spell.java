@@ -11,11 +11,13 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.Collection;
 
+// ToDo: pattern builder
 public class Spell implements IMagicAspect {
-    final @NotNull IMagicCore magicCore;
+    private final @NotNull IMagicCore magicCore;
     private final @NotNull Collection<IMagicAttribute> magicAttributes;
     private final @Nullable IMagicStructure magicStructure;
     private final int ownerId;
+    private final int manaCost;
     private final int particleSpeed;
     private final int particleLifeTime;
 
@@ -30,7 +32,8 @@ public class Spell implements IMagicAspect {
         this.magicStructure = magicStructure;
         this.ownerId = ownerId;
 
-        // ToDo: Math and mb pattern builder
+        // ToDo: Math
+        this.manaCost = calculateManaCost();
         this.particleSpeed = calculateParticleSpeed();
         this.particleLifeTime = calculateParticleLifeTime();
     }
@@ -50,15 +53,24 @@ public class Spell implements IMagicAspect {
         this(magicCore, new ArrayList<>(), null, ownerId);
     }
 
+    private int calculateManaCost() {
+        int totalCost = magicCore.getManaCost();
+
+        for (IMagicAttribute attribute : magicAttributes) {
+            totalCost += attribute.getManaCost();
+        }
+
+        if (magicStructure != null)
+            totalCost += magicStructure.getManaCost();
+
+        return totalCost;
+    }
+
     private int calculateParticleLifeTime() {
         return magicCore.getParticleLifeTime();
     }
 
     private int calculateParticleSpeed() {
-        if (magicAttributes.isEmpty())
-            return 0;
-
-        // ToDo: Calc with Math
         for (IMagicAttribute attribute : magicAttributes) {
 
             if (AttributeTypes.getId(attribute) == AttributeTypes.VECTOR.getId()) {
@@ -67,22 +79,6 @@ public class Spell implements IMagicAspect {
         }
 
         return 0;
-    }
-
-    @Override
-    public int getManaCost() {
-        int totalCost = magicCore.getManaCost();
-
-        if (!magicAttributes.isEmpty()) {
-            for (IMagicAttribute attribute : magicAttributes) {
-                totalCost += attribute.getManaCost();
-            }
-        }
-
-        if (magicStructure != null)
-            totalCost += magicStructure.getManaCost();
-
-        return totalCost;
     }
 
     @NotNull
@@ -102,6 +98,11 @@ public class Spell implements IMagicAspect {
 
     public int getOwnerId() {
         return ownerId;
+    }
+
+    @Override
+    public int getManaCost() {
+        return manaCost;
     }
 
     public int getParticleSpeed() {

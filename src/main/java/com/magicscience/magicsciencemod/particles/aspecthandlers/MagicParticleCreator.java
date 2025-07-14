@@ -9,6 +9,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class MagicParticleCreator {
     private final @NotNull SpellData spellData;
@@ -27,35 +28,54 @@ public class MagicParticleCreator {
         var level = Minecraft.getInstance().level;
         if (level == null) return;
 
-        int particleCount = spell.getMagicCore().getParticleCount();
-        float particleSize = spell.getMagicCore().getSize();
+        var magicCore = spell.getMagicCore();
+        int particleCount = magicCore.getParticleCount();
+        float particleSize = magicCore.getSize();
 
-        // ToDo: rename and refactor
-        var positions = calculateStructure(position, particleCount, 0.3, particleSize);
+        var particlePositions = calculateParticlePositions(
+            position,
+            particleCount,
+            0.3,
+            particleSize
+        );
 
-        for (var pos : positions) {
+        var options = new MagicParticleOptions(
+            spellData.ownerId(),
+            spellData.coreId(),
+            spellData.attributeIds(),
+            spellData.structureId(),
+            spellData.particleSpeed(),
+            spellData.particleLifeTime()
+        );
+
+        for (var pos : particlePositions) {
             level.addParticle(
-                new MagicParticleOptions(
-                    spellData.ownerId(),
-                    spellData.coreId(),
-                    spellData.attributeIds(),
-                    spellData.structureId(),
-                    spellData.particleSpeed(),
-                    spellData.particleLifeTime()
-                ),
+                options,
                 pos.x, pos.y, pos.z,
                 direction.x, direction.y, direction.z
             );
         }
     }
 
-    private List<Vec3> calculateStructure(Vec3 basePosition, int count, double spread, double size) {
+    private List<Vec3> calculateParticlePositions(Vec3 basePosition, int count, double spread, double size) {
         List<Vec3> result = new ArrayList<>(count);
+        double radius = spread * size;
+        var rnd = ThreadLocalRandom.current();
+
         for (int i = 0; i < count; i++) {
-            double offsetX = (Math.random() - size) * spread;
-            double offsetY = (Math.random() - size) * spread;
-            double offsetZ = (Math.random() - size) * spread;
-            result.add(basePosition.add(offsetX, offsetY, offsetZ));
+            double u = rnd.nextDouble();
+            double r = radius * Math.cbrt(u);
+
+            // Случайные уголовые координаты
+            double theta = Math.acos(2 * rnd.nextDouble() - 1);    // полярный угол [0, π]
+            double phi = 2 * Math.PI * rnd.nextDouble();         // азимут [0, 2π)
+
+            // Перевод в декартовы координаты
+            double x = r * Math.sin(theta) * Math.cos(phi);
+            double y = r * Math.sin(theta) * Math.sin(phi);
+            double z = r * Math.cos(theta);
+
+            result.add(basePosition.add(x, y, z));
         }
         return result;
     }

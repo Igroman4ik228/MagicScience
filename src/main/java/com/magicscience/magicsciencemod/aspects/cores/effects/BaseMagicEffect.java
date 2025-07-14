@@ -6,7 +6,6 @@ import org.jetbrains.annotations.NotNull;
 public abstract class BaseMagicEffect implements IMagicEffect {
     @Override
     public final void applyEffect(@NotNull Entity entity) {
-        // Base effects/checks/before or after
         if (!canApply(entity))
             return;
 

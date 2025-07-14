@@ -1,7 +1,6 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.particles.MagicParticleOptions;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.MagicParticleCreator;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;

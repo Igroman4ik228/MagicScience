@@ -68,13 +68,15 @@ public class ServerboundCastParticlePacket {
             LOGGER.info("Packet handled and data logged for player {}", player.getName().getString());
 
             ModMessagesMagicParticles.CHANNEL.send(
-                // Радиус отправки пакета клинтам, может нескольким
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                // Отправки пакета клинтам пакетов с партиками
                 new ClientboundSpawnParticlePacket(
                     spellData,
                     player.position().add(0, 1.4, 0),
-                    player.getLookAngle().normalize().scale(SpellConverter.toSpell(spellData).getParticleSpeed())
+                    player.getLookAngle()
+                        .normalize()
+                        .scale(
+                            SpellConverter.toSpell(spellData).getParticleSpeed()
+                        )
                 )
             );
         });
