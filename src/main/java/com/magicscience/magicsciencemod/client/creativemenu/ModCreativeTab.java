@@ -24,7 +24,8 @@ public class ModCreativeTab {
 
     private static void registerDisplayItems(
         CreativeModeTab.ItemDisplayParameters parameters,
-        CreativeModeTab.Output output) {
+        CreativeModeTab.Output output
+    ) {
         output.accept(ModItems.MAGIC_STICK.get());
     }
 

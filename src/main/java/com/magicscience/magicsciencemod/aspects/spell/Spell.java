@@ -1,8 +1,8 @@
 package com.magicscience.magicsciencemod.aspects.spell;
 
 import com.magicscience.magicsciencemod.aspects.IMagicAspect;
-import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
+import com.magicscience.magicsciencemod.aspects.attributes.VectorAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
 import org.jetbrains.annotations.NotNull;
@@ -72,10 +72,8 @@ public class Spell implements IMagicAspect {
 
     private int calculateParticleSpeed() {
         for (IMagicAttribute attribute : magicAttributes) {
-
-            if (AttributeTypes.getId(attribute) == AttributeTypes.VECTOR.getId()) {
-                return 2;
-            }
+            if (attribute instanceof VectorAttribute)
+                return VectorAttribute.PARTICLE_SPEED;
         }
 
         return 0;
