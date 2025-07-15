@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.aspects.attributes;
+package com.magicscience.magicsciencemod.aspects.attributes.unique;
 
 import net.minecraft.world.entity.Entity;
 

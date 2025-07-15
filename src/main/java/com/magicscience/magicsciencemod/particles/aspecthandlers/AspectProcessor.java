@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
-import com.magicscience.magicsciencemod.aspects.attributes.IFilterMagicAttribute;
+import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
@@ -18,7 +18,6 @@ import java.util.List;
 import java.util.function.Predicate;
 
 public class AspectProcessor {
-
     private final @NotNull MagicParticle particle;
     private final @NotNull SpellData spellData;
 

@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.registry;
 
 import com.magicscience.magicsciencemod.MagicScienceMod;
-import com.magicscience.magicsciencemod.items.cust.MagicStick;
+import com.magicscience.magicsciencemod.items.cast.MagicStick;
 import net.minecraft.world.item.Item;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;

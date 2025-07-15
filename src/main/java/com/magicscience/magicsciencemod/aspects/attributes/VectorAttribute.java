@@ -1,14 +1,21 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
-// unique class for add particle speed
-public class VectorAttribute extends BaseMagicAttribute {
-    public static final int PARTICLE_SPEED = 2;
-    
-    public VectorAttribute() {
-        this(20);
+import com.magicscience.magicsciencemod.aspects.attributes.unique.IMagicParticleSpeed;
+
+public class VectorAttribute extends BaseMagicAttribute implements IMagicParticleSpeed {
+    private final int particleSpeed;
+
+    public VectorAttribute(int manaCost, int particleSpeed) {
+        super(manaCost);
+        this.particleSpeed = particleSpeed;
     }
 
-    public VectorAttribute(int manaCost) {
-        super(manaCost);
+    public VectorAttribute() {
+        this(20, 2);
+    }
+
+    @Override
+    public int getParticleSpeed() {
+        return particleSpeed;
     }
 }

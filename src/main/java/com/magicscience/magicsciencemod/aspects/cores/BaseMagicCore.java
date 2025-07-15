@@ -12,6 +12,7 @@ public class BaseMagicCore implements IMagicCore {
     private final int particleLifeTime;
     private final int particleCount;
     private final float size;
+    
     private @NotNull Collection<IMagicEffect> effects = new ArrayList<>();
 
     public BaseMagicCore(

@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.items.cust;
+package com.magicscience.magicsciencemod.items.cast;
 
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
 
