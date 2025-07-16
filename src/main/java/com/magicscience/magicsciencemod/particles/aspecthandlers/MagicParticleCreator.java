@@ -35,10 +35,14 @@ public class MagicParticleCreator {
         int particleCount = spell.getMagicCore().getParticleCount();
         float particleSize = spell.getMagicCore().getSize();
 
-        // ToDo: rename and refactor
-        var positions = calculateStructure(position, particleCount, 0.3, particleSize);
+        var particlePositions = calculateParticlePositions(
+            position,
+            particleCount,
+            0.3,
+            particleSize
+        );
 
-        for (var pos : positions) {
+        for (var pos : particlePositions) {
             level.addParticle(
                 new MagicParticleOptions(
                     spellData.ownerId(),
@@ -57,7 +61,7 @@ public class MagicParticleCreator {
         }
     }
 
-    private List<Vec3> calculateStructure(Vec3 basePosition, int count, double spread, double size) {
+    private List<Vec3> calculateParticlePositions(Vec3 basePosition, int count, double spread, double size) {
         List<Vec3> result = new ArrayList<>(count);
         double radius = spread * size;
         var rnd = ThreadLocalRandom.current();

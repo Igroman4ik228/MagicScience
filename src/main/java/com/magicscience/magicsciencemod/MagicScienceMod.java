@@ -40,11 +40,13 @@ public class MagicScienceMod {
         // Particles
         ModParticles.register(modEventBus);
 
+
         // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
 
         // Register the item to a creative tab
         modEventBus.addListener(this::addCreative);
+
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);

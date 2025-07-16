@@ -1,7 +1,8 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
 import com.magicscience.magicsciencemod.aspects.IMagicAspect;
-import com.magicscience.magicsciencemod.aspects.cores.effects.BaseMagicEffect;
+import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 
@@ -18,5 +19,5 @@ public interface IMagicCore extends IMagicAspect {
 
     IMagicCore cloneWithArguments(Object... args);
 
-    Collection<BaseMagicEffect> getMagicEffects();
+    @NotNull Collection<IMagicEffect> getMagicEffects();
 }
