@@ -5,16 +5,6 @@ import com.magicscience.magicsciencemod.aspects.cores.effects.BornEffect;
 import java.util.List;
 
 public class FireCore extends BaseMagicCore {
-    public FireCore() {
-        this(10, 10, 300, 10, 1, 1);
-        setEffects(List.of(new BornEffect()));
-    }
-
-    public FireCore(int stack) {
-        this(10, 10, 300, 10, 1, stack);
-        setEffects(List.of(new BornEffect()));
-    }
-
     public FireCore(
         int manaCost,
         int damage,
@@ -24,6 +14,15 @@ public class FireCore extends BaseMagicCore {
         int stack
     ) {
         super(manaCost, damage, particleLifeTime, particleCount, size, stack);
+        setEffects(List.of(new BornEffect()));
+    }
+
+    public FireCore() {
+        this(10, 10, 300, 10, 1, 1);
+    }
+
+    public FireCore(int stack) {
+        this(10, 10, 300, 10, 1, stack);
     }
 
     @Override

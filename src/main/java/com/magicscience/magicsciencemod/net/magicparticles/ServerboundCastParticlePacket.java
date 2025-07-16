@@ -12,6 +12,7 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
 import java.util.function.Supplier;
 
 public class ServerboundCastParticlePacket {
@@ -74,33 +75,26 @@ public class ServerboundCastParticlePacket {
             LOGGER.info("  Core ID: {}", spellData.coreId());
             LOGGER.info("  Core Stack: {}", spellData.coreStack());
 
-            LOGGER.info("  Attribute IDs: {}", java.util.Arrays.toString(spellData.attributeIds()));
-            LOGGER.info("  Attribute Stack: {}", java.util.Arrays.toString(spellData.attributeStack()));
+            LOGGER.info("  Attribute IDs: {}", Arrays.toString(spellData.attributeIds()));
+            LOGGER.info("  Attribute Stack: {}", Arrays.toString(spellData.attributeStack()));
 
             LOGGER.info("  Structure ID: {}", spellData.structureId());
             LOGGER.info("  Structure Stack: {}", spellData.structureStack());
 
-            Spell spell;
-            try {
-                spell = SpellConverter.toSpell(spellData);
-            } catch (Exception e) {
-                LOGGER.error("Failed to convert spellData to Spell", e);
-                return;
-            }
 
-            LOGGER.info("  Particle Speed: {}", SpellConverter.toSpell(spellData).getParticleSpeed());
+            Spell spell = SpellConverter.toSpell(spellData);
+
+            LOGGER.info("  Particle Speed: {}", spell.getParticleSpeed());
 
             LOGGER.info("Packet handled and data logged for player {}", player.getName().getString());
 
             ModMessagesMagicParticles.CHANNEL.send(
-                // Радиус отправки пакета клинтам, может нескольким
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-                // Отправки пакета клинтам пакетов с партиками
 
                 new ClientboundSpawnParticlePacket(
                     spellData,
                     player.position().add(0, 1.4, 0),
-                    player.getLookAngle().normalize().scale(SpellConverter.toSpell(spellData).getParticleSpeed())
+                    player.getLookAngle().normalize().scale(spell.getParticleSpeed())
                 )
             );
 

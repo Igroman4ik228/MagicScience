@@ -7,16 +7,16 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterMagicAttribute {
+    public SelfSpectreAttribute(int manaCost, int stack) {
+        super(manaCost, stack);
+    }
+
     public SelfSpectreAttribute() {
         this(10, 1);
     }
 
     public SelfSpectreAttribute(int stack) {
         this(10, stack);
-    }
-
-    public SelfSpectreAttribute(int manaCost, int stack) {
-        super(manaCost, stack);
     }
 
     @Override
