@@ -62,7 +62,7 @@ public class Spell implements IMagicAspect {
         // ToDo: Calc with Math
         for (var attribute : getMagicAttributes()) {
             if (attribute instanceof IMagicParticleSpeed) {
-                return 2 * attribute.getStack();
+                return ((IMagicParticleSpeed) attribute).getParticleSpeed() * attribute.getStack();
             }
         }
         return 0;

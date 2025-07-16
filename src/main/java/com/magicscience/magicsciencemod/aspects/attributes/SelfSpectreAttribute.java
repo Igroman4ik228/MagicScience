@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
+import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;
 import net.minecraft.world.entity.Entity;
 
 import java.util.Collection;
