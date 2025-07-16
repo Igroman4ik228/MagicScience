@@ -1,7 +1,6 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.particles.MagicParticleOptions;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.MagicParticleCreator;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
@@ -32,8 +31,11 @@ public class ClientboundSpawnParticlePacket {
         this.spellData = new SpellData(
             buf.readInt(),               // ownerId
             buf.readVarInt(),            // coreId
+            buf.readVarInt(),            // coreStack
             buf.readVarIntArray(),       // attributeIds
+            buf.readVarIntArray(),       // attributeStack
             buf.readVarInt(),            // structureId
+            buf.readVarInt(),            // structureStack
             buf.readInt(),                // particleSpeed
             buf.readInt()                  // particleLifeTime
         );
@@ -44,11 +46,21 @@ public class ClientboundSpawnParticlePacket {
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(spellData.ownerId());
         buf.writeVarInt(spellData.coreId());
+        buf.writeVarInt(spellData.coreStack());
+
         buf.writeVarInt(spellData.attributeIds().length);
         for (int attrId : spellData.attributeIds()) {
             buf.writeVarInt(attrId);
         }
+
+        buf.writeVarInt(spellData.attributeStack().length);
+        for (int attrStack : spellData.attributeStack()) {
+            buf.writeVarInt(attrStack);
+        }
+
         buf.writeVarInt(spellData.structureId());
+        buf.writeVarInt(spellData.structureStack());
+
         buf.writeInt(spellData.particleSpeed());
         buf.writeInt(spellData.particleLifeTime());
 
@@ -60,6 +72,7 @@ public class ClientboundSpawnParticlePacket {
         buf.writeDouble(direction.z);
     }
 
+
     @OnlyIn(Dist.CLIENT)
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
@@ -69,12 +82,21 @@ public class ClientboundSpawnParticlePacket {
             LOGGER.info("Received ClientboundSpawnParticlePacket:");
             LOGGER.info("  Owner ID: {}", spellData.ownerId());
             LOGGER.info("  Core ID: {}", spellData.coreId());
+            LOGGER.info("  Core Stack: {}", spellData.coreStack());
+
             LOGGER.info("  Attribute IDs: {}", java.util.Arrays.toString(spellData.attributeIds()));
+            LOGGER.info("  Attribute Stack: {}", java.util.Arrays.toString(spellData.attributeStack()));
+
             LOGGER.info("  Structure ID: {}", spellData.structureId());
+            LOGGER.info("  Structure ID: {}", spellData.structureStack());
+
             LOGGER.info("  Particle Speed: {}", spellData.particleSpeed());
 
             LOGGER.info("  Position: x = {}, y = {}, z = {}", position.x, position.y, position.z);
             LOGGER.info("  Direction: x = {}, y = {}, z = {}", direction.x, direction.y, direction.z);
+
+            var pos = player.position();
+            LOGGER.info("  Position: x = {}, y = {}, z = {}", pos.x, pos.y, pos.z);
 
             var particleCreator = new MagicParticleCreator(spellData, position, direction);
             particleCreator.create();

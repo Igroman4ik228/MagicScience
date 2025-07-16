@@ -17,11 +17,17 @@ public class MagicParticleType extends ParticleType<MagicParticleOptions> {
             instance.group(
                 Codec.INT.fieldOf("ownerId").forGetter(MagicParticleOptions::ownerId),
                 Codec.INT.fieldOf("coreId").forGetter(MagicParticleOptions::coreId),
+                Codec.INT.fieldOf("coreStack").forGetter(MagicParticleOptions::coreId),
                 Codec.INT.listOf().xmap(
                     list -> list.stream().mapToInt(Integer::intValue).toArray(),
                     array -> java.util.Arrays.stream(array).boxed().toList()
                 ).fieldOf("attributeIds").forGetter(MagicParticleOptions::attributeIds),
+                Codec.INT.listOf().xmap(
+                    list -> list.stream().mapToInt(Integer::intValue).toArray(),
+                    array -> java.util.Arrays.stream(array).boxed().toList()
+                ).fieldOf("attributeStack").forGetter(MagicParticleOptions::attributeStack),
                 Codec.INT.fieldOf("structureId").forGetter(MagicParticleOptions::structureId),
+                Codec.INT.fieldOf("structureStack").forGetter(MagicParticleOptions::structureId),
                 Codec.INT.fieldOf("particleSpeed").forGetter(MagicParticleOptions::particleSpeed),
                 Codec.INT.fieldOf("particleLifeTime").forGetter(MagicParticleOptions::particleLifeTime)
             ).apply(instance, MagicParticleOptions::new)

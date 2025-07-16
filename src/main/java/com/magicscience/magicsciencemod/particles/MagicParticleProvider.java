@@ -27,8 +27,11 @@ public class MagicParticleProvider implements ParticleProvider<MagicParticleOpti
         var spellData = new SpellData(
             data.ownerId(),
             data.coreId(),
+            data.coreStack(),
             data.attributeIds(),
+            data.attributeStack(),
             data.structureId(),
+            data.structureStack(),
             data.particleSpeed(),
             data.particleLifeTime()
         );

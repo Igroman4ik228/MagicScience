@@ -41,12 +41,11 @@ public class AspectProcessor {
     }
 
     public void process() {
-        // ToDO:
-        // Effects!
-        // Stack aspects!
-        // Mana
-        // Collision with block
-        // Craft spell
+        // ToDo:
+        // ! Stack aspects
+        // ? Mana
+        // ? Collision with block
+        // ! Craft spell
         AABB collisionBox = calculateCollisionBox();
 
         particle.getLevel()
@@ -93,7 +92,7 @@ public class AspectProcessor {
             // Отправка ивента коллизии с entity на сервер
             new ServerboundParticleDamagePacket(
                 entity.getId(),
-                damage,
+                damage * spellData.coreStack(),
                 spellData.ownerId()
             )
         );

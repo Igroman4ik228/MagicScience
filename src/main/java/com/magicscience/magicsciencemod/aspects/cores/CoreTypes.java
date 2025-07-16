@@ -6,28 +6,40 @@ import org.jetbrains.annotations.NotNull;
 public enum CoreTypes implements IMagicType<IMagicCore> {
     FIRE(new FireCore());
 
-    private final @NotNull IMagicCore instance;
+    private final @NotNull IMagicCore prototype;
 
-    CoreTypes(@NotNull IMagicCore instance) {
-        this.instance = instance;
+    CoreTypes(@NotNull IMagicCore prototype) {
+        this.prototype = prototype;
     }
 
-    @NotNull
-    public static IMagicCore getInstance(int id) {
-        return IMagicType.findInstance(id, CoreTypes.class);
+    @Override
+    public @NotNull IMagicCore getInstance() {
+        return prototype;
+    }
+
+    @Override
+    public @NotNull IMagicCore newInstance(Object... args) {
+        return prototype.cloneWithArguments(args);
+    }
+
+    @Override
+    public int getId() {
+        return ordinal() + 1;
     }
 
     public static int getId(@NotNull IMagicCore instance) {
         return IMagicType.findId(instance, CoreTypes.class);
     }
 
-    @NotNull
-    public IMagicCore getInstance() {
-        return instance;
+    public static IMagicCore getInstance(int id) {
+        return IMagicType.findInstance(id, CoreTypes.class);
     }
 
-    public int getId() {
-        // Not index, because not null
-        return ordinal() + 1;
+    public static IMagicCore getInstance(int id, Object... args) {
+        for (CoreTypes type : values()) {
+            if (type.getId() == id)
+                return type.newInstance(args);
+        }
+        throw new IllegalArgumentException("Unknown core id: " + id);
     }
 }

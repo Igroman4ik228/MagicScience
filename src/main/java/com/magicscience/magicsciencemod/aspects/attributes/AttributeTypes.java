@@ -9,19 +9,28 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     VECTOR(new VectorAttribute()),
     SELF_SPECTRE(new SelfSpectreAttribute());
 
-    private final @Nullable IMagicAttribute instance;
+    private final @Nullable IMagicAttribute prototype;
 
     AttributeTypes() {
-        this(null);
+        this.prototype = null;
     }
 
-    AttributeTypes(@Nullable IMagicAttribute instance) {
-        this.instance = instance;
+    AttributeTypes(@Nullable IMagicAttribute prototype) {
+        this.prototype = prototype;
     }
 
     @Nullable
     public static IMagicAttribute getInstance(int id) {
         return IMagicType.findInstance(id, AttributeTypes.class);
+    }
+
+    @Nullable
+    public static IMagicAttribute getInstance(int id, Object... args) {
+        for (AttributeTypes type : values()) {
+            if (type.getId() == id)
+                return type.newInstance(args);
+        }
+        throw new IllegalArgumentException("Unknown attribute id: " + id);
     }
 
     public static int getId(@Nullable IMagicAttribute instance) {
@@ -31,11 +40,17 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     @Override
     @Nullable
     public IMagicAttribute getInstance() {
-        return instance;
+        return prototype;
     }
 
     @Override
     public int getId() {
         return ordinal();
+    }
+
+    @Override
+    @Nullable
+    public IMagicAttribute newInstance(Object... args) {
+        return prototype != null ? prototype.cloneWithArguments(args) : null;
     }
 }

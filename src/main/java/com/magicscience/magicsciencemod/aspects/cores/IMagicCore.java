@@ -14,5 +14,9 @@ public interface IMagicCore extends IMagicAspect {
 
     float getSize();
 
+    int getStack();
+
+    IMagicCore cloneWithArguments(Object... args);
+
     Collection<BaseMagicEffect> getMagicEffects();
 }

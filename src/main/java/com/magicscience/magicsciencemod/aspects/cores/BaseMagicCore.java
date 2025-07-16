@@ -4,12 +4,13 @@ import com.magicscience.magicsciencemod.aspects.cores.effects.BaseMagicEffect;
 
 import java.util.Collection;
 
-public class BaseMagicCore implements IMagicCore {
+public abstract class BaseMagicCore implements IMagicCore {
     private final int manaCost;
     private final int damage;
     private final int particleLifeTime;
     private final int particleCount;
     private final float size;
+    private final int stack;
     private Collection<BaseMagicEffect> effects;
 
     public BaseMagicCore(
@@ -17,13 +18,19 @@ public class BaseMagicCore implements IMagicCore {
         int damage,
         int particleLifeTime,
         int particleCount,
-        float size
+        float size,
+        int stack
     ) {
         this.manaCost = manaCost;
         this.damage = damage;
         this.particleLifeTime = particleLifeTime;
         this.particleCount = particleCount;
         this.size = size;
+
+        if (stack < 1) {
+            stack = 1;
+        }
+        this.stack = stack;
     }
 
     protected void setEffects(Collection<BaseMagicEffect> effects){
@@ -32,12 +39,12 @@ public class BaseMagicCore implements IMagicCore {
 
     @Override
     public int getManaCost() {
-        return manaCost;
+        return manaCost * stack;
     }
 
     @Override
     public int getDamage() {
-        return damage;
+        return damage * stack;
     }
 
     @Override
@@ -52,7 +59,12 @@ public class BaseMagicCore implements IMagicCore {
 
     @Override
     public float getSize() {
-        return size;
+        return size * stack;
+    }
+
+    @Override
+    public int getStack() {
+        return stack;
     }
 
     @Override

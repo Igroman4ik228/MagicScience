@@ -3,6 +3,7 @@ package com.magicscience.magicsciencemod.aspects.spell;
 import com.magicscience.magicsciencemod.aspects.IMagicAspect;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
+import com.magicscience.magicsciencemod.aspects.attributes.VectorAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
 import org.jetbrains.annotations.NotNull;
@@ -10,10 +11,11 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 
 public class Spell implements IMagicAspect {
-    final @NotNull IMagicCore magicCore;
-    private final @NotNull Collection<IMagicAttribute> magicAttributes;
+    private final @NotNull IMagicCore magicCore;
+    private final @NotNull List<IMagicAttribute> magicAttributes;
     private final @Nullable IMagicStructure magicStructure;
     private final int ownerId;
     private final int particleSpeed;
@@ -21,7 +23,7 @@ public class Spell implements IMagicAspect {
 
     public Spell(
         @NotNull IMagicCore magicCore,
-        @NotNull Collection<IMagicAttribute> magicAttributes,
+        @NotNull List<IMagicAttribute> magicAttributes,
         @Nullable IMagicStructure magicStructure,
         int ownerId
     ) {
@@ -37,7 +39,7 @@ public class Spell implements IMagicAspect {
 
     public Spell(
         @NotNull IMagicCore magicCore,
-        @NotNull Collection<IMagicAttribute> magicAttributes,
+        @NotNull List<IMagicAttribute> magicAttributes,
         int ownerId
     ) {
         this(magicCore, magicAttributes, null, ownerId);
@@ -59,13 +61,11 @@ public class Spell implements IMagicAspect {
             return 0;
 
         // ToDo: Calc with Math
-        for (IMagicAttribute attribute : magicAttributes) {
-
-            if (AttributeTypes.getId(attribute) == AttributeTypes.VECTOR.getId()) {
-                return 2;
+        for (var attribute : getMagicAttributes()) {
+            if (attribute instanceof VectorAttribute) {
+                return 2 * attribute.getStack();
             }
         }
-
         return 0;
     }
 
@@ -91,7 +91,7 @@ public class Spell implements IMagicAspect {
     }
 
     @NotNull
-    public Collection<IMagicAttribute> getMagicAttributes() {
+    public List<IMagicAttribute> getMagicAttributes() {
         return magicAttributes;
     }
 

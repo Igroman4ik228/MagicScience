@@ -11,8 +11,11 @@ import org.jetbrains.annotations.NotNull;
 public record MagicParticleOptions(
     int ownerId,
     int coreId,
+    int coreStack,
     int[] attributeIds,
+    int[] attributeStack,
     int structureId,
+    int structureStack,
     int particleSpeed,
     int particleLifeTime
 ) implements ParticleOptions {
@@ -30,7 +33,11 @@ public record MagicParticleOptions(
                 reader.expect(' ');
                 int coreId = reader.readInt();
                 reader.expect(' ');
+                int coreStack = reader.readInt();
+                reader.expect(' ');
                 int structureId = reader.readInt();
+                reader.expect(' ');
+                int structureStack = reader.readInt();
                 reader.expect(' ');
                 int particleSpeed = reader.readInt();
                 reader.expect(' ');
@@ -42,7 +49,12 @@ public record MagicParticleOptions(
                     reader.expect(' ');
                     attributeIds[i] = reader.readInt();
                 }
-                return new MagicParticleOptions(ownerId, coreId, attributeIds, structureId, particleSpeed, particleLifeTime);
+                int[] attributeStack = new int[attrCount];
+                for (int i = 0; i < attrCount; i++) {
+                    reader.expect(' ');
+                    attributeStack[i] = reader.readInt();
+                }
+                return new MagicParticleOptions(ownerId, coreId, coreStack, attributeIds, attributeStack, structureId, structureStack, particleSpeed, particleLifeTime);
             }
 
             @Override
@@ -53,7 +65,9 @@ public record MagicParticleOptions(
             ) {
                 int ownerId = buf.readInt();
                 int coreId = buf.readInt();
+                int coreStack = buf.readInt();
                 int structureId = buf.readInt();
+                int structureStack = buf.readInt();
                 int particleSpeed = buf.readInt();
                 int particleLifeTime = buf.readInt();
                 int attrCount = buf.readVarInt();
@@ -61,8 +75,12 @@ public record MagicParticleOptions(
                 for (int i = 0; i < attrCount; i++) {
                     attributeIds[i] = buf.readInt();
                 }
-                return new MagicParticleOptions(ownerId, coreId, attributeIds,
-                    structureId, particleSpeed, particleLifeTime);
+                int[] attributeStack = new int[attrCount];
+                for (int i = 0; i < attrCount; i++) {
+                    attributeStack[i] = buf.readInt();
+                }
+                return new MagicParticleOptions(ownerId, coreId, coreStack, attributeIds, attributeStack,
+                    structureId, structureStack, particleSpeed, particleLifeTime);
             }
         };
 
@@ -77,12 +95,17 @@ public record MagicParticleOptions(
     public void writeToNetwork(FriendlyByteBuf buf) {
         buf.writeInt(ownerId);
         buf.writeInt(coreId);
+        buf.writeInt(coreStack);
         buf.writeInt(structureId);
+        buf.writeInt(structureStack);
         buf.writeInt(particleSpeed);
         buf.writeInt(particleLifeTime);
 
         buf.writeVarInt(attributeIds.length);
         for (int id : attributeIds) {
+            buf.writeInt(id);
+        }
+        for (int id : attributeStack) {
             buf.writeInt(id);
         }
     }
@@ -93,11 +116,16 @@ public record MagicParticleOptions(
         StringBuilder sb = new StringBuilder();
         sb.append(ownerId).append(" ")
             .append(coreId).append(" ")
+            .append(coreStack).append(" ")
             .append(structureId).append(" ")
+            .append(structureStack).append(" ")
             .append(particleSpeed).append(" ")
             .append(particleLifeTime).append(" ")
             .append(attributeIds.length);
         for (int id : attributeIds) {
+            sb.append(" ").append(id);
+        }
+        for (int id : attributeStack()) {
             sb.append(" ").append(id);
         }
         return sb.toString();

@@ -35,4 +35,8 @@ public interface IMagicType<T> {
      * Returns the associated instance
      */
     T getInstance();
+
+    default T newInstance(Object... args) {
+        throw new UnsupportedOperationException("Dynamic creation not supported for this type.");
+    }
 }

@@ -26,18 +26,25 @@ public class ServerboundCastParticlePacket {
     public ServerboundCastParticlePacket(FriendlyByteBuf buf) {
         int ownerId = buf.readInt();
         int coreId = buf.readVarInt();
+        int coreStack = buf.readVarInt();
         int attrCount = buf.readVarInt();
         int[] attrs = new int[attrCount];
         for (int i = 0; i < attrCount; i++) attrs[i] = buf.readVarInt();
+        int[] attrsStack = new int[attrCount];
+        for (int i = 0; i < attrCount; i++) attrsStack[i] = buf.readVarInt();
         int structureId = buf.readVarInt();
+        int structureStack = buf.readVarInt();
         int particleSpeed = buf.readInt();
         int particleLifeTime = buf.readInt();
 
         this.spellData = new SpellData(
             ownerId,
             coreId,
+            coreStack,
             attrs,
+            attrsStack,
             structureId,
+            structureStack,
             particleSpeed,
             particleLifeTime
         );
@@ -46,9 +53,12 @@ public class ServerboundCastParticlePacket {
     public void encode(FriendlyByteBuf buf) {
         buf.writeInt(spellData.ownerId());
         buf.writeVarInt(spellData.coreId());
+        buf.writeVarInt(spellData.coreStack());
         buf.writeVarInt(spellData.attributeIds().length);
         for (int id : spellData.attributeIds()) buf.writeVarInt(id);
+        for (int id : spellData.attributeStack()) buf.writeVarInt(id);
         buf.writeVarInt(spellData.structureId());
+        buf.writeVarInt(spellData.structureStack());
         buf.writeInt(spellData.particleSpeed());
         buf.writeInt(spellData.particleLifeTime());
     }
@@ -60,10 +70,25 @@ public class ServerboundCastParticlePacket {
 
             LOGGER.info("SpellData received:");
             LOGGER.info("  Owner ID: {}", spellData.ownerId());
+
             LOGGER.info("  Core ID: {}", spellData.coreId());
+            LOGGER.info("  Core Stack: {}", spellData.coreStack());
+
             LOGGER.info("  Attribute IDs: {}", java.util.Arrays.toString(spellData.attributeIds()));
+            LOGGER.info("  Attribute Stack: {}", java.util.Arrays.toString(spellData.attributeStack()));
+
             LOGGER.info("  Structure ID: {}", spellData.structureId());
-            LOGGER.info("  Particle Speed: {}", spellData.particleSpeed());
+            LOGGER.info("  Structure Stack: {}", spellData.structureStack());
+
+            Spell spell;
+            try {
+                spell = SpellConverter.toSpell(spellData);
+            } catch (Exception e) {
+                LOGGER.error("Failed to convert spellData to Spell", e);
+                return;
+            }
+
+            LOGGER.info("  Particle Speed: {}", SpellConverter.toSpell(spellData).getParticleSpeed());
 
             LOGGER.info("Packet handled and data logged for player {}", player.getName().getString());
 
@@ -71,12 +96,16 @@ public class ServerboundCastParticlePacket {
                 // Радиус отправки пакета клинтам, может нескольким
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
                 // Отправки пакета клинтам пакетов с партиками
+
                 new ClientboundSpawnParticlePacket(
                     spellData,
                     player.position().add(0, 1.4, 0),
                     player.getLookAngle().normalize().scale(SpellConverter.toSpell(spellData).getParticleSpeed())
                 )
             );
+
+            LOGGER.info("Spawn");
+
         });
         ctx.get().setPacketHandled(true);
     }
