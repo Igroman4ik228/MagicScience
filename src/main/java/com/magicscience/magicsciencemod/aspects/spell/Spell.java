@@ -56,15 +56,12 @@ public class Spell implements IMagicAspect {
     }
 
     private int calculateParticleSpeed() {
-        if (magicAttributes.isEmpty())
-            return 0;
-
-        // ToDo: Calc with Math
         for (var attribute : getMagicAttributes()) {
             if (attribute instanceof IMagicParticleSpeed) {
                 return ((IMagicParticleSpeed) attribute).getParticleSpeed();
             }
         }
+
         return 0;
     }
 
