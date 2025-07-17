@@ -22,4 +22,16 @@ public abstract class BaseMagicAttribute implements IMagicAttribute {
     public int getManaCost() {
         return manaCost * stack;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null) return false;
+        return this.getClass() == o.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getClass().hashCode();
+    }
 }

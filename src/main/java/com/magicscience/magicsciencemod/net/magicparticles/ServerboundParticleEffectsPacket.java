@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypeHelper;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
 import com.mojang.logging.LogUtils;
@@ -47,7 +48,7 @@ public class ServerboundParticleEffectsPacket {
             if (target == null) return;
 
             // get list of effects for current core
-            var effects = CoreTypes.getInstance(coreId).getMagicEffects();
+            var effects = CoreTypeHelper.findInstance(coreId).getMagicEffects();
 
             // apply effects
             for (IMagicEffect effect : effects) {

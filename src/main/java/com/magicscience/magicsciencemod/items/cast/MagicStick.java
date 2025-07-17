@@ -1,10 +1,17 @@
 package com.magicscience.magicsciencemod.items.cast;
 
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
+import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
+import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
+import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
+import com.mojang.logging.LogUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -15,11 +22,13 @@ import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.List;
-import java.util.Objects;
 
 public class MagicStick extends Item implements ICast {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     private Spell spell;
 
     public MagicStick(Item.Properties properties) {
@@ -38,20 +47,31 @@ public class MagicStick extends Item implements ICast {
         if (hand != InteractionHand.MAIN_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
+        var coreFactory = new MagicCoreFactory();
+        var attributeFactory = new MagicAttributeFactory();
+        var structureFactory = new MagicStructureFactory();
+
         // ToDo: сделать отдельный класс
         // Dynamic create spell
         var spell = new Spell(
-            CoreTypes.getInstance(CoreTypes.FIRE.getId(), 10),     // magicCore
+            coreFactory.create(CoreTypes.FIRE, 3),     // magicCore
             List.of(
-                AttributeTypes.getInstance(AttributeTypes.SELF_SPECTRE.getId()),
-                AttributeTypes.getInstance(AttributeTypes.VECTOR.getId())
+                attributeFactory.create(AttributeTypes.SELF_SPECTRE, 1),
+                attributeFactory.create(AttributeTypes.VECTOR, 2)
             ),                                                 // magicAttributes
-            null,                                              // magicStructure
+            structureFactory.create(StructureTypes.CLOT, 1),                                              // magicStructure
             player.getId()                                     // ownerId
         );
 
-
         setSpell(spell);
+
+        LOGGER.info("  Particle Speed: {}", spell.getParticleSpeed());
+
+        var attributeIds = spell.getMagicAttributes().stream()
+            .map(AttributeTypeHelper::findId)
+            .toList();
+
+        LOGGER.info("Attribute IDs: {}", attributeIds);
 
         ModMessagesMagicParticles.CHANNEL.sendToServer(
             new ServerboundCastParticlePacket(spell)

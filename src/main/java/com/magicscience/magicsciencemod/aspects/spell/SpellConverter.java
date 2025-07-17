@@ -1,8 +1,14 @@
 package com.magicscience.magicsciencemod.aspects.spell;
 
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypeHelper;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
+import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
+import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
+import com.magicscience.magicsciencemod.aspects.structures.StructureTypeHelper;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.mojang.logging.LogUtils;
 import org.jetbrains.annotations.NotNull;
@@ -18,7 +24,7 @@ public class SpellConverter {
         // ! I`m fuck tired convert OOP data to primitive for server code
         List<IMagicAttribute> attributes = spell.getMagicAttributes();
         int[] attributeIds = attributes.stream()
-            .mapToInt(AttributeTypes::getId)
+            .mapToInt(AttributeTypeHelper::findId)
             .toArray();
 
         var attributeStack = new int[attributeIds.length];
@@ -33,11 +39,11 @@ public class SpellConverter {
 
         return new SpellData(
             spell.getOwnerId(),
-            CoreTypes.getId(spell.getMagicCore()),
+            CoreTypeHelper.findId(spell.getMagicCore()),
             spell.getMagicCore().getStack(),
             attributeIds,
             attributeStack,
-            StructureTypes.getId(spell.getStructure()),
+            StructureTypeHelper.findId(spell.getStructure()),
             structureStack,
             spell.getParticleSpeed(),
             spell.getParticleLifeTime()
@@ -48,14 +54,18 @@ public class SpellConverter {
     public static Spell toSpell(SpellData data) {
         List<IMagicAttribute> attributes = new ArrayList<>();
 
+        var attributeFactory = new MagicAttributeFactory();
+        var coreFactory = new MagicCoreFactory();
+        var structureFactory = new MagicStructureFactory();
+
         for (int i = 0; i != data.attributeIds().length; i++) {
-            attributes.add(AttributeTypes.getInstance(data.attributeIds()[i], data.attributeStack()[i]));
+            attributes.add(attributeFactory.createById(data.attributeIds()[i], AttributeTypes.class, data.attributeStack()[i]));
         }
 
         return new Spell(
-            CoreTypes.getInstance(data.coreId(), data.coreStack()),
+            coreFactory.createById(data.coreId(), CoreTypes.class, data.coreStack()),
             attributes,
-            StructureTypes.getInstance(data.structureId(), data.structureStack()),
+            structureFactory.createById(data.structureId(), StructureTypes.class, data.structureStack()),
             data.ownerId()
         );
     }

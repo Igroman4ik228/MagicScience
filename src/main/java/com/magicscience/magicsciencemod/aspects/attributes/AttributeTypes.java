@@ -1,56 +1,35 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
-import com.magicscience.magicsciencemod.aspects.IMagicType;
-
-import javax.annotation.Nullable;
+import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
 
 public enum AttributeTypes implements IMagicType<IMagicAttribute> {
-    NONE(),
+    NONE(null),
     VECTOR(new VectorAttribute()),
     SELF_SPECTRE(new SelfSpectreAttribute());
 
-    private final @Nullable IMagicAttribute prototype;
+    private final IMagicAttribute prototype;
 
-    AttributeTypes() {
-        this.prototype = null;
-    }
-
-    AttributeTypes(@Nullable IMagicAttribute prototype) {
+    AttributeTypes(IMagicAttribute prototype) {
         this.prototype = prototype;
     }
 
-    @Nullable
-    public static IMagicAttribute getInstance(int id) {
-        return IMagicType.findInstance(id, AttributeTypes.class);
-    }
-
-    @Nullable
-    public static IMagicAttribute getInstance(int id, Object... args) {
-        for (AttributeTypes type : values()) {
-            if (type.getId() == id)
-                return type.newInstance(args);
-        }
-        throw new IllegalArgumentException("Unknown attribute id: " + id);
-    }
-
-    public static int getId(@Nullable IMagicAttribute instance) {
-        return IMagicType.findId(instance, AttributeTypes.class);
+    public IMagicAttribute getPrototype() {
+        return prototype;
     }
 
     @Override
-    @Nullable
     public IMagicAttribute getInstance() {
         return prototype;
     }
 
     @Override
-    public int getId() {
-        return ordinal();
+    public IMagicAttribute newInstance(Object... args) {
+        return prototype.cloneWithArguments(args);
     }
 
     @Override
-    @Nullable
-    public IMagicAttribute newInstance(Object... args) {
-        return prototype != null ? prototype.cloneWithArguments(args) : null;
+    public int getId() {
+        return ordinal() + 1;
     }
 }
+

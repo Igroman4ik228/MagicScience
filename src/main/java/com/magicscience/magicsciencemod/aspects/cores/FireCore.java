@@ -30,14 +30,4 @@ public class FireCore extends BaseMagicCore {
     public IMagicCore cloneWithArguments(Object... args) {
         return new FireCore((int) args[0]);
     }
-
-    @Override
-    public boolean equals(Object obj) {
-        return obj instanceof FireCore;
-    }
-
-    @Override
-    public int hashCode() {
-        return getClass().hashCode();
-    }
 }

@@ -3,6 +3,8 @@ package com.magicscience.magicsciencemod.particles.aspecthandlers;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
+import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleEffectsPacket;
@@ -30,7 +32,14 @@ public class AspectProcessor {
 
         this.entityFilter = getBaseEntityFilter()
             .and(getAttributesEntityFilter());
-        this.damage = CoreTypes.getInstance(spellData.coreId()).getDamage();
+
+        var coreFactory = new MagicCoreFactory();
+
+        this.damage = coreFactory.createById(
+            spellData.coreId(),
+            CoreTypes.class,
+            spellData.coreStack())
+            .getDamage();
     }
 
     public void process() {
@@ -69,8 +78,10 @@ public class AspectProcessor {
         int ownerId = spellData.ownerId();
         int[] attributeIds = spellData.attributeIds();
 
+        var attributeFactory = new MagicAttributeFactory();
+
         for (int attrId : attributeIds) {
-            var attr = AttributeTypes.getInstance(attrId);
+            var attr = attributeFactory.createById(attrId, AttributeTypes.class, 1);
 
             if (attr instanceof IFilterMagicAttribute filterAttr) {
                 filter = filter.and(filterAttr.getFilteredEntity(List.of(ownerId)));

@@ -8,7 +8,7 @@ public class VectorAttribute extends BaseMagicAttribute implements IMagicParticl
     }
 
     public VectorAttribute(int stack) {
-        super(20, 1);
+        super(20, stack);
     }
 
     public VectorAttribute(int manaCost, int stack) {
@@ -22,6 +22,6 @@ public class VectorAttribute extends BaseMagicAttribute implements IMagicParticl
 
     @Override
     public int getParticleSpeed() {
-        return 2;
+        return 2 * getStack();
     }
 }

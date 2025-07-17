@@ -26,6 +26,6 @@ public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterM
 
     @Override
     public IMagicAttribute cloneWithArguments(Object... args) {
-        return new VectorAttribute((int) args[0]);
+        return new SelfSpectreAttribute((int) args[0]);
     }
 }
