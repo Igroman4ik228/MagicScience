@@ -2,7 +2,7 @@ package com.magicscience.magicsciencemod.mana;
 
 public class Mana implements IMana {
     private int mana = 0;
-    private int maxMana = 100;
+    private int maxMana = 10000;
 
     @Override
     public int getMana() { return mana; }
@@ -11,8 +11,8 @@ public class Mana implements IMana {
     public int getMaxMana() { return maxMana; }
 
     @Override
-    public void setMana(int mana) {
-        this.mana = Math.min(mana, maxMana);
+    public void setMana(int amount) {
+        this.mana = Math.max(0, Math.min(amount, maxMana));
     }
 
     @Override

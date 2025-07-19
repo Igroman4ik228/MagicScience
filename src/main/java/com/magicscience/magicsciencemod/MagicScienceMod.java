@@ -5,6 +5,7 @@ import com.magicscience.magicsciencemod.events.ManaEvents;
 import com.magicscience.magicsciencemod.events.ModCapabilityEvents;
 import com.magicscience.magicsciencemod.registry.ModItems;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
+import com.magicscience.magicsciencemod.registry.ModMessagesMana;
 import com.magicscience.magicsciencemod.registry.ModParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraftforge.api.distmarker.Dist;
@@ -38,6 +39,7 @@ public class MagicScienceMod {
 
         // Net
         ModMessagesMagicParticles.register();
+        ModMessagesMana.register();
 
         // Particles
         ModParticles.register(modEventBus);

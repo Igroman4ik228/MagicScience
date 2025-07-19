@@ -1,6 +1,5 @@
 package com.magicscience.magicsciencemod.items.cast;
 
-import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
@@ -8,8 +7,8 @@ import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
-import com.magicscience.magicsciencemod.registry.ModCapabilities;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.sounds.SoundEvents;
@@ -65,20 +64,7 @@ public class MagicStick extends Item implements ICast {
 
         setSpell(spell);
 
-        LOGGER.info("  Particle Speed: {}", spell.getParticleSpeed());
-
-        var attributeIds = spell.getMagicAttributes().stream()
-            .map(AttributeTypeHelper::findId)
-            .toList();
-
-        LOGGER.info("Attribute IDs: {}", attributeIds);
-
-        ModMessagesMagicParticles.CHANNEL.sendToServer(
-            new ServerboundCastParticlePacket(spell)
-        );
-
-        // ToDo: Вынести в client/sound
-        player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
+        cast(player, spell.getManaCost());
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
     }
@@ -94,7 +80,20 @@ public class MagicStick extends Item implements ICast {
     }
 
     @Override
-    public void cast() {
-        return;
+    public void cast(Player player, int manaCost) {
+        var mana = ManaCapabilityHelper.get(player).get().getMana();
+
+        if (mana < manaCost) {
+            LOGGER.info("Not enough mana: {}/{}", mana, manaCost);
+            player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F); // отказ
+            return;
+        }
+
+        ModMessagesMagicParticles.CHANNEL.sendToServer(
+            new ServerboundCastParticlePacket(spell)
+        );
+
+        // ToDo: Вынести в client/sound
+        player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
     }
 }

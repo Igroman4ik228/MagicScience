@@ -3,7 +3,7 @@ package com.magicscience.magicsciencemod.net.magicparticles;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.registry.ModCapabilities;
+import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -14,7 +14,6 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
-import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public class ServerboundCastParticlePacket {
@@ -71,18 +70,15 @@ public class ServerboundCastParticlePacket {
             ServerPlayer player = ctx.get().getSender();
             if (player == null) return;
 
-            AtomicInteger mana = new AtomicInteger();
+            Spell spell = SpellConverter.toSpell(spellData);
 
-            player.getCapability(ModCapabilities.MANA_CAPABILITY).ifPresent(playerMana -> {
-                mana.set(playerMana.getMana());
-            });
+            var mana = ManaCapabilityHelper.get(player).get().getMana();
 
-            LOGGER.info("Pl mana: {}", mana);
-
-
-            if (mana.get() < 10) return;
+            if (mana < spell.getManaCost()) return;
 
             LOGGER.info("SpellData received:");
+            LOGGER.info("  Mana: {}", mana);
+
             LOGGER.info("  Owner ID: {}", spellData.ownerId());
 
             LOGGER.info("  Core ID: {}", spellData.coreId());
@@ -93,11 +89,6 @@ public class ServerboundCastParticlePacket {
 
             LOGGER.info("  Structure ID: {}", spellData.structureId());
             LOGGER.info("  Structure Stack: {}", spellData.structureStack());
-
-
-            Spell spell = SpellConverter.toSpell(spellData);
-
-            LOGGER.info("  Particle Speed: {}", spell.getParticleSpeed());
 
             LOGGER.info("Packet handled and data logged for player {}", player.getName().getString());
 
@@ -111,10 +102,7 @@ public class ServerboundCastParticlePacket {
                 )
             );
 
-            player.getCapability(ModCapabilities.MANA_CAPABILITY).ifPresent(playerMana -> {
-                mana.set(playerMana.getMana() - 10);
-            });
-
+            ManaCapabilityHelper.removeMana(player, spell.getManaCost());
 
             LOGGER.info("Spawn");
 
