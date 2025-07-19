@@ -3,13 +3,13 @@ package com.magicscience.magicsciencemod.items.cast;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
-import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
 import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
+import com.magicscience.magicsciencemod.registry.ModCapabilities;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.sounds.SoundEvents;
@@ -59,7 +59,7 @@ public class MagicStick extends Item implements ICast {
                 attributeFactory.create(AttributeTypes.SELF_SPECTRE, 1),
                 attributeFactory.create(AttributeTypes.VECTOR, 2)
             ),                                                 // magicAttributes
-            structureFactory.create(StructureTypes.CLOT, 1),                                              // magicStructure
+            structureFactory.create(StructureTypes.CLOT, 1),    // magicStructure
             player.getId()                                     // ownerId
         );
 
@@ -91,5 +91,10 @@ public class MagicStick extends Item implements ICast {
     @Override
     public void setSpell(Spell newSpell) {
         spell = newSpell;
+    }
+
+    @Override
+    public void cast() {
+        return;
     }
 }

@@ -3,6 +3,7 @@ package com.magicscience.magicsciencemod.net.magicparticles;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import com.magicscience.magicsciencemod.registry.ModCapabilities;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
@@ -13,6 +14,7 @@ import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.Arrays;
+import java.util.concurrent.atomic.AtomicInteger;
 import java.util.function.Supplier;
 
 public class ServerboundCastParticlePacket {
@@ -69,6 +71,17 @@ public class ServerboundCastParticlePacket {
             ServerPlayer player = ctx.get().getSender();
             if (player == null) return;
 
+            AtomicInteger mana = new AtomicInteger();
+
+            player.getCapability(ModCapabilities.MANA_CAPABILITY).ifPresent(playerMana -> {
+                mana.set(playerMana.getMana());
+            });
+
+            LOGGER.info("Pl mana: {}", mana);
+
+
+            if (mana.get() < 10) return;
+
             LOGGER.info("SpellData received:");
             LOGGER.info("  Owner ID: {}", spellData.ownerId());
 
@@ -97,6 +110,11 @@ public class ServerboundCastParticlePacket {
                     player.getLookAngle().normalize().scale(spell.getParticleSpeed())
                 )
             );
+
+            player.getCapability(ModCapabilities.MANA_CAPABILITY).ifPresent(playerMana -> {
+                mana.set(playerMana.getMana() - 10);
+            });
+
 
             LOGGER.info("Spawn");
 

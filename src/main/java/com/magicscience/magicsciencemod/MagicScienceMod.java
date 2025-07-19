@@ -1,6 +1,8 @@
 package com.magicscience.magicsciencemod;
 
 import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
+import com.magicscience.magicsciencemod.events.ManaEvents;
+import com.magicscience.magicsciencemod.events.ModCapabilityEvents;
 import com.magicscience.magicsciencemod.registry.ModItems;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.magicscience.magicsciencemod.registry.ModParticles;
@@ -50,6 +52,11 @@ public class MagicScienceMod {
 
         // Register ourselves for server and other game events we are interested in
         MinecraftForge.EVENT_BUS.register(this);
+
+        // Events
+        MinecraftForge.EVENT_BUS.register(ModCapabilityEvents.class);
+        MinecraftForge.EVENT_BUS.register(ManaEvents.class);
+
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
