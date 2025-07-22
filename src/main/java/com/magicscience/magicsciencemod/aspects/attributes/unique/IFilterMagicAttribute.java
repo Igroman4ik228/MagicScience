@@ -1,15 +1,18 @@
 package com.magicscience.magicsciencemod.aspects.attributes.unique;
 
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
 import java.util.function.Predicate;
 
 public interface IFilterMagicAttribute {
-    default Predicate<Entity> getFilteredEntity() {
-        return getFilteredEntity(Collections.emptyList());
+    @NotNull
+    default Predicate<Entity> getEntityFilter() {
+        return getEntityFilter(Collections.emptyList());
     }
 
-    Predicate<Entity> getFilteredEntity(Collection<Integer> targetIds);
+    @NotNull
+    Predicate<Entity> getEntityFilter(@NotNull Collection<Integer> targetIds);
 }

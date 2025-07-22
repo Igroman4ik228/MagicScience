@@ -14,8 +14,10 @@ public class ManaEvents {
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
-        if (!(event.player instanceof ServerPlayer serverPlayer)) return;
-        if (event.phase != TickEvent.Phase.END) return;
+        if (!(event.player instanceof ServerPlayer serverPlayer))
+            return;
+        if (event.phase != TickEvent.Phase.END)
+            return;
 
         var data = serverPlayer.getPersistentData();
         int cooldown = data.getInt(MANA_REGEN_COOLDOWN);

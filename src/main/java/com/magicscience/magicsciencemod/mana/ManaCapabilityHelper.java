@@ -51,7 +51,9 @@ public class ManaCapabilityHelper {
     }
 
     public static boolean canAdd(Player player, int amount) {
-        return get(player).map(mana -> mana.getMana() + amount <= mana.getMaxMana()).orElse(false);
+        return get(player)
+            .map(mana -> mana.getMana() + amount <= mana.getMaxMana())
+            .orElse(false);
     }
 
     public static boolean canRemove(Player player, int amount) {

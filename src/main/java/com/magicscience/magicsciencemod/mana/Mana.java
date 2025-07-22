@@ -1,6 +1,7 @@
 package com.magicscience.magicsciencemod.mana;
 
 public class Mana implements IMana {
+    // Default for create world
     private int mana = 0;
     private int maxMana = 10000;
 
