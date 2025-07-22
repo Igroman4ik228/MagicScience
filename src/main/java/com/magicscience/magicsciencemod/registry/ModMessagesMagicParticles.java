@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.registry;
 
+import com.magicscience.magicsciencemod.MagicScienceMod;
 import com.magicscience.magicsciencemod.net.magicparticles.ClientboundSpawnParticlePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
@@ -14,7 +15,7 @@ public class ModMessagesMagicParticles {
 
     public static void register() {
         CHANNEL = NetworkRegistry.newSimpleChannel(
-            new ResourceLocation("magicscience", "magicparticles"),
+            new ResourceLocation(MagicScienceMod.MOD_ID,"magicparticles"),
             () -> "1.0",
             s -> true,
             s -> true

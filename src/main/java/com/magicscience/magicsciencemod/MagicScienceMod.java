@@ -1,17 +1,17 @@
 package com.magicscience.magicsciencemod;
 
+import com.magicscience.magicsciencemod.blocks.LightBlockManager;
 import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
 import com.magicscience.magicsciencemod.events.ManaEvents;
 import com.magicscience.magicsciencemod.events.ModCapabilityEvents;
-import com.magicscience.magicsciencemod.registry.ModItems;
-import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
-import com.magicscience.magicsciencemod.registry.ModMessagesMana;
-import com.magicscience.magicsciencemod.registry.ModParticles;
+import com.magicscience.magicsciencemod.registry.*;
 import com.mojang.logging.LogUtils;
+import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
 import net.minecraftforge.event.server.ServerStartingEvent;
+import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
@@ -40,6 +40,7 @@ public class MagicScienceMod {
         // Net
         ModMessagesMagicParticles.register();
         ModMessagesMana.register();
+        ModMessagesLightBlock.register();
 
         // Particles
         ModParticles.register(modEventBus);
@@ -58,7 +59,6 @@ public class MagicScienceMod {
         // Events
         MinecraftForge.EVENT_BUS.register(ModCapabilityEvents.class);
         MinecraftForge.EVENT_BUS.register(ManaEvents.class);
-
     }
 
     private void commonSetup(final FMLCommonSetupEvent event) {
@@ -70,10 +70,18 @@ public class MagicScienceMod {
 
     }
 
-    // You can use SubscribeEvent and let the Event Bus discover methods to call
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
+        ServerLevel level = event.getServer().overworld();
+        LightBlockManager.removeAllLights(level);
+    }
 
+    @SubscribeEvent
+    public void onServerStopping(ServerStoppingEvent event) {
+        ServerLevel level = event.getServer().overworld();
+        LightBlockManager.removeAllLights(level);
+
+        LOGGER.info("SERVER STOP");
     }
 
     // You can use EventBusSubscriber to automatically register all static methods in the class annotated with @SubscribeEvent
@@ -81,7 +89,7 @@ public class MagicScienceMod {
     public static class ClientModEvents {
         @SubscribeEvent
         public static void onClientSetup(FMLClientSetupEvent event) {
-
+            LOGGER.info("CLIENT SETUP");
         }
     }
 }
