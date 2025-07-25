@@ -70,6 +70,10 @@ public class ServerboundCastParticlePacket {
             ServerPlayer player = ctx.get().getSender();
             if (player == null) return;
 
+            if (player.getId() != spellData.ownerId()) {
+                return;
+            }
+
             Spell spell = SpellConverter.toSpell(spellData);
 
             int mana = ManaCapabilityHelper.get(player).get().getMana();
