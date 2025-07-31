@@ -10,7 +10,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class ManaEvents {
     private static final String MANA_REGEN_COOLDOWN = "mana_regen_cd";
-    private static final int COOLDOWN_TICKS = TimeHelper.seconds(2);
+    private static final int COOLDOWN_TICKS = TimeHelper.seconds(1);
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {

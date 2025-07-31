@@ -53,12 +53,12 @@ public class MagicStick extends Item implements ICast {
         // ToDo: сделать отдельный класс
         // Dynamic create spell
         var spell = new Spell(
-            coreFactory.create(CoreTypes.FIRE, 3),     // magicCore
+            coreFactory.create(CoreTypes.FIRE, 1),     // magicCore
             List.of(
                 attributeFactory.create(AttributeTypes.SELF_SPECTRE, 1),
-                attributeFactory.create(AttributeTypes.VECTOR, 2)
+                attributeFactory.create(AttributeTypes.VECTOR, 1)
             ),                                                 // magicAttributes
-            structureFactory.create(StructureTypes.CLOT, 1),    // magicStructure
+            structureFactory.create(StructureTypes.SPHERE, 3),    // magicStructure
             player.getId()                                     // ownerId
         );
 

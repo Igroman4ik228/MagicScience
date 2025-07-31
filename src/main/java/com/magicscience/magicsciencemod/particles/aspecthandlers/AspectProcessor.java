@@ -44,8 +44,6 @@ public class AspectProcessor {
 
     public void process() {
         // ToDo:
-        // ! Stack aspects
-        // ? Mana
         // ? Collision with block
         // ! Craft spell
         AABB collisionBox = calculateCollisionBox();

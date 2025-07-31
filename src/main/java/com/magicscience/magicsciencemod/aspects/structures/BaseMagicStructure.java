@@ -1,20 +1,23 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
+import net.minecraft.world.phys.Vec3;
+import java.util.List;
+
 public abstract class BaseMagicStructure implements IMagicStructure {
     private final int manaCost;
     private final int countParticles;
-    private final int spawnParticlesRadius;
+    private final int size;
     private final int stack;
 
     public BaseMagicStructure(
         int manaCost,
         int countParticles,
-        int spawnParticlesRadius,
+        int size,
         int stack
     ) {
         this.manaCost = manaCost;
         this.countParticles = countParticles;
-        this.spawnParticlesRadius = spawnParticlesRadius;
+        this.size = size;
 
         if (stack < 1) {
             stack = 1;
@@ -29,7 +32,7 @@ public abstract class BaseMagicStructure implements IMagicStructure {
 
     @Override
     public int getCountParticles() {
-        return countParticles;
+        return countParticles * stack;
     }
 
     @Override
@@ -38,9 +41,11 @@ public abstract class BaseMagicStructure implements IMagicStructure {
     }
 
     @Override
-    public int getSpawnParticlesRadius() {
-        return spawnParticlesRadius;
+    public int getSize() {
+        return size * stack;
     }
+
+    public abstract List<Vec3> calculateStartParticlePositions(Vec3 basePosition);
 
     @Override
     public boolean equals(Object o) {
