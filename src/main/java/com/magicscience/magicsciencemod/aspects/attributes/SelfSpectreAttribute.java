@@ -1,7 +1,12 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.function.Predicate;
@@ -20,8 +25,14 @@ public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterM
     }
 
     @Override
-    public Predicate<Entity> getFilteredEntity(Collection<Integer> targetIds) {
-        return entity -> !targetIds.contains(entity.getId());
+    @NotNull
+    @OnlyIn(Dist.CLIENT)
+    public Predicate<Entity> getEntityFilter(@NotNull Collection<Integer> targetIds) {
+        LocalPlayer player = Minecraft.getInstance().player;
+        if (player==null)
+            return entity -> true;
+
+        return entity -> !(player.getId()== entity.getId());
     }
 
     @Override

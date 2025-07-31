@@ -53,13 +53,13 @@ public class MagicStick extends Item implements ICast {
         // ToDo: сделать отдельный класс
         // Dynamic create spell
         var spell = new Spell(
-            coreFactory.create(CoreTypes.FIRE, 1),     // magicCore
+            coreFactory.create(CoreTypes.FIRE, 3),
             List.of(
                 attributeFactory.create(AttributeTypes.SELF_SPECTRE, 1),
-                attributeFactory.create(AttributeTypes.VECTOR, 1)
-            ),                                                 // magicAttributes
-            structureFactory.create(StructureTypes.SPHERE, 3),    // magicStructure
-            player.getId()                                     // ownerId
+                attributeFactory.create(AttributeTypes.VECTOR, 2)
+            ),
+            structureFactory.create(StructureTypes.CLOT, 1),
+            player.getId()
         );
 
         setSpell(spell);
@@ -67,6 +67,27 @@ public class MagicStick extends Item implements ICast {
         cast(player, spell.getManaCost());
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
+    }
+
+    @Override
+    @OnlyIn(Dist.CLIENT)
+    public void cast(Player player, int manaCost) {
+        if (!player.isCreative()) {
+            int mana = ManaCapabilityHelper.get(player).get().getMana();
+
+            if (mana < manaCost) {
+                LOGGER.info("Not enough mana: {}/{}", mana, manaCost);
+                player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F); // отказ
+                return;
+            }
+        }
+
+        ModMessagesMagicParticles.CHANNEL.sendToServer(
+            new ServerboundCastParticlePacket(spell)
+        );
+
+        // ToDo: Вынести в client/sound
+        player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
     }
 
     @Override
@@ -79,21 +100,4 @@ public class MagicStick extends Item implements ICast {
         spell = newSpell;
     }
 
-    @Override
-    public void cast(Player player, int manaCost) {
-        var mana = ManaCapabilityHelper.get(player).get().getMana();
-
-        if (mana < manaCost) {
-            LOGGER.info("Not enough mana: {}/{}", mana, manaCost);
-            player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F); // отказ
-            return;
-        }
-
-        ModMessagesMagicParticles.CHANNEL.sendToServer(
-            new ServerboundCastParticlePacket(spell)
-        );
-
-        // ToDo: Вынести в client/sound
-        player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
-    }
 }

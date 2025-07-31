@@ -1,6 +1,7 @@
 package com.magicscience.magicsciencemod.registry;
 
 import com.magicscience.magicsciencemod.MagicScienceMod;
+import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
 import com.magicscience.magicsciencemod.net.mana.ClientboundSyncManaPacket;
 import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.network.NetworkDirection;
@@ -19,11 +20,11 @@ public class ModMessagesMana {
             s -> true
         );
 
-        CHANNEL.messageBuilder(ClientboundSyncManaPacket.class, packetId++, NetworkDirection.PLAY_TO_CLIENT)
-            .encoder(ClientboundSyncManaPacket::encode)
-            .decoder(ClientboundSyncManaPacket::new)
-            .consumerMainThread(ClientboundSyncManaPacket::handle)
-            .add();
-
+        CHANNEL.registerMessage(packetId++,
+            ClientboundSyncManaPacket.class,
+            ClientboundSyncManaPacket::encode,
+            ClientboundSyncManaPacket::new,
+            ClientboundSyncManaPacket::handle
+        );
     }
 }

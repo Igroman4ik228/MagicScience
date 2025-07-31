@@ -1,24 +1,32 @@
 package com.magicscience.magicsciencemod.particles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import com.magicscience.magicsciencemod.net.lightBlock.ServerboundRemoveLightBlockPacket;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.AspectProcessor;
+import com.magicscience.magicsciencemod.registry.ModMessagesLightBlock;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
+import net.minecraft.core.BlockPos;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
+
+import java.util.UUID;
 
 public class MagicParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FRAME_COUNT = 3;
-
     private final @NotNull SpellData spellData;
-
     private final @NotNull AspectProcessor aspectProcessor;
+
+    private final UUID particleUUID;
+
+    public @Nullable BlockPos lightBlockPos = null;
 
     public MagicParticle(
         ClientLevel level,
@@ -33,6 +41,8 @@ public class MagicParticle extends TextureSheetParticle {
         this.zd = zd;
         this.lifetime = spellData.particleLifeTime();
         this.spellData = spellData;
+
+        this.particleUUID = UUID.randomUUID();
 
         // ToDo: В будущем может быть усложнение взятия индекса спрайта
         int spriteIndex = Math.max(spellData.coreId() - 1, 0);
@@ -65,6 +75,24 @@ public class MagicParticle extends TextureSheetParticle {
     }
 
     @Override
+    public void remove() {
+        if (lightBlockPos != null){
+            ModMessagesLightBlock.CHANNEL.sendToServer(
+                new ServerboundRemoveLightBlockPacket(particleUUID)
+            );
+        }
+
+        lightBlockPos = null;
+        super.remove();
+    }
+
+
+    @Override
+    public int getLightColor(float partialTick) {
+        return 0xF000F0;
+    }
+
+    @Override
     public @NotNull ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
@@ -79,5 +107,9 @@ public class MagicParticle extends TextureSheetParticle {
 
     public @NotNull Vec3 getDirectionPos() {
         return new Vec3(xd, yd, zd);
+    }
+
+    public @NotNull UUID getUUID() {
+        return particleUUID;
     }
 }

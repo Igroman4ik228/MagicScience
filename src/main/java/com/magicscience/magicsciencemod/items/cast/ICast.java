@@ -4,8 +4,9 @@ import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import net.minecraft.world.entity.player.Player;
 
 public interface ICast {
-    public Spell getSpell();
-    public void setSpell(Spell newSpell);
+    void cast(Player player, int manaCost);
 
-    public void cast(Player player, int manaCost);
+    Spell getSpell();
+
+    void setSpell(Spell newSpell);
 }

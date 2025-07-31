@@ -70,11 +70,19 @@ public class ServerboundCastParticlePacket {
             ServerPlayer player = ctx.get().getSender();
             if (player == null) return;
 
+            if (player.getId() != spellData.ownerId()) {
+                return;
+            }
+
             Spell spell = SpellConverter.toSpell(spellData);
 
-            var mana = ManaCapabilityHelper.get(player).get().getMana();
+            int mana = ManaCapabilityHelper.get(player).get().getMana();
+            if (!player.isCreative()) {
 
-            if (mana < spell.getManaCost()) return;
+                if (mana < spell.getManaCost())
+                    return;
+
+            }
 
             LOGGER.info("SpellData received:");
             LOGGER.info("  Mana: {}", mana);
@@ -102,7 +110,9 @@ public class ServerboundCastParticlePacket {
                 )
             );
 
-            ManaCapabilityHelper.removeMana(player, spell.getManaCost());
+            if (!player.isCreative()) {
+                ManaCapabilityHelper.removeMana(player, spell.getManaCost());
+            }
 
             LOGGER.info("Spawn");
 
