@@ -3,7 +3,6 @@ package com.magicscience.magicsciencemod.particles.aspecthandlers;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.net.lightBlock.ServerboundPlaceLightBlockPacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleEffectsPacket;
 import com.magicscience.magicsciencemod.particles.MagicParticle;
@@ -11,9 +10,7 @@ import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.
 import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.BaseEntityFilter;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.EntityFilter;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.IEntityFilter;
-import com.magicscience.magicsciencemod.registry.ModMessagesLightBlock;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
-import net.minecraft.core.BlockPos;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.Vec3;
@@ -50,9 +47,6 @@ public class AspectProcessor {
         // ? Collision with block
         // ! Craft spell
 
-        // Свет
-        handleLight();
-
         AABB collisionBox = calculateCollisionBox();
 
         particle.getLevel()
@@ -68,16 +62,6 @@ public class AspectProcessor {
         Vec3 nextPosition = currentPosition.add(directionPos);
 
         return new AABB(currentPosition, nextPosition).inflate(0.1);
-    }
-
-    private void handleLight() {
-        BlockPos blockPos = BlockPos.containing(particle.getPos());
-        if (!blockPos.equals(particle.lightBlockPos)) {
-            particle.lightBlockPos = blockPos;
-            ModMessagesLightBlock.CHANNEL.sendToServer(
-                new ServerboundPlaceLightBlockPacket(particle.getUUID(), blockPos)
-            );
-        }
     }
 
     private void handleCollision(Entity entity) {

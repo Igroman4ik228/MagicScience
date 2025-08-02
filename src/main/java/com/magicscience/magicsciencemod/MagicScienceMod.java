@@ -1,12 +1,10 @@
 package com.magicscience.magicsciencemod;
 
-import com.magicscience.magicsciencemod.blocks.LightBlockManager;
 import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
 import com.magicscience.magicsciencemod.events.ManaEvents;
 import com.magicscience.magicsciencemod.events.ModCapabilityEvents;
 import com.magicscience.magicsciencemod.registry.*;
 import com.mojang.logging.LogUtils;
-import net.minecraft.server.level.ServerLevel;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.event.BuildCreativeModeTabContentsEvent;
@@ -40,7 +38,6 @@ public class MagicScienceMod {
         // Net
         ModMessagesMagicParticles.register();
         ModMessagesMana.register();
-        ModMessagesLightBlock.register();
 
         // Particles
         ModParticles.register(modEventBus);
@@ -72,15 +69,11 @@ public class MagicScienceMod {
 
     @SubscribeEvent
     public void onServerStarting(ServerStartingEvent event) {
-        ServerLevel level = event.getServer().overworld();
-        LightBlockManager.removeAllLights(level);
+        LOGGER.info("SERVER START");
     }
 
     @SubscribeEvent
     public void onServerStopping(ServerStoppingEvent event) {
-        ServerLevel level = event.getServer().overworld();
-        LightBlockManager.removeAllLights(level);
-
         LOGGER.info("SERVER STOP");
     }
 
