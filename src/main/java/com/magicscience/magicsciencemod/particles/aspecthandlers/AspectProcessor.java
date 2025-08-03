@@ -13,10 +13,7 @@ import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.phys.AABB;
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.List;
 
 public class AspectProcessor {
     private final @NotNull MagicParticle particle;
@@ -29,17 +26,17 @@ public class AspectProcessor {
         this.particle = particle;
         this.spellData = particle.getSpellData();
 
-        this.entityFilter = new EntityFilter(List.of(
+        this.entityFilter = new EntityFilter(
             new BaseEntityFilter(),
             new AttributeEntityFilter(spellData)
-        ));
+        );
 
         var coreFactory = new MagicCoreFactory();
         this.damage = coreFactory.createById(
-                spellData.coreId(),
-                CoreTypes.class,
-                spellData.coreStack()
-            ).getDamage();
+            spellData.coreId(),
+            CoreTypes.class,
+            spellData.coreStack()
+        ).getDamage();
     }
 
     public void process() {
@@ -56,12 +53,13 @@ public class AspectProcessor {
 
     @NotNull
     private AABB calculateCollisionBox() {
-        var currentPosition = particle.getPos();
-
-        var directionPos = particle.getDirectionPos();
-        Vec3 nextPosition = currentPosition.add(directionPos);
-
-        return new AABB(currentPosition, nextPosition).inflate(0.1);
+        return particle.getBoundingBox();
+//        var currentPosition = particle.getPos();
+//
+//        var directionPos = particle.getDirectionPos();
+//        Vec3 nextPosition = currentPosition.add(directionPos);
+//
+//        return new AABB(currentPosition, nextPosition).inflate(0.1);
     }
 
     private void handleCollision(Entity entity) {

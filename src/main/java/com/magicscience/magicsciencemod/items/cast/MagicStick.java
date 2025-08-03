@@ -43,7 +43,7 @@ public class MagicStick extends Item implements ICast {
         @NotNull InteractionHand hand
     ) {
         // Check main hand
-        if (hand != InteractionHand.MAIN_HAND)
+        if (hand!=InteractionHand.MAIN_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
         var coreFactory = new MagicCoreFactory();

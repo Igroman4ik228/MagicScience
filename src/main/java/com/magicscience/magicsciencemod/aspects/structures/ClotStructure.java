@@ -1,6 +1,8 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
+
 import java.util.concurrent.ThreadLocalRandom;
 
 public class ClotStructure extends BaseMagicStructure {
@@ -17,11 +19,13 @@ public class ClotStructure extends BaseMagicStructure {
     }
 
     @Override
+    @NotNull
     public IMagicStructure cloneWithArguments(Object... args) {
         return new ClotStructure((int) args[0]);
     }
 
     @Override
+    @NotNull
     public Vec3 calculateStartParticlePosition(Vec3 basePosition) {
         double radius = 0.3 * getSize();
         var rnd = ThreadLocalRandom.current();
@@ -38,5 +42,4 @@ public class ClotStructure extends BaseMagicStructure {
 
         return basePosition.add(x, y, z);
     }
-
 }

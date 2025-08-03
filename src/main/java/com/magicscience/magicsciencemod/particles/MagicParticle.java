@@ -30,7 +30,8 @@ public class MagicParticle extends TextureSheetParticle {
         this.yd = yd;
         this.zd = zd;
         this.lifetime = spellData.particleLifeTime();
-        this.spellData = spellData;
+        this.bbWidth = 0.1f;
+        this.bbHeight = 0.1f;
 
         // ToDo: В будущем может быть усложнение взятия индекса спрайта
         int spriteIndex = Math.max(spellData.coreId() - 1, 0);
@@ -41,6 +42,8 @@ public class MagicParticle extends TextureSheetParticle {
                 sprites
             )
         );
+
+        this.spellData = spellData;
 
         this.aspectProcessor = new AspectProcessor(this);
     }

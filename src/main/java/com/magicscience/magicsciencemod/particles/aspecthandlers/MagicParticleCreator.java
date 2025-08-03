@@ -23,13 +23,15 @@ public class MagicParticleCreator {
     }
 
     public void create() {
-        var spell = SpellConverter.toSpell(spellData);
-
         var level = Minecraft.getInstance().level;
         if (level == null) return;
 
-        for (int i = 0; i < spell.getStructure().getCountParticles(); i++) {
-            var pos = spell.getStructure().calculateStartParticlePosition(position);
+        var spell = SpellConverter.toSpell(spellData);
+        var structure = spell.getStructure();
+        if(structure == null) return;
+
+        for (int i = 0; i < structure.getCountParticles(); i++) {
+            var pos = structure.calculateStartParticlePosition(position);
 
             level.addParticle(
                 new MagicParticleOptions(
