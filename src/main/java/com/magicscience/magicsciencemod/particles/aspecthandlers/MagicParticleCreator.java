@@ -28,9 +28,9 @@ public class MagicParticleCreator {
         var level = Minecraft.getInstance().level;
         if (level == null) return;
 
-        var particlePositions = spell.getStructure().calculateStartParticlePositions(position);
+        for (int i = 0; i < spell.getStructure().getCountParticles(); i++) {
+            var pos = spell.getStructure().calculateStartParticlePosition(position);
 
-        for (var pos : particlePositions) {
             level.addParticle(
                 new MagicParticleOptions(
                     spellData.ownerId(),

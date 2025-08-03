@@ -1,7 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
 import net.minecraft.world.phys.Vec3;
-import java.util.List;
 
 public abstract class BaseMagicStructure implements IMagicStructure {
     private final int manaCost;
@@ -45,7 +44,7 @@ public abstract class BaseMagicStructure implements IMagicStructure {
         return size * stack;
     }
 
-    public abstract List<Vec3> calculateStartParticlePositions(Vec3 basePosition);
+    public abstract Vec3 calculateStartParticlePosition(Vec3 basePosition);
 
     @Override
     public boolean equals(Object o) {
