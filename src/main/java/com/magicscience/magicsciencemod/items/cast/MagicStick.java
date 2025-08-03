@@ -6,9 +6,12 @@ import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
+import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import com.magicscience.magicsciencemod.entities.MagicEntity;
 import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
+import com.magicscience.magicsciencemod.registry.ModEntities;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.sounds.SoundEvents;
@@ -55,16 +58,32 @@ public class MagicStick extends Item implements ICast {
         var spell = new Spell(
             coreFactory.create(CoreTypes.FIRE, 3),
             List.of(
-                attributeFactory.create(AttributeTypes.SELF_SPECTRE, 1),
-                attributeFactory.create(AttributeTypes.VECTOR, 2)
+                attributeFactory.create(AttributeTypes.SELF_SPECTRE, 1)
             ),
-            structureFactory.create(StructureTypes.CLOT, 1),
+            structureFactory.create(StructureTypes.SPHERE, 20),
             player.getId()
         );
 
         setSpell(spell);
 
-        cast(player, spell.getManaCost());
+//        cast(player, spell.getManaCost());
+//
+        for (int i = 0; i < 100; i++) {
+            double angle = 2 * Math.PI * i / 100; // 10 точек по кругу
+            double radius = 1.0; // радиус круга вокруг игрока
+
+            double offsetX = Math.cos(angle) * radius;
+            double offsetZ = Math.sin(angle) * radius;
+
+            MagicEntity entity = new MagicEntity(
+                ModEntities.MAGIC_ENTITY.get(),
+                level,
+                SpellConverter.toData(spell),
+                player.getEyePosition().add(offsetX, 0, offsetZ),
+                player.getLookAngle()
+            );
+            level.addFreshEntity(entity);
+        }
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
     }

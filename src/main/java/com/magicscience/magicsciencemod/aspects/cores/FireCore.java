@@ -18,11 +18,11 @@ public class FireCore extends BaseMagicCore {
     }
 
     public FireCore() {
-        this(10, 10, 300, 10, 1, 1);
+        this(10, 10, 50000, 10, 1, 1);
     }
 
     public FireCore(int stack) {
-        this(10, 10, 300, 10, 1, stack);
+        this(10, 10, 50000, 10, 1, stack);
     }
 
     @Override
