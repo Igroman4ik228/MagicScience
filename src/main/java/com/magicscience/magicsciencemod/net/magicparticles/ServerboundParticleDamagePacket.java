@@ -41,16 +41,16 @@ public class ServerboundParticleDamagePacket {
             LOGGER.info("ServerboundParticleDamagePacket start");
 
             ServerPlayer player = ctx.get().getSender();
-            if (player == null) return;
+            if (player==null) return;
 
             // get entity with collision
             Level level = player.level();
             Entity target = level.getEntity(entityId);
-            if (target == null) return;
+            if (target==null) return;
 
             // Получаем владельца частицы
             Entity owner = level.getEntity(ownerId);
-
+            
             // Если владелец не игрок (или не найден), не наносим урон
             if (!(owner instanceof ServerPlayer ownerPlayer)) return;
 

@@ -44,22 +44,11 @@ public class AspectProcessor {
         // ? Collision with block
         // ! Craft spell
 
-        AABB collisionBox = calculateCollisionBox();
+        AABB collisionBox = particle.getBoundingBox();
 
         particle.getLevel()
             .getEntities((Entity) null, collisionBox, entityFilter)
             .forEach(this::handleCollision);
-    }
-
-    @NotNull
-    private AABB calculateCollisionBox() {
-        return particle.getBoundingBox();
-//        var currentPosition = particle.getPos();
-//
-//        var directionPos = particle.getDirectionPos();
-//        Vec3 nextPosition = currentPosition.add(directionPos);
-//
-//        return new AABB(currentPosition, nextPosition).inflate(0.1);
     }
 
     private void handleCollision(Entity entity) {
@@ -75,7 +64,7 @@ public class AspectProcessor {
         ModMessagesMagicParticles.CHANNEL.sendToServer(
             new ServerboundParticleDamagePacket(
                 entity.getId(),
-                damage * spellData.coreStack(),
+                damage,
                 spellData.ownerId()
             )
         );
