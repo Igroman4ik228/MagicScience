@@ -18,11 +18,7 @@ public abstract class BaseMagicStructure implements IMagicStructure {
         this.manaCost = manaCost;
         this.countParticles = countParticles;
         this.size = size;
-
-        if (stack < 1) {
-            stack = 1;
-        }
-        this.stack = stack;
+        this.stack = Math.max(1, stack);
     }
 
     @Override
@@ -50,9 +46,9 @@ public abstract class BaseMagicStructure implements IMagicStructure {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        return this.getClass() == o.getClass();
+        if (this==o) return true;
+        if (o==null) return false;
+        return this.getClass()==o.getClass();
     }
 
     @Override

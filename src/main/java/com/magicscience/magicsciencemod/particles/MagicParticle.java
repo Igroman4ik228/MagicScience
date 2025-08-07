@@ -76,19 +76,23 @@ public class MagicParticle extends TextureSheetParticle {
     }
 
     @Override
-    public @NotNull ParticleRenderType getRenderType() {
+    @NotNull
+    public ParticleRenderType getRenderType() {
         return ParticleRenderType.PARTICLE_SHEET_LIT;
     }
 
-    public @NotNull ClientLevel getLevel() {
+    @NotNull
+    public ClientLevel getLevel() {
         return level;
     }
 
-    public @NotNull SpellData getSpellData() {
+    @NotNull
+    public SpellData getSpellData() {
         return spellData;
     }
 
-    public @NotNull Vec3 getDirectionPos() {
+    @NotNull
+    public Vec3 getDirectionPos() {
         return new Vec3(xd, yd, zd);
     }
 }

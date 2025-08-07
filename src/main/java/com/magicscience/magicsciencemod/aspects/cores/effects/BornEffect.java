@@ -11,6 +11,5 @@ public class BornEffect extends BaseMagicEffect {
     @Override
     protected void apply(@NotNull Entity entity) {
         entity.setSecondsOnFire(5);
-        LOGGER.info("doApply: BornEffect");
     }
 }

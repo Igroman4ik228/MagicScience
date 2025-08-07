@@ -30,5 +30,3 @@ public enum CoreTypes implements IMagicType<IMagicCore> {
         return ordinal() + 1;
     }
 }
-
-

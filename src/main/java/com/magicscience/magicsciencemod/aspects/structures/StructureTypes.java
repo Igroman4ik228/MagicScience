@@ -29,6 +29,6 @@ public enum StructureTypes implements IMagicType<IMagicStructure> {
 
     @Override
     public int getId() {
-        return ordinal() + 1;
+        return ordinal();
     }
 }

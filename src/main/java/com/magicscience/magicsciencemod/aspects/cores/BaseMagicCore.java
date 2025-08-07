@@ -3,7 +3,6 @@ package com.magicscience.magicsciencemod.aspects.cores;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.Collection;
 
 public abstract class BaseMagicCore implements IMagicCore {
@@ -12,9 +11,8 @@ public abstract class BaseMagicCore implements IMagicCore {
     private final int particleLifeTime;
     private final int particleCount;
     private final float size;
-
-    private @NotNull Collection<IMagicEffect> effects = new ArrayList<>();
     private final int stack;
+    private final @NotNull Collection<IMagicEffect> effects;
 
     public BaseMagicCore(
         int manaCost,
@@ -22,21 +20,15 @@ public abstract class BaseMagicCore implements IMagicCore {
         int particleLifeTime,
         int particleCount,
         float size,
-        int stack
+        int stack,
+        @NotNull Collection<IMagicEffect> effects
     ) {
         this.manaCost = manaCost;
         this.damage = damage;
         this.particleLifeTime = particleLifeTime;
         this.particleCount = particleCount;
         this.size = size;
-
-        if (stack < 1) {
-            stack = 1;
-        }
-        this.stack = stack;
-    }
-
-    protected void setEffects(@NotNull Collection<IMagicEffect> effects) {
+        this.stack = Math.max(1, stack);
         this.effects = effects;
     }
 
@@ -78,9 +70,9 @@ public abstract class BaseMagicCore implements IMagicCore {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        return this.getClass() == o.getClass();
+        if (this==o) return true;
+        if (o==null) return false;
+        return this.getClass()==o.getClass();
     }
 
     @Override

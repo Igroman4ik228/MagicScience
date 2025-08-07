@@ -29,7 +29,7 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
 
     @Override
     public int getId() {
-        return ordinal() + 1;
+        return ordinal();
     }
 }
 

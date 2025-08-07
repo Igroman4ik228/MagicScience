@@ -2,7 +2,6 @@ package com.magicscience.magicsciencemod.aspects.spell;
 
 import com.magicscience.magicsciencemod.aspects.IMagicAspect;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
-import com.magicscience.magicsciencemod.aspects.attributes.VectorAttribute;
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IMagicParticleSpeed;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
@@ -10,10 +9,8 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 
-// ToDo: pattern builder
 public class Spell implements IMagicAspect {
     private final @NotNull IMagicCore magicCore;
     private final @NotNull List<IMagicAttribute> magicAttributes;
@@ -34,7 +31,6 @@ public class Spell implements IMagicAspect {
         this.magicStructure = magicStructure;
         this.ownerId = ownerId;
 
-        // ToDo: Math
         this.manaCost = calculateManaCost();
         this.particleSpeed = calculateParticleSpeed();
         this.particleLifeTime = calculateParticleLifeTime();
@@ -72,7 +68,7 @@ public class Spell implements IMagicAspect {
             totalCost += attribute.getManaCost();
         }
 
-        if (magicStructure != null)
+        if (magicStructure!=null)
             totalCost += magicStructure.getManaCost();
 
         return totalCost;

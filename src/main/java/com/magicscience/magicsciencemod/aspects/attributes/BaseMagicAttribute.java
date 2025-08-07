@@ -6,11 +6,7 @@ public abstract class BaseMagicAttribute implements IMagicAttribute {
 
     protected BaseMagicAttribute(int manaCost, int stack) {
         this.manaCost = manaCost;
-
-        if (stack < 1) {
-            stack = 1;
-        }
-        this.stack = stack;
+        this.stack = Math.max(1, stack);
     }
 
     @Override
@@ -25,9 +21,9 @@ public abstract class BaseMagicAttribute implements IMagicAttribute {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        return this.getClass() == o.getClass();
+        if (this==o) return true;
+        if (o==null) return false;
+        return this.getClass()==o.getClass();
     }
 
     @Override

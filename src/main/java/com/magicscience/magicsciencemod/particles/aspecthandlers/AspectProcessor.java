@@ -1,6 +1,5 @@
 package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
@@ -34,7 +33,6 @@ public class AspectProcessor {
         var coreFactory = new MagicCoreFactory();
         this.damage = coreFactory.createById(
             spellData.coreId(),
-            CoreTypes.class,
             spellData.coreStack()
         ).getDamage();
     }
