@@ -1,0 +1,11 @@
+{
+  "type": "minecraft:crafting_shapeless",
+  "ingredients": [
+    { "item": "minecraft:ink_sac" },
+    { "item": "minecraft:glowstone_dust" }
+  ],
+  "result": {
+    "item": "magicscience:magic_ink",
+    "count": 1
+  }
+}

@@ -1,4 +1,6 @@
 {
   "item.magicscience.magic_stick": "Magic Stick",
-  "creativetab.magic_science_tab": "Magic Science"
+  "creativetab.magic_science_tab": "Magic Science",
+  "item.magicscience.magic_ink": "Magic Inc",
+  "block.magicscience.magic_workbench": "Magic Workbench"
 }

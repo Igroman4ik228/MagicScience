@@ -1,6 +1,7 @@
 package com.magicscience.magicsciencemod;
 
 import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
+import com.magicscience.magicsciencemod.client.menu.ModMenuTypes;
 import com.magicscience.magicsciencemod.events.ManaEvents;
 import com.magicscience.magicsciencemod.events.ModCapabilityEvents;
 import com.magicscience.magicsciencemod.registry.*;
@@ -28,6 +29,13 @@ public class MagicScienceMod {
 
     public MagicScienceMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
+
+        // Blocks
+        ModBlocks.register(modEventBus);
+        ModBlockEntities.register(modEventBus);
+
+        // Menu
+        ModMenuTypes.register(modEventBus);
 
         // Tabs
         ModCreativeTab.register(modEventBus);

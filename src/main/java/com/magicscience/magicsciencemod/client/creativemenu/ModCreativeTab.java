@@ -27,6 +27,8 @@ public class ModCreativeTab {
         CreativeModeTab.Output output
     ) {
         output.accept(ModItems.MAGIC_STICK.get());
+        output.accept(ModItems.MAGIC_INK.get());
+        output.accept(ModItems.MAGIC_WORKBENCH_ITEM.get());
     }
 
     public static void register(IEventBus eventBus) {
