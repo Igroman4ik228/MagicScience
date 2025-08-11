@@ -18,25 +18,27 @@ public class MagicWorkbenchMenu extends AbstractContainerMenu {
         IItemHandler handler = blockEntity.getItemHandler();
 
         // Добавление слотов рабочего стола
-        this.addSlot(new SlotItemHandler(handler, 0, 44, 17)); // Core
-        this.addSlot(new SlotItemHandler(handler, 1, 62, 17)); // Attribute
-        this.addSlot(new SlotItemHandler(handler, 2, 80, 17)); // Structure
-        this.addSlot(new SlotItemHandler(handler, 3, 98, 17)); // Magic Ink
-        this.addSlot(new SlotItemHandler(handler, 4, 116, 17)); // Paper
-        this.addSlot(new SlotItemHandler(handler, 5, 134, 17)); // Result
+        this.addSlot(new SlotItemHandler(handler, 0, 8, 9));   // Core
+        this.addSlot(new SlotItemHandler(handler, 1, 8, 32));  // Attribute
+        this.addSlot(new SlotItemHandler(handler, 2, 8, 55));  // Structure
+        this.addSlot(new SlotItemHandler(handler, 3, 116, 58));  // Magic Ink
+        this.addSlot(new SlotItemHandler(handler, 4, 79, 42));  // Paper
+        this.addSlot(new SlotItemHandler(handler, 5, 151, 32));  // Result
 
         // Добавление слотов инвентаря игрока — стандартно
-        // (27 слотов инвентаря + 9 слотов быстрого доступа)
         for (int row = 0; row < 3; ++row) {
             for (int col = 0; col < 9; ++col) {
-                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 50 + row * 18));
+                this.addSlot(new Slot(playerInventory, col + row * 9 + 9, 8 + col * 18, 84 + row * 18)); // y=84, 102, 120
             }
         }
         for (int hotbarSlot = 0; hotbarSlot < 9; ++hotbarSlot) {
-            this.addSlot(new Slot(playerInventory, hotbarSlot, 8 + hotbarSlot * 18, 108));
+            this.addSlot(new Slot(playerInventory, hotbarSlot, 8 + hotbarSlot * 18, 142)); // y=142
         }
     }
 
+    public MagicWorkbenchBlockEntity getBlockEntity() {
+        return blockEntity;
+    }
 
     @Override
     public ItemStack quickMoveStack(Player pPlayer, int pIndex) {

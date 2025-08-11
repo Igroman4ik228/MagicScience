@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.client.screen;
 
+import com.magicscience.magicsciencemod.blocks.entity.MagicWorkbenchBlockEntity;
 import com.magicscience.magicsciencemod.client.menu.MagicWorkbenchMenu;
 import net.minecraft.client.gui.GuiGraphics;
 import net.minecraft.client.gui.screens.inventory.AbstractContainerScreen;
@@ -24,11 +25,17 @@ public class MagicWorkbenchScreen extends AbstractContainerScreen<MagicWorkbench
         graphics.blit(TEXTURE, x, y, 0, 0, imageWidth, imageHeight);
     }
 
-
     @Override
     public void render(GuiGraphics graphics, int mouseX, int mouseY, float partialTicks) {
         renderBackground(graphics);
         super.render(graphics, mouseX, mouseY, partialTicks);
         renderTooltip(graphics, mouseX, mouseY);
+
+        // Отладочный вывод уровня чернил
+        MagicWorkbenchBlockEntity blockEntity = this.menu.getBlockEntity();
+        int inkLevel = blockEntity.getInkLevel();
+        int maxInkLevel = blockEntity.getMaxInkLevel();
+        String inkText = "Ink Level: " + inkLevel + "/" + maxInkLevel;
+        graphics.drawString(this.font, inkText, this.leftPos + 8, this.topPos + 20, 0xFFFFFF, false);
     }
 }
