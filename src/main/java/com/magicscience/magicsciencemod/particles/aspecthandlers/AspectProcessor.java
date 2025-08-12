@@ -10,11 +10,18 @@ import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.
 import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.EntityFilter;
 import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.IEntityFilter;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
+import com.mojang.logging.LogUtils;
 import net.minecraft.world.entity.Entity;
+import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 public class AspectProcessor {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     private final @NotNull MagicParticle particle;
     private final @NotNull SpellData spellData;
 
@@ -39,17 +46,36 @@ public class AspectProcessor {
 
     public void process() {
         // ToDo:
-        // ? Collision with block
-        // ! Craft spell
+        // Collision with block
 
-        AABB collisionBox = particle.getBoundingBox();
+        // сначала — проверка коллизий с блоками (ray-trace от центра AABB по вектору направления)
+        AABB boundingBox = particle.getBoundingBox();
+
+        Vec3 start = new Vec3(
+            (boundingBox.minX + boundingBox.maxX) / 2.0,
+            (boundingBox.minY + boundingBox.maxY) / 2.0,
+            (boundingBox.minZ + boundingBox.maxZ) / 2.0
+        );
+        Vec3 end = start.add(particle.getDirectionPos()); // xd,yd,zd через getter в MagicParticle
+
+        var blockHitResult = particle.getLevel().clip(
+            new ClipContext(
+                start,
+                end,
+                ClipContext.Block.OUTLINE,
+                ClipContext.Fluid.ANY,
+                null
+            )
+        );
+
+        handleBlockCollision(blockHitResult);
 
         particle.getLevel()
-            .getEntities((Entity) null, collisionBox, entityFilter)
-            .forEach(this::handleCollision);
+            .getEntities((Entity) null, boundingBox, entityFilter)
+            .forEach(this::handleEntityCollision);
     }
 
-    private void handleCollision(Entity entity) {
+    private void handleEntityCollision(Entity entity) {
         // Send effects
         ModMessagesMagicParticles.CHANNEL.sendToServer(
             new ServerboundParticleEffectsPacket(
@@ -68,5 +94,16 @@ public class AspectProcessor {
         );
 
         particle.remove();
+    }
+
+    private void handleBlockCollision(BlockHitResult blockHitResult) {
+        var blockPos = blockHitResult.getBlockPos();
+        var blockState = particle.getLevel().getBlockState(blockPos);
+
+        if (!blockState.isAir()) {
+            LOGGER.info("blockHitResult {}", blockHitResult);
+            LOGGER.info("blockPos {}", blockPos);
+            LOGGER.info("blockState {}", blockState);
+        }
     }
 }
