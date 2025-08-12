@@ -8,6 +8,9 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
+import net.minecraft.network.protocol.Packet;
+import net.minecraft.network.protocol.game.ClientGamePacketListener;
+import net.minecraft.network.protocol.game.ClientboundBlockEntityDataPacket;
 import net.minecraft.world.MenuProvider;
 import net.minecraft.world.entity.player.Inventory;
 import net.minecraft.world.entity.player.Player;
@@ -41,10 +44,7 @@ public class MagicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
         @Override
         protected void onContentsChanged(int slot) {
             setChanged();
-            if (slot == 3 && level != null && !level.isClientSide) {
-                startInkProcessing();
-                LOGGER.info("Ink processing started at pos {} with inkToProcess: {}", getBlockPos(), inkToProcess);
-            }
+
         }
 
         @Override
@@ -97,80 +97,16 @@ public class MagicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
         return itemHandler;
     }
 
-    // Метод для запуска обработки чернил
-    private void startInkProcessing() {
-        ItemStack inkStack = itemHandler.getStackInSlot(3);
-        if (!inkStack.isEmpty() && inkStack.is(ModItems.MAGIC_INK.get())) {
-            inkToProcess = inkStack.getCount() * INK_PER_ITEM; // Общее количество чернил для обработки
-            inkProcessingTicks = 0; // Сброс счётчика тиков при старте обработки
-            LOGGER.info("Setting inkToProcess to {} and resetting ticks to 0 at pos {}", inkToProcess, getBlockPos());
-            setChanged();
-        } else {
-            LOGGER.info("No valid ink stack found at pos {}", getBlockPos());
-        }
-    }
+    public static void serverTick(Level level, BlockPos pos, BlockState state, MagicWorkbenchBlockEntity entity) {
+        if (level.isClientSide) return;
 
-    // Упрощённый метод серверного тика
-    public void serverTick(Level level, BlockPos pos, BlockState state, MagicWorkbenchBlockEntity blockEntity) {
-        LOGGER.info("Server tick called at pos {} with inkToProcess: {}", pos, inkToProcess);
-        if (inkToProcess <= 0) {
-            LOGGER.info("No ink to process at pos {}, exiting.", pos);
-            return; // Обработка не требуется
-        }
-        LOGGER.info("Starting ink processing at pos {}", pos);
+        ItemStack inkStack = entity.itemHandler.getStackInSlot(3);
 
-        processInkTick(blockEntity);
-        updateInkStackIfComplete(blockEntity);
-
-        LOGGER.info("Server tick ended at pos {} with inkLevel: {}, inkToProcess: {}", pos, inkLevel, inkToProcess);
-    }
-
-    // Обработка одного тика чернил
-    private void processInkTick(MagicWorkbenchBlockEntity blockEntity) {
-        LOGGER.info("Processing ink tick at pos {}, current ticks: {}", blockEntity.getBlockPos(), inkProcessingTicks);
-        if (inkProcessingTicks >= TICKS_PER_INK) {
-            int inkToAdd = Math.min(INK_PER_ITEM, inkToProcess);
-            LOGGER.info("Adding {} ink at pos {}", inkToAdd, blockEntity.getBlockPos());
-            addInkAndUpdate(inkToAdd);
-            inkProcessingTicks = 0; // Сброс таймера
-        } else {
-            inkProcessingTicks++; // Увеличение счётчика тиков
-            LOGGER.info("Incrementing ticks to {} at pos {}", inkProcessingTicks, blockEntity.getBlockPos());
-        }
-    }
-
-    // Добавление чернил и обновление состояния
-    private void addInkAndUpdate(int inkToAdd) {
-        LOGGER.info("Attempting to add {} ink, current level: {} at pos {}", inkToAdd, inkLevel, getBlockPos());
-        if (inkLevel + inkToAdd <= MAX_INK_LEVEL) {
-            inkLevel += inkToAdd;
-            inkToProcess -= inkToAdd;
-            LOGGER.info("Added {} ink, new level: {}, remaining to process: {}", inkToAdd, inkLevel, inkToProcess);
-        } else {
-            int availableSpace = MAX_INK_LEVEL - inkLevel;
-            inkLevel = MAX_INK_LEVEL;
-            inkToProcess -= availableSpace;
-            LOGGER.info("Added {} ink (limited by max), new level: {}, remaining to process: {}", availableSpace, inkLevel, inkToProcess);
-        }
-        setChanged();
-    }
-
-    // Обновление стека чернил в слоте при завершении обработки
-    private void updateInkStackIfComplete(MagicWorkbenchBlockEntity blockEntity) {
-        if (inkToProcess == 0) {
-            LOGGER.info("Processing complete at pos {}, updating ink stack.", blockEntity.getBlockPos());
-            ItemStack inkStack = itemHandler.getStackInSlot(3);
-            if (!inkStack.isEmpty()) {
-                int itemsProcessed = (int) Math.ceil((double) (inkStack.getCount() * INK_PER_ITEM - inkToProcess) / INK_PER_ITEM);
-                LOGGER.info("Shrinking ink stack by {} items at pos {}", itemsProcessed, blockEntity.getBlockPos());
-                inkStack.shrink(itemsProcessed);
-                if (inkStack.isEmpty()) {
-                    itemHandler.setStackInSlot(3, ItemStack.EMPTY);
-                    LOGGER.info("Ink stack cleared at pos {}", blockEntity.getBlockPos());
-                }
-            } else {
-                LOGGER.info("Ink stack already empty at pos {}", blockEntity.getBlockPos());
-            }
+        if (inkStack.is(ModItems.MAGIC_INK.get()) && entity.inkLevel < MAX_INK_LEVEL) {
+            entity.inkLevel = Math.min(entity.inkLevel + INK_PER_ITEM, MAX_INK_LEVEL);
+            inkStack.shrink(1);
+            setChanged(level, pos, state);
+            level.sendBlockUpdated(pos, state, state, 3);
         }
     }
 
@@ -214,4 +150,21 @@ public class MagicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
         }
         return super.getCapability(cap, side);
     }
+
+    @Override
+    public CompoundTag getUpdateTag() {
+        return saveWithoutMetadata();
+    }
+
+    @Override
+    public void handleUpdateTag(CompoundTag tag) {
+        load(tag);
+    }
+
+    @Nullable
+    @Override
+    public Packet<ClientGamePacketListener> getUpdatePacket() {
+        return ClientboundBlockEntityDataPacket.create(this);
+    }
+
 }

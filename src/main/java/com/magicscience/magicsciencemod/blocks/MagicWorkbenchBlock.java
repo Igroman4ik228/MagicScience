@@ -55,6 +55,6 @@ public class MagicWorkbenchBlock extends Block implements EntityBlock {
             return null;
         }
         return type == ModBlockEntities.MAGIC_WORKBENCH.get() ? (level1, pos, state1, blockEntity) ->
-            ((MagicWorkbenchBlockEntity) blockEntity).serverTick(level1, pos, state1, (MagicWorkbenchBlockEntity) blockEntity) : null;
+            MagicWorkbenchBlockEntity.serverTick(level1, pos, state1, (MagicWorkbenchBlockEntity) blockEntity) : null;
     }
 }
