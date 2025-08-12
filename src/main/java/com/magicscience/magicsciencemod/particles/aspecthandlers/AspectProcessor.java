@@ -2,6 +2,7 @@ package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleBlockHitPacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleEffectsPacket;
 import com.magicscience.magicsciencemod.particles.MagicParticle;
@@ -11,6 +12,7 @@ import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.
 import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.IEntityFilter;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
+import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.phys.AABB;
@@ -98,12 +100,24 @@ public class AspectProcessor {
 
     private void handleBlockCollision(BlockHitResult blockHitResult) {
         var blockPos = blockHitResult.getBlockPos();
+        
         var blockState = particle.getLevel().getBlockState(blockPos);
 
         if (!blockState.isAir()) {
-            LOGGER.info("blockHitResult {}", blockHitResult);
-            LOGGER.info("blockPos {}", blockPos);
-            LOGGER.info("blockState {}", blockState);
+            Vec3 hitVec = blockHitResult.getLocation();
+            int face = blockHitResult.getDirection().get3DDataValue();
+
+            CompoundTag extra = new CompoundTag();
+            extra.putInt("coreId", spellData.coreId());
+
+            ModMessagesMagicParticles.CHANNEL.sendToServer(
+                new ServerboundParticleBlockHitPacket(
+                    blockPos,
+                    face,
+                    hitVec,
+                    extra
+                )
+            );
         }
     }
 }
