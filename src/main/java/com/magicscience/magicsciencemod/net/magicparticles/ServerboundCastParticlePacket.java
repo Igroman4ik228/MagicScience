@@ -13,7 +13,6 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
-import java.util.Arrays;
 import java.util.function.Supplier;
 
 public class ServerboundCastParticlePacket {
@@ -21,19 +20,16 @@ public class ServerboundCastParticlePacket {
 
     private final @NotNull SpellData spellData;
 
-    public ServerboundCastParticlePacket(Spell spell) {
-        this.spellData = SpellConverter.toData(spell);
+    public ServerboundCastParticlePacket(@NotNull SpellData spellData) {
+        this.spellData = spellData;
     }
 
     public ServerboundCastParticlePacket(FriendlyByteBuf buf) {
         int ownerId = buf.readInt();
         int coreId = buf.readVarInt();
         int coreStack = buf.readVarInt();
-        int attrCount = buf.readVarInt();
-        int[] attrs = new int[attrCount];
-        for (int i = 0; i < attrCount; i++) attrs[i] = buf.readVarInt();
-        int[] attrsStack = new int[attrCount];
-        for (int i = 0; i < attrCount; i++) attrsStack[i] = buf.readVarInt();
+        int[] attributeIds = buf.readVarIntArray();
+        int[] attributeStacks = buf.readVarIntArray();
         int structureId = buf.readVarInt();
         int structureStack = buf.readVarInt();
         int particleSpeed = buf.readInt();
@@ -43,8 +39,8 @@ public class ServerboundCastParticlePacket {
             ownerId,
             coreId,
             coreStack,
-            attrs,
-            attrsStack,
+            attributeIds,
+            attributeStacks,
             structureId,
             structureStack,
             particleSpeed,
@@ -56,9 +52,8 @@ public class ServerboundCastParticlePacket {
         buf.writeInt(spellData.ownerId());
         buf.writeVarInt(spellData.coreId());
         buf.writeVarInt(spellData.coreStack());
-        buf.writeVarInt(spellData.attributeIds().length);
-        for (int id : spellData.attributeIds()) buf.writeVarInt(id);
-        for (int id : spellData.attributeStack()) buf.writeVarInt(id);
+        buf.writeVarIntArray(spellData.attributeIds());
+        buf.writeVarIntArray(spellData.attributeStack());
         buf.writeVarInt(spellData.structureId());
         buf.writeVarInt(spellData.structureStack());
         buf.writeInt(spellData.particleSpeed());
@@ -68,54 +63,35 @@ public class ServerboundCastParticlePacket {
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             ServerPlayer player = ctx.get().getSender();
-            if (player == null) return;
+            if (player==null) return;
 
-            if (player.getId() != spellData.ownerId()) {
+            if (player.getId()!=spellData.ownerId())
                 return;
-            }
 
             Spell spell = SpellConverter.toSpell(spellData);
 
             int mana = ManaCapabilityHelper.get(player).get().getMana();
-            if (!player.isCreative()) {
-
-                if (mana < spell.getManaCost())
-                    return;
-
-            }
-
+            LOGGER.info("ServerboundCastParticlePacket");
             LOGGER.info("SpellData received:");
             LOGGER.info("  Mana: {}", mana);
+            LOGGER.info("  SpellData: {}", spellData);
 
-            LOGGER.info("  Owner ID: {}", spellData.ownerId());
+            if (!player.isCreative()) {
+                if (ManaCapabilityHelper.canRemove(player, spell.getManaCost()))
+                    return;
 
-            LOGGER.info("  Core ID: {}", spellData.coreId());
-            LOGGER.info("  Core Stack: {}", spellData.coreStack());
-
-            LOGGER.info("  Attribute IDs: {}", Arrays.toString(spellData.attributeIds()));
-            LOGGER.info("  Attribute Stack: {}", Arrays.toString(spellData.attributeStack()));
-
-            LOGGER.info("  Structure ID: {}", spellData.structureId());
-            LOGGER.info("  Structure Stack: {}", spellData.structureStack());
-
-            LOGGER.info("Packet handled and data logged for player {}", player.getName().getString());
-
+                ManaCapabilityHelper.removeMana(player, spell.getManaCost());
+            }
+            
             ModMessagesMagicParticles.CHANNEL.send(
                 PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
 
                 new ClientboundSpawnParticlePacket(
                     spellData,
-                    player.position().add(0, 1.4, 0),
+                    player.position().add(0, player.getEyeHeight(), 0),
                     player.getLookAngle().normalize().scale(spell.getParticleSpeed())
                 )
             );
-
-            if (!player.isCreative()) {
-                ManaCapabilityHelper.removeMana(player, spell.getManaCost());
-            }
-
-            LOGGER.info("Spawn");
-
         });
         ctx.get().setPacketHandled(true);
     }

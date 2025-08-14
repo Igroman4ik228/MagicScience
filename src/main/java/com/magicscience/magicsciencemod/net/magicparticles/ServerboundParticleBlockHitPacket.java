@@ -2,52 +2,40 @@ package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.mojang.logging.LogUtils;
-import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.level.Level;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.Objects;
 import java.util.function.Supplier;
 
 public class ServerboundParticleBlockHitPacket {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final BlockPos pos;
-    private final int face;
-    private final double hitX, hitY, hitZ;
-    private final CompoundTag extra; // содержит coreId и ownerId и другие свойства
+    private final @NotNull BlockHitResult blockHitResult;
+    private final @NotNull CompoundTag additionalArgs;
 
-    public ServerboundParticleBlockHitPacket(BlockPos pos, int face, net.minecraft.world.phys.Vec3 hitVec, CompoundTag extra) {
-        this.pos = pos;
-        this.face = face;
-        this.hitX = hitVec.x;
-        this.hitY = hitVec.y;
-        this.hitZ = hitVec.z;
-        this.extra = extra==null ? new CompoundTag():extra;
+    public ServerboundParticleBlockHitPacket(@NotNull BlockHitResult blockHitResult, @NotNull CompoundTag additionalArgs) {
+        this.blockHitResult = blockHitResult;
+        this.additionalArgs = additionalArgs;
     }
 
     public ServerboundParticleBlockHitPacket(FriendlyByteBuf buf) {
-        this.pos = buf.readBlockPos();
-        this.face = buf.readInt();
-        this.hitX = buf.readDouble();
-        this.hitY = buf.readDouble();
-        this.hitZ = buf.readDouble();
-        this.extra = buf.readNbt(); // может вернуть null в некоторых версиях -> проверяй
+        this.blockHitResult = buf.readBlockHitResult();
+        this.additionalArgs = Objects.requireNonNull(buf.readNbt());
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeBlockPos(pos);
-        buf.writeInt(face);
-        buf.writeDouble(hitX);
-        buf.writeDouble(hitY);
-        buf.writeDouble(hitZ);
-        buf.writeNbt(extra);
+        buf.writeBlockHitResult(blockHitResult);
+        buf.writeNbt(additionalArgs);
     }
 
     public void handle(Supplier<NetworkEvent.Context> ctxSupplier) {
@@ -58,26 +46,33 @@ public class ServerboundParticleBlockHitPacket {
             ServerPlayer sender = ctx.getSender();
             if (sender==null) return;
 
-            Level level = sender.level();
-            BlockState state = level.getBlockState(pos);
+            var level = sender.level();
+            var blockPos = blockHitResult.getBlockPos();
+            BlockState state = level.getBlockState(blockPos);
 
-            // Извлекаем coreId/ownerId из extra (по соглашению ключи "coreId" и "ownerId")
-            int coreId = extra!=null && extra.contains("coreId") ? extra.getInt("coreId"):-1;
+            if (blockHitResult.getType()!=HitResult.Type.BLOCK) {
+                LOGGER.debug("Ignoring non-block hit or null result from {}", sender.getName().getString());
+                return;
+            }
 
-            LOGGER.info("Block hit at {} state {} coreId {}", pos, state, coreId);
+            int coreId = additionalArgs.contains("coreId") ? additionalArgs.getInt("coreId"):-1;
+
+            LOGGER.info("Block hit at {} state {} coreId {}", blockPos, state, coreId);
 
             if (state.getBlock()==Blocks.TNT) {
                 if (coreId==CoreTypes.FIRE.getId()) {
-                    level.removeBlock(pos, false);
+                    level.removeBlock(blockPos, false);
+
+                    var centerBlockPos = blockPos.getCenter();
                     PrimedTnt primed = new PrimedTnt(
                         level,
-                        pos.getX(),
-                        pos.getY(),
-                        pos.getZ(),
+                        centerBlockPos.x,
+                        centerBlockPos.y,
+                        centerBlockPos.z,
                         sender
                     );
                     level.addFreshEntity(primed);
-                    LOGGER.info("Ignited TNT at {}", pos);
+                    LOGGER.info("Ignited TNT at {}", blockPos);
                 }
             }
         });

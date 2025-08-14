@@ -122,6 +122,9 @@ repositories {
     // flatDir {
     //     dir 'libs'
     // }
+    a maven {
+        url "https://maven.blamejared.com"
+    }
 }
 
 dependencies {
@@ -134,6 +137,7 @@ dependencies {
 
     annotationProcessor 'org.spongepowered:mixin:0.8.5:processor'
 
+    implementation fg.deobf("org.embeddedt:embeddium-1.20.1:0.3.9-git.f603a93+mc1.20.1")
     // Example mod dependency with JEI - using fg.deobf() ensures the dependency is remapped to your development mappings
     // The JEI API is declared for compile time use, while the full JEI artifact is used at runtime
     // compileOnly fg.deobf("mezz.jei:jei-${mc_version}-common-api:${jei_version}")

@@ -15,9 +15,12 @@ import net.minecraft.world.entity.projectile.ShulkerBullet;
 import net.minecraft.world.entity.vehicle.AbstractMinecart;
 import net.minecraft.world.entity.vehicle.Boat;
 
-public class BaseEntityFilter implements IEntityFilter  {
+import java.util.Set;
+import java.util.function.Predicate;
+
+public class ConfigEntityFilter implements Predicate<Entity> {
     // ToDo: Вынести в конфиг
-    private static final Class<?>[] BASE_ENTITY = new Class<?>[]{
+    private static final Set<Class<? extends Entity>> EXCLUDED_ENTITIES = Set.of(
         // "Блочные" сущности
         ItemEntity.class,
         FallingBlockEntity.class,
@@ -34,15 +37,12 @@ public class BaseEntityFilter implements IEntityFilter  {
         // Прочее
         ExperienceOrb.class,
         Boat.class,
-        AbstractMinecart.class,
-    };
+        AbstractMinecart.class
+    );
 
     @Override
     public boolean test(Entity entity) {
-        for (var cls : BASE_ENTITY) {
-            if (cls.isInstance(entity))
-                return false;
-        }
-        return true;
+        return EXCLUDED_ENTITIES.stream()
+            .noneMatch(cls -> cls.isInstance(entity));
     }
 }

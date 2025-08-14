@@ -6,6 +6,7 @@ import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
+import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
@@ -28,6 +29,10 @@ import java.util.List;
 public class MagicStick extends Item implements ICast {
     private static final Logger LOGGER = LogUtils.getLogger();
 
+    private static final MagicCoreFactory CORE_FACTORY = new MagicCoreFactory();
+    private static final MagicAttributeFactory ATTRIBUTE_FACTORY = new MagicAttributeFactory();
+    private static final MagicStructureFactory STRUCTURE_FACTORY = new MagicStructureFactory();
+
     private Spell spell;
 
     public MagicStick(Item.Properties properties) {
@@ -46,19 +51,15 @@ public class MagicStick extends Item implements ICast {
         if (hand!=InteractionHand.MAIN_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        var coreFactory = new MagicCoreFactory();
-        var attributeFactory = new MagicAttributeFactory();
-        var structureFactory = new MagicStructureFactory();
-
         // ToDo: сделать отдельный класс
         // Dynamic create spell
         var spell = new Spell(
-            coreFactory.create(CoreTypes.FIRE, 1),
+            CORE_FACTORY.create(CoreTypes.FIRE, 1),
             List.of(
-                attributeFactory.create(AttributeTypes.SELF_SPECTRE, 1),
-                attributeFactory.create(AttributeTypes.VECTOR, 3)
+                ATTRIBUTE_FACTORY.create(AttributeTypes.SELF_SPECTRE, 1),
+                ATTRIBUTE_FACTORY.create(AttributeTypes.VECTOR, 3)
             ),
-            structureFactory.create(StructureTypes.SPHERE, 1),
+            STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 1),
             player.getId()
         );
 
@@ -74,20 +75,21 @@ public class MagicStick extends Item implements ICast {
     public void cast(Player player, int manaCost) {
         if (!player.isCreative()) {
             int mana = ManaCapabilityHelper.get(player).get().getMana();
-
             if (mana < manaCost) {
                 LOGGER.info("Not enough mana: {}/{}", mana, manaCost);
-                player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F); // отказ
+                // ToDo: Вынести в client/sound
+                // sound cancel cast
+                player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F);
                 return;
             }
         }
 
         ModMessagesMagicParticles.CHANNEL.sendToServer(
-            new ServerboundCastParticlePacket(spell)
+            new ServerboundCastParticlePacket(SpellConverter.toData(spell))
         );
 
         // ToDo: Вынести в client/sound
-        player.playSound(SoundEvents.FIRECHARGE_USE, 10.0F, 10.0F);
+        player.playSound(SoundEvents.FIRECHARGE_USE, 1.0F, 1.0F);
     }
 
     @Override
@@ -99,5 +101,4 @@ public class MagicStick extends Item implements ICast {
     public void setSpell(Spell newSpell) {
         spell = newSpell;
     }
-
 }

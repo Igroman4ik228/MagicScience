@@ -6,16 +6,18 @@ import com.magicscience.magicsciencemod.registry.ModMessagesMana;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkDirection;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
+import java.util.function.Consumer;
 
 public class ManaCapabilityHelper {
 
-    public static Optional<IMana> get(Player player) {
+    public static Optional<IMana> get(@NotNull Player player) {
         return player.getCapability(ModCapabilities.MANA_CAPABILITY).resolve();
     }
 
-    public static void syncToClient(ServerPlayer player, IMana mana) {
+    public static void syncToClient(@NotNull ServerPlayer player, @NotNull IMana mana) {
         ModMessagesMana.CHANNEL.sendTo(
             new ClientboundSyncManaPacket(mana.getMana()),
             player.connection.connection,
@@ -23,41 +25,37 @@ public class ManaCapabilityHelper {
         );
     }
 
-    public static void removeMana(Player player, int amount) {
+    private static void modifyAndSync(@NotNull Player player, @NotNull Consumer<IMana> action) {
         get(player).ifPresent(mana -> {
-            mana.removeMana(amount);
+            action.accept(mana);
             if (player instanceof ServerPlayer serverPlayer) {
                 syncToClient(serverPlayer, mana);
             }
         });
     }
 
-    public static void addMana(Player player, int amount) {
-        get(player).ifPresent(mana -> {
-            mana.addMana(amount);
-            if (player instanceof ServerPlayer serverPlayer) {
-                syncToClient(serverPlayer, mana);
-            }
-        });
+    public static void removeMana(@NotNull Player player, int amount) {
+        
+        modifyAndSync(player, mana -> mana.removeMana(amount));
     }
 
-    public static void setMana(Player player, int amount) {
-        get(player).ifPresent(mana -> {
-            mana.setMana(amount);
-            if (player instanceof ServerPlayer serverPlayer) {
-                syncToClient(serverPlayer, mana);
-            }
-        });
+    public static void addMana(@NotNull Player player, int amount) {
+        modifyAndSync(player, mana -> mana.addMana(amount));
     }
 
-    public static boolean canAdd(Player player, int amount) {
+    public static void setMana(@NotNull Player player, int amount) {
+        modifyAndSync(player, mana -> mana.setMana(amount));
+    }
+
+    public static boolean canAdd(@NotNull Player player, int amount) {
         return get(player)
             .map(mana -> mana.getMana() + amount <= mana.getMaxMana())
             .orElse(false);
     }
 
-    public static boolean canRemove(Player player, int amount) {
-        return get(player).map(mana -> mana.getMana() >= amount).orElse(false);
+    public static boolean canRemove(@NotNull Player player, int amount) {
+        return get(player)
+            .map(mana -> mana.getMana() >= amount)
+            .orElse(false);
     }
-
 }

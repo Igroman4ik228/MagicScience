@@ -2,31 +2,26 @@ package com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity
 
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;
-import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import net.minecraft.world.entity.Entity;
-import org.jetbrains.annotations.NotNull;
 
-public class AttributeEntityFilter implements IEntityFilter {
-    private final SpellData spellData;
+import java.util.List;
+import java.util.function.Predicate;
+import java.util.stream.IntStream;
 
-    public AttributeEntityFilter(@NotNull SpellData spellData) {
-        this.spellData = spellData;
+public class AttributeEntityFilter implements Predicate<Entity> {
+    private final List<Predicate<Entity>> entityFilters;
+
+    public AttributeEntityFilter(int[] attributeIds) {
+        this.entityFilters = IntStream.of(attributeIds)
+            .mapToObj(AttributeTypeHelper::findInstance)
+            .filter(IFilterMagicAttribute.class::isInstance)
+            .map(attr -> ((IFilterMagicAttribute) attr).getEntityFilter())
+            .toList();
     }
 
     @Override
     public boolean test(Entity entity) {
-        int[] attributeIds = spellData.attributeIds();
-
-        for (int attrId : attributeIds) {
-            var attr = AttributeTypeHelper.findInstance(attrId);
-
-            if (attr instanceof IFilterMagicAttribute filterAttr) {
-                if (!filterAttr.getEntityFilter().test(entity)) {
-                    return false;
-                }
-            }
-        }
-
-        return true;
+        return entityFilters.stream()
+            .allMatch(filter -> filter.test(entity));
     }
 }
