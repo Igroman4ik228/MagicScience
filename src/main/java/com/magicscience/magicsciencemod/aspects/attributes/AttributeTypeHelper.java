@@ -12,4 +12,8 @@ public final class AttributeTypeHelper {
     public static int findId(IMagicAttribute attribute) {
         return IMagicType.findId(attribute, enumClass);
     }
+
+    public static AttributeTypes findType(int id) {
+        return IMagicType.findType(id, enumClass);
+    }
 }

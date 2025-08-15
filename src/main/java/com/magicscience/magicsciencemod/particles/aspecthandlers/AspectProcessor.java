@@ -112,7 +112,7 @@ public class AspectProcessor {
         var blockPos = blockHitResult.getBlockPos();
         var blockState = level.getBlockState(blockPos);
 
-        if (blockHitResult.getType()==HitResult.Type.MISS) return;
+        if (blockHitResult.getType()!=HitResult.Type.BLOCK) return;
         if (blockState.isAir()) return;
         if (blockFilter.test(blockState)) return;
 

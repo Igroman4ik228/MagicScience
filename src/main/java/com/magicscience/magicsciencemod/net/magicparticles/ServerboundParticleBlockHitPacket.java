@@ -58,9 +58,18 @@ public class ServerboundParticleBlockHitPacket {
             int coreId = additionalArgs.contains("coreId") ? additionalArgs.getInt("coreId"):-1;
 
             LOGGER.info("Block hit at {} state {} coreId {}", blockPos, state, coreId);
+            if (coreId==CoreTypes.FIRE.getId()) {
+                // todo: ignite
+                if (state.isFlammable(level, blockPos, blockHitResult.getDirection())) {
+                    var abovePos = blockPos.relative(blockHitResult.getDirection());
+                    
+                    if (level.getBlockState(abovePos).isAir()) {
+                        level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
+                        LOGGER.info("Ignited block at {} with fire on {}", abovePos, blockPos);
+                    }
+                }
 
-            if (state.getBlock()==Blocks.TNT) {
-                if (coreId==CoreTypes.FIRE.getId()) {
+                if (state.getBlock()==Blocks.TNT) {
                     level.removeBlock(blockPos, false);
 
                     var centerBlockPos = blockPos.getCenter();
