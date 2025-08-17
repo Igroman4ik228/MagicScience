@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.particles.aspecthandlers;
 
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleBlockHitPacket;
@@ -16,6 +17,7 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
@@ -115,6 +117,13 @@ public class AspectProcessor {
         if (blockHitResult.getType()!=HitResult.Type.BLOCK) return;
         if (blockState.isAir()) return;
         if (blockFilter.test(blockState)) return;
+
+        if (spellData.coreId()==CoreTypes.FIRE.getId()) {
+            if (blockState.getBlock()==Blocks.WATER) {
+                particle.remove();
+                return;
+            }
+        }
 
         ModMessagesMagicParticles.CHANNEL.sendToServer(
             new ServerboundParticleBlockHitPacket(
