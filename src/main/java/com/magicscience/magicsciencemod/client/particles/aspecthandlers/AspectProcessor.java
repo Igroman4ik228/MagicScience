@@ -1,16 +1,16 @@
-package com.magicscience.magicsciencemod.particles.aspecthandlers;
+package com.magicscience.magicsciencemod.client.particles.aspecthandlers;
 
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import com.magicscience.magicsciencemod.client.particles.MagicParticle;
+import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.block.ConfigBlockFilter;
+import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.block.CoreBlockFilter;
+import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity.AttributeEntityFilter;
+import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity.ConfigEntityFilter;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleBlockHitPacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
 import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleEffectsPacket;
-import com.magicscience.magicsciencemod.particles.MagicParticle;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.block.ConfigBlockFilter;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.block.CoreBlockFilter;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.AttributeEntityFilter;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity.ConfigEntityFilter;
 import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;

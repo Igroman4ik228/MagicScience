@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.registry;
 
 import com.magicscience.magicsciencemod.MagicScienceMod;
-import com.magicscience.magicsciencemod.particles.MagicParticleType;
+import com.magicscience.magicsciencemod.client.particles.MagicParticleType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.eventbus.api.IEventBus;
