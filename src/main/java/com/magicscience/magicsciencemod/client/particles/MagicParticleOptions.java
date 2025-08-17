@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.particles;
+package com.magicscience.magicsciencemod.client.particles;
 
 import com.magicscience.magicsciencemod.registry.ModParticles;
 import com.mojang.brigadier.StringReader;

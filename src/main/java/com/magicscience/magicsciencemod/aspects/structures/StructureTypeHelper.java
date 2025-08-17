@@ -12,4 +12,14 @@ public final class StructureTypeHelper {
     public static int findId(IMagicStructure structure) {
         return IMagicType.findId(structure, enumClass);
     }
+
+    public static StructureTypes findType(int id) {
+        return IMagicType.findType(id, enumClass);
+    }
+
+    public static StructureTypes getType(int id) {
+        return IMagicType.findType(id, enumClass);
+    }
+
+
 }

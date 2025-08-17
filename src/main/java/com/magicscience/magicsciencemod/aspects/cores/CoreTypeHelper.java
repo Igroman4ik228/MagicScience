@@ -12,5 +12,9 @@ public final class CoreTypeHelper {
     public static int findId(IMagicCore core) {
         return IMagicType.findId(core, enumClass);
     }
+
+    public static CoreTypes findType(int id) {
+        return IMagicType.findType(id, enumClass);
+    }
 }
 

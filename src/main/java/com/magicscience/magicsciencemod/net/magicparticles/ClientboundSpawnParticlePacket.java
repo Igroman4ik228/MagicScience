@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.MagicParticleCreator;
+import com.magicscience.magicsciencemod.client.particles.aspecthandlers.MagicParticleCreator;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
@@ -10,6 +10,7 @@ import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import net.minecraftforge.network.NetworkEvent;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.function.Supplier;
@@ -17,11 +18,11 @@ import java.util.function.Supplier;
 public class ClientboundSpawnParticlePacket {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private final SpellData spellData;
-    private final Vec3 position;
-    private final Vec3 direction;
+    private final @NotNull SpellData spellData;
+    private final @NotNull Vec3 position;
+    private final @NotNull Vec3 direction;
 
-    public ClientboundSpawnParticlePacket(SpellData spellData, Vec3 position, Vec3 direction) {
+    public ClientboundSpawnParticlePacket(@NotNull SpellData spellData, @NotNull Vec3 position, @NotNull Vec3 direction) {
         this.spellData = spellData;
         this.position = position;
         this.direction = direction;
@@ -48,15 +49,8 @@ public class ClientboundSpawnParticlePacket {
         buf.writeVarInt(spellData.coreId());
         buf.writeVarInt(spellData.coreStack());
 
-        buf.writeVarInt(spellData.attributeIds().length);
-        for (int attrId : spellData.attributeIds()) {
-            buf.writeVarInt(attrId);
-        }
-
-        buf.writeVarInt(spellData.attributeStack().length);
-        for (int attrStack : spellData.attributeStack()) {
-            buf.writeVarInt(attrStack);
-        }
+        buf.writeVarIntArray(spellData.attributeIds());
+        buf.writeVarIntArray(spellData.attributeStack());
 
         buf.writeVarInt(spellData.structureId());
         buf.writeVarInt(spellData.structureStack());
@@ -77,7 +71,7 @@ public class ClientboundSpawnParticlePacket {
     public void handle(Supplier<NetworkEvent.Context> ctx) {
         ctx.get().enqueueWork(() -> {
             LocalPlayer player = Minecraft.getInstance().player;
-            if (player == null) return;
+            if (player==null) return;
 
             LOGGER.info("Received ClientboundSpawnParticlePacket:");
             LOGGER.info("  Owner ID: {}", spellData.ownerId());

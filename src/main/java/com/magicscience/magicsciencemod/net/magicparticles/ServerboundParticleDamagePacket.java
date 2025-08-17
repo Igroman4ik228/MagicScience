@@ -48,15 +48,13 @@ public class ServerboundParticleDamagePacket {
             Entity target = level.getEntity(entityId);
             if (target==null) return;
 
-            // Получаем владельца частицы
+            // Get particle owner
             Entity owner = level.getEntity(ownerId);
-            
-            // Если владелец не игрок (или не найден), не наносим урон
             if (!(owner instanceof ServerPlayer ownerPlayer)) return;
 
-            LOGGER.info("ownerId: " + ownerId);
+            LOGGER.info("ownerId: {}", ownerId);
 
-            // Дамаг
+            // Damage
             target.hurt(target.damageSources().playerAttack(ownerPlayer), damage);
 
         });

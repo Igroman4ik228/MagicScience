@@ -1,7 +1,7 @@
-package com.magicscience.magicsciencemod.particles;
+package com.magicscience.magicsciencemod.client.particles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.AspectProcessor;
+import com.magicscience.magicsciencemod.client.particles.aspecthandlers.AspectProcessor;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;

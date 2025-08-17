@@ -20,6 +20,14 @@ public interface IMagicType<T> {
             (instance!=null ? instance.getClass().getName():null));
     }
 
+    static <E extends Enum<E> & IMagicType<?>> E findType(int id, Class<E> enumClass) {
+        for (E type : enumClass.getEnumConstants()) {
+            if (type.getId()==id)
+                return type;
+        }
+        throw new IllegalArgumentException("Invalid ID: " + id + " for enum " + enumClass.getSimpleName());
+    }
+
     int getId();
 
     T getInstance();

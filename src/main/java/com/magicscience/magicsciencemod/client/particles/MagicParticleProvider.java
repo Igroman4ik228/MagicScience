@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.particles;
+package com.magicscience.magicsciencemod.client.particles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import net.minecraft.client.multiplayer.ClientLevel;

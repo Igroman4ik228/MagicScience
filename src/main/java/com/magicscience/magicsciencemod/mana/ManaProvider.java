@@ -19,7 +19,8 @@ public class ManaProvider implements ICapabilitySerializable<Tag> {
     private final LazyOptional<IMana> optional = LazyOptional.of(() -> backend);
 
     @Override
-    public <T> @NotNull LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
+    @NotNull
+    public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
         return ModCapabilities.MANA_CAPABILITY.orEmpty(cap, optional);
     }
 

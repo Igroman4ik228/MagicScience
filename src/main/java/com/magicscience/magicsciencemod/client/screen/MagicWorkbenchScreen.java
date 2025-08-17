@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.client.screen;
 
+import com.magicscience.magicsciencemod.MagicScienceMod;
 import com.magicscience.magicsciencemod.blocks.entity.MagicWorkbenchBlockEntity;
 import com.magicscience.magicsciencemod.client.menu.MagicWorkbenchMenu;
 import net.minecraft.client.gui.GuiGraphics;
@@ -11,7 +12,7 @@ import net.minecraft.world.entity.player.Inventory;
 public class MagicWorkbenchScreen extends AbstractContainerScreen<MagicWorkbenchMenu> {
 
     private static final ResourceLocation TEXTURE =
-        new ResourceLocation("magicscience", "textures/gui/magic_workbench.png");
+        new ResourceLocation(MagicScienceMod.MOD_ID, "textures/gui/magic_workbench.png");
 
     public MagicWorkbenchScreen(MagicWorkbenchMenu menu, Inventory inv, Component title) {
         super(menu, inv, title);
