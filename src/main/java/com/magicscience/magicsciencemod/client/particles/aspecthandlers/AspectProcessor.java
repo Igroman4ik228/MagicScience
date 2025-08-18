@@ -8,18 +8,19 @@ import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.block.CoreBlockFilter;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity.AttributeEntityFilter;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity.ConfigEntityFilter;
-import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleBlockHitPacket;
-import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleDamagePacket;
-import com.magicscience.magicsciencemod.net.magicparticles.ServerboundParticleEffectsPacket;
-import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
+import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleBlockHitPacket;
+import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleDamagePacket;
+import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleEffectsPacket;
+import com.magicscience.magicsciencemod.registry.ModNetwork;
+import com.magicscience.magicsciencemod.util.MathHelper;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.ClipContext;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.phys.AABB;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
@@ -64,11 +65,43 @@ public class AspectProcessor {
     }
 
     public void process() {
-        AABB boundingBox = particle.getBoundingBox();
+        processBlockCollision();
 
-        // Center
-        Vec3 start = boundingBox.getCenter();
-        Vec3 end = start.add(particle.getDirectionPos());
+        processEntityCollision();
+    }
+
+    private void processBlockCollision() {
+        Vec3 center = particle.getBoundingBox().getCenter();
+        Vec3 direction = particle.getDirectionPos();
+
+        // No speed
+        if (direction.lengthSqr()==0) {
+            BlockPos pos = BlockPos.containing(center);
+
+            handleBlockCollision(
+                new BlockHitResult(
+                    center,
+                    MathHelper.getClosestDirection(pos, center),
+                    pos,
+                    true
+                )
+            );
+            return;
+        }
+
+        rayTraceBlock(center, direction);
+    }
+
+    private void processEntityCollision() {
+        // Particle remove -> just first entity
+        level.getEntities((Entity) null, particle.getBoundingBox(), entityFilter)
+            .stream()
+            .findFirst()
+            .ifPresent(this::handleEntityCollision);
+    }
+
+    private void rayTraceBlock(Vec3 start, Vec3 direction) {
+        Vec3 end = start.add(direction);
 
         var blockHitResult = level.clip(
             new ClipContext(
@@ -81,34 +114,8 @@ public class AspectProcessor {
         );
 
         handleBlockCollision(blockHitResult);
-
-        // Particle remove -> just first entity
-        level.getEntities((Entity) null, boundingBox, entityFilter)
-            .stream()
-            .findFirst()
-            .ifPresent(this::handleEntityCollision);
     }
 
-    private void handleEntityCollision(Entity entity) {
-        // Send effects
-        ModMessagesMagicParticles.CHANNEL.sendToServer(
-            new ServerboundParticleEffectsPacket(
-                entity.getId(),
-                spellData.coreId()
-            )
-        );
-
-        // Send damage
-        ModMessagesMagicParticles.CHANNEL.sendToServer(
-            new ServerboundParticleDamagePacket(
-                entity.getId(),
-                damage,
-                spellData.ownerId()
-            )
-        );
-
-        particle.remove();
-    }
 
     private void handleBlockCollision(BlockHitResult blockHitResult) {
         var blockPos = blockHitResult.getBlockPos();
@@ -125,11 +132,32 @@ public class AspectProcessor {
             }
         }
 
-        ModMessagesMagicParticles.CHANNEL.sendToServer(
-            new ServerboundParticleBlockHitPacket(
+        ModNetwork.CHANNEL.sendToServer(
+            new ServerParticleBlockHitPacket(
                 blockHitResult,
                 additionalArgs
             )
         );
+    }
+
+    private void handleEntityCollision(Entity entity) {
+        // Send effects
+        ModNetwork.CHANNEL.sendToServer(
+            new ServerParticleEffectsPacket(
+                entity.getId(),
+                spellData.coreId()
+            )
+        );
+
+        // Send damage
+        ModNetwork.CHANNEL.sendToServer(
+            new ServerParticleDamagePacket(
+                entity.getId(),
+                damage,
+                spellData.ownerId()
+            )
+        );
+
+        particle.remove();
     }
 }

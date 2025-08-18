@@ -9,8 +9,8 @@ import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
-import com.magicscience.magicsciencemod.net.magicparticles.ServerboundCastParticlePacket;
-import com.magicscience.magicsciencemod.registry.ModMessagesMagicParticles;
+import com.magicscience.magicsciencemod.network.magicparticles.ServerCastParticlePacket;
+import com.magicscience.magicsciencemod.registry.ModNetwork;
 import com.mojang.logging.LogUtils;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
@@ -84,8 +84,8 @@ public class MagicStick extends Item implements ICast {
             }
         }
 
-        ModMessagesMagicParticles.CHANNEL.sendToServer(
-            new ServerboundCastParticlePacket(SpellConverter.toData(spell))
+        ModNetwork.CHANNEL.sendToServer(
+            new ServerCastParticlePacket(SpellConverter.toData(spell))
         );
 
         // ToDo: Вынести в client/sound
