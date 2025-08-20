@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.particles.aspecthandlers.filters.block;
+package com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.block;
 
 import net.minecraft.world.level.block.state.BlockState;
 

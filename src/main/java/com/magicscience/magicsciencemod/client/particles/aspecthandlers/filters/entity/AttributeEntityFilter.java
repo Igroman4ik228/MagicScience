@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity;
+package com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity;
 
 import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;

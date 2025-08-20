@@ -1,11 +1,13 @@
-package com.magicscience.magicsciencemod.particles.aspecthandlers;
+package com.magicscience.magicsciencemod.client.particles.aspecthandlers;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.particles.MagicParticleOptions;
+import com.magicscience.magicsciencemod.client.particles.MagicParticleOptions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -22,14 +24,14 @@ public class MagicParticleCreator {
         this.direction = direction;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void create() {
         var level = Minecraft.getInstance().level;
-        if (level == null) return;
+        if (level==null) return;
 
         var spell = SpellConverter.toSpell(spellData);
         var structure = spell.getStructure();
-        if(structure == null) return;
-
+        if (structure==null) return;
         for (int i = 0; i < structure.getCountParticles(); i++) {
             var pos = structure.calculateStartParticlePosition(position);
 

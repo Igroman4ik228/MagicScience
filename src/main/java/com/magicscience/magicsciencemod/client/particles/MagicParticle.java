@@ -1,7 +1,7 @@
-package com.magicscience.magicsciencemod.particles;
+package com.magicscience.magicsciencemod.client.particles;
 
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.particles.aspecthandlers.AspectProcessor;
+import com.magicscience.magicsciencemod.client.particles.aspecthandlers.AspectProcessor;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -12,9 +12,15 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 public class MagicParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FRAME_COUNT = 3;
+    private static final ConcurrentMap<UUID, MagicParticle> INSTANCES = new ConcurrentHashMap<>();
+    private final @NotNull UUID particleUUID;
     private final @NotNull SpellData spellData;
     private final @NotNull AspectProcessor aspectProcessor;
 
@@ -30,8 +36,7 @@ public class MagicParticle extends TextureSheetParticle {
         this.yd = yd;
         this.zd = zd;
         this.lifetime = spellData.particleLifeTime();
-        this.bbWidth = 0.1f;
-        this.bbHeight = 0.1f;
+        this.setSize(0.1f, 0.1f);
 
         // ToDo: В будущем может быть усложнение взятия индекса спрайта
         int spriteIndex = Math.max(spellData.coreId() - 1, 0);
@@ -45,7 +50,14 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
+        this.particleUUID = UUID.randomUUID();
+        INSTANCES.put(this.particleUUID, this);
+
         this.aspectProcessor = new AspectProcessor(this);
+    }
+
+    public static MagicParticle get(UUID particleUUID) {
+        return INSTANCES.get(particleUUID);
     }
 
     @NotNull
@@ -67,6 +79,8 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public void remove() {
+        INSTANCES.remove(this.particleUUID);
+
         super.remove();
     }
 
@@ -89,6 +103,11 @@ public class MagicParticle extends TextureSheetParticle {
     @NotNull
     public SpellData getSpellData() {
         return spellData;
+    }
+
+    @NotNull
+    public UUID getParticleUUID() {
+        return particleUUID;
     }
 
     @NotNull

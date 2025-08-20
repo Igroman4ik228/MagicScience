@@ -1,4 +1,4 @@
-package com.magicscience.magicsciencemod.particles.aspecthandlers.filters.entity;
+package com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity;
 
 import net.minecraft.world.entity.Display;
 import net.minecraft.world.entity.Entity;
