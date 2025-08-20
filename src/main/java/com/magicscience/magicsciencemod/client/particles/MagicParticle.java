@@ -12,9 +12,15 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
+import java.util.concurrent.ConcurrentMap;
+
 public class MagicParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FRAME_COUNT = 3;
+    private static final ConcurrentMap<UUID, MagicParticle> INSTANCES = new ConcurrentHashMap<>();
+    private final @NotNull UUID particleUUID;
     private final @NotNull SpellData spellData;
     private final @NotNull AspectProcessor aspectProcessor;
 
@@ -44,7 +50,14 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.spellData = spellData;
 
+        this.particleUUID = UUID.randomUUID();
+        INSTANCES.put(this.particleUUID, this);
+
         this.aspectProcessor = new AspectProcessor(this);
+    }
+
+    public static MagicParticle get(UUID particleUUID) {
+        return INSTANCES.get(particleUUID);
     }
 
     @NotNull
@@ -66,6 +79,8 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public void remove() {
+        INSTANCES.remove(this.particleUUID);
+
         super.remove();
     }
 
@@ -88,6 +103,11 @@ public class MagicParticle extends TextureSheetParticle {
     @NotNull
     public SpellData getSpellData() {
         return spellData;
+    }
+
+    @NotNull
+    public UUID getParticleUUID() {
+        return particleUUID;
     }
 
     @NotNull

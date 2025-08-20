@@ -65,6 +65,11 @@ public class ModNetwork {
             ClientSpawnParticlePacket::new
         );
         registerClient(
+            ClientRemoveParticlePacket.class,
+            ClientRemoveParticlePacket::encode,
+            ClientRemoveParticlePacket::new
+        );
+        registerClient(
             ClientSyncManaPacket.class,
             ClientSyncManaPacket::encode,
             ClientSyncManaPacket::new

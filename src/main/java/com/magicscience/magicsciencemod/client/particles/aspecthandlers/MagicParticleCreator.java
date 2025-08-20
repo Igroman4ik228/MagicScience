@@ -6,6 +6,8 @@ import com.magicscience.magicsciencemod.client.particles.MagicParticleOptions;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
+import net.minecraftforge.api.distmarker.Dist;
+import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -22,6 +24,7 @@ public class MagicParticleCreator {
         this.direction = direction;
     }
 
+    @OnlyIn(Dist.CLIENT)
     public void create() {
         var level = Minecraft.getInstance().level;
         if (level==null) return;
@@ -29,7 +32,6 @@ public class MagicParticleCreator {
         var spell = SpellConverter.toSpell(spellData);
         var structure = spell.getStructure();
         if (structure==null) return;
-
         for (int i = 0; i < structure.getCountParticles(); i++) {
             var pos = structure.calculateStartParticlePosition(position);
 

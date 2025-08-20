@@ -135,6 +135,7 @@ public class AspectProcessor {
         ModNetwork.CHANNEL.sendToServer(
             new ServerParticleBlockHitPacket(
                 blockHitResult,
+                particle.getParticleUUID(),
                 additionalArgs
             )
         );

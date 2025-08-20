@@ -81,7 +81,6 @@ public class ServerCastParticlePacket implements IServerPacket {
 
         ModNetwork.CHANNEL.send(
             PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-
             new ClientSpawnParticlePacket(
                 spellData,
                 player.position().add(0, player.getEyeHeight(), 0),

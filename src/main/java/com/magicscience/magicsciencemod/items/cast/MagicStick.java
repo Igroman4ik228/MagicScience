@@ -41,12 +41,14 @@ public class MagicStick extends Item implements ICast {
 
     @Override
     @NotNull
-    @OnlyIn(Dist.CLIENT)
     public InteractionResultHolder<ItemStack> use(
         @NotNull Level level,
         @NotNull Player player,
         @NotNull InteractionHand hand
     ) {
+        if (!level.isClientSide)
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
+
         // Check main hand
         if (hand!=InteractionHand.MAIN_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(hand));
