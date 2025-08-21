@@ -1,12 +1,10 @@
 package com.magicscience.magicsciencemod.net.magicparticles;
 
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypeHelper;
 import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
@@ -58,33 +56,9 @@ public class ServerboundParticleBlockHitPacket {
             int coreId = additionalArgs.contains("coreId") ? additionalArgs.getInt("coreId"):-1;
 
             LOGGER.info("Block hit at {} state {} coreId {}", blockPos, state, coreId);
-            if (coreId==CoreTypes.FIRE.getId()) {
-                if (state.getBlock()==Blocks.TNT) {
-                    level.removeBlock(blockPos, false);
 
-                    var centerBlockPos = blockPos.getCenter();
-                    PrimedTnt primed = new PrimedTnt(
-                        level,
-                        centerBlockPos.x,
-                        centerBlockPos.y,
-                        centerBlockPos.z,
-                        sender
-                    );
-                    level.addFreshEntity(primed);
-                    LOGGER.info("Ignited TNT at {}", blockPos);
-                    return;
-                }
-
-                // todo: particle remove
-                if (state.isFlammable(level, blockPos, blockHitResult.getDirection())) {
-                    var abovePos = blockPos.relative(blockHitResult.getDirection());
-
-                    if (level.getBlockState(abovePos).isAir()) {
-                        level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
-                        LOGGER.info("Ignited block at {} with fire on {}", abovePos, blockPos);
-                    }
-                }
-            }
+            var core = CoreTypeHelper.findInstance(coreId);
+            core.processingBlock(state.getBlock(), level, blockHitResult, sender);
         });
         ctx.setPacketHandled(true);
     }

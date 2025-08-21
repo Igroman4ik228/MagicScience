@@ -47,10 +47,10 @@ public final class ScrollDataUtils {
             return null;
         }
 
-        // Чтение AttributeIds
+        // read AttributeIds
         int[] attrIds = getIntArrayFromTag(t, kAttrIds);
 
-        // Чтение AttributeStacks
+        // read AttributeStacks
         int[] attrStacks = getIntArrayFromTag(t, kAttrStacks);
 
         return new SpellData(
