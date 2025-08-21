@@ -5,7 +5,9 @@ import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
 public enum StructureTypes implements IMagicType<IMagicStructure> {
     NONE(null),
     CLOT(new ClotStructure()),
-    SPHERE(new SphereStructure());
+    SPHERE(new SphereStructure()),
+    WALL(new WallStructure()),
+    RAY(new RayStructure());
 
     private final IMagicStructure prototype;
 

@@ -27,6 +27,9 @@ public class MagicScienceMod {
     public MagicScienceMod(FMLJavaModLoadingContext context) {
         IEventBus modEventBus = context.getModEventBus();
 
+        // Network
+        ModNetwork.register();
+
         // Blocks
         ModBlocks.register(modEventBus);
         ModBlockEntities.register(modEventBus);
@@ -40,19 +43,10 @@ public class MagicScienceMod {
         // Items
         ModItems.register(modEventBus);
 
-        // Net
-        ModMessagesMagicParticles.register();
-        ModMessagesMana.register();
-
         // Particles
         ModParticles.register(modEventBus);
 
-
-        // Register the commonSetup method for modloading
         modEventBus.addListener(this::commonSetup);
-
-        // Register ourselves for server and other game events we are interested in
-        MinecraftForge.EVENT_BUS.register(this);
 
         // Events
         MinecraftForge.EVENT_BUS.register(ModCapabilityEvents.class);

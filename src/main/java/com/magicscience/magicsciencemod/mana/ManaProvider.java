@@ -1,6 +1,5 @@
 package com.magicscience.magicsciencemod.mana;
 
-import com.magicscience.magicsciencemod.MagicScienceMod;
 import com.magicscience.magicsciencemod.registry.ModCapabilities;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
@@ -12,8 +11,10 @@ import net.minecraftforge.common.util.LazyOptional;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
+import static com.magicscience.magicsciencemod.util.ResourceLocationHelper.prefix;
+
 public class ManaProvider implements ICapabilitySerializable<Tag> {
-    public static final ResourceLocation ID = new ResourceLocation(MagicScienceMod.MOD_ID, "mana");
+    public static final ResourceLocation ID = prefix("mana");
 
     private final Mana backend = new Mana();
     private final LazyOptional<IMana> optional = LazyOptional.of(() -> backend);

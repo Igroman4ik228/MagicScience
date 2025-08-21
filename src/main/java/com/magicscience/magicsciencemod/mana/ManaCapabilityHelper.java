@@ -1,8 +1,8 @@
 package com.magicscience.magicsciencemod.mana;
 
-import com.magicscience.magicsciencemod.net.mana.ClientboundSyncManaPacket;
+import com.magicscience.magicsciencemod.network.mana.ClientSyncManaPacket;
 import com.magicscience.magicsciencemod.registry.ModCapabilities;
-import com.magicscience.magicsciencemod.registry.ModMessagesMana;
+import com.magicscience.magicsciencemod.registry.ModNetwork;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
 import net.minecraftforge.network.NetworkDirection;
@@ -18,8 +18,8 @@ public class ManaCapabilityHelper {
     }
 
     public static void syncToClient(@NotNull ServerPlayer player, @NotNull IMana mana) {
-        ModMessagesMana.CHANNEL.sendTo(
-            new ClientboundSyncManaPacket(mana.getMana()),
+        ModNetwork.CHANNEL.sendTo(
+            new ClientSyncManaPacket(mana.getMana()),
             player.connection.connection,
             NetworkDirection.PLAY_TO_CLIENT
         );
@@ -35,7 +35,7 @@ public class ManaCapabilityHelper {
     }
 
     public static void removeMana(@NotNull Player player, int amount) {
-        
+
         modifyAndSync(player, mana -> mana.removeMana(amount));
     }
 

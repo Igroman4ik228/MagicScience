@@ -9,10 +9,11 @@ import net.minecraftforge.event.AttachCapabilitiesEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
 
+import static com.magicscience.magicsciencemod.util.ResourceLocationHelper.prefix;
+
 @Mod.EventBusSubscriber(modid = MagicScienceMod.MOD_ID)
 public class ModCapabilityEvents {
-
-    public static final ResourceLocation MANA_ID = new ResourceLocation(MagicScienceMod.MOD_ID, "mana");
+    public static final ResourceLocation MANA_ID = prefix("mana");
 
     @SubscribeEvent
     public static void attachPlayerCapabilities(AttachCapabilitiesEvent<Entity> event) {
