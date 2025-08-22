@@ -18,10 +18,6 @@ public enum StructureTypes implements IMagicType<IMagicStructure> {
         this.prototype = prototype;
     }
 
-    public IMagicStructure getPrototype() {
-        return prototype;
-    }
-
     @Override
     @Nullable
     public IMagicStructure getInstance() {

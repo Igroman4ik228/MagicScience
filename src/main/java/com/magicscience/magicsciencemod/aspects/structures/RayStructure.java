@@ -7,16 +7,16 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RayStructure extends BaseMagicStructure {
-    public RayStructure(int manaCost, int countParticles, int size, int stack) {
-        super(manaCost, countParticles, size, stack);
+    public RayStructure(BaseStructureData baseStructureData, int stack) {
+        super(baseStructureData, stack);
     }
 
     public RayStructure() {
-        this(20, 15, 1, 1);
+        this(new BaseStructureData(20, 15, 1), 1);
     }
 
     public RayStructure(int stack) {
-        this(20, 15, 1, stack);
+        this(new BaseStructureData(20, 15, 1), stack);
     }
 
     @Override
@@ -29,7 +29,7 @@ public class RayStructure extends BaseMagicStructure {
 
         var random = ThreadLocalRandom.current();
         var mc = Minecraft.getInstance();
-        if (mc.player == null) return basePosition;
+        if (mc.player==null) return basePosition;
 
         final double rayLength = 3.0;
         final double maxOffsetX = 0.10;
@@ -43,7 +43,7 @@ public class RayStructure extends BaseMagicStructure {
         double xOffset = (random.nextDouble() - 0.5) * maxOffsetX;
         double yOffset = (random.nextDouble() - 0.5) * maxOffsetY;
         double zOffset = (random.nextDouble() - 0.5) * maxOffsetZ;
-        
+
         Vec3 pointOnBeam = basePosition.add(dir.scale(distanceAlongBeam));
         return pointOnBeam.add(xOffset, yOffset, zOffset);
     }

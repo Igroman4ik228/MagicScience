@@ -1,5 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
+import com.magicscience.magicsciencemod.aspects.IAction;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
 import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
@@ -12,8 +13,8 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public abstract class BaseMagicCore implements IMagicCore {
-    protected final HashMap<Class<? extends Block>, IAction> blockActionMap;
-    protected final HashMap<Predicate<Class<? extends Block>>, IAction> groupBlockActionMap;
+    protected final HashMap<Class<? extends Block>, IAction> blockActionMap = new HashMap<>();
+    protected final HashMap<Predicate<Class<? extends Block>>, IAction> groupBlockActionMap = new HashMap<>();
     private final @NotNull BaseCoreData baseCoreData;
     private final int stack;
     private final @NotNull Collection<IMagicEffect> effects;
@@ -26,9 +27,6 @@ public abstract class BaseMagicCore implements IMagicCore {
         this.baseCoreData = baseCoreData;
         this.stack = Math.max(1, stack);
         this.effects = effects;
-
-        this.blockActionMap = new HashMap<Class<? extends Block>, IAction>();
-        this.groupBlockActionMap = new HashMap<Predicate<Class<? extends Block>>, IAction>();
     }
 
     @Override
@@ -44,16 +42,6 @@ public abstract class BaseMagicCore implements IMagicCore {
     @Override
     public int getParticleLifeTime() {
         return baseCoreData.particleLifeTime();
-    }
-
-    @Override
-    public int getParticleCount() {
-        return baseCoreData.particleCount();
-    }
-
-    @Override
-    public float getSize() {
-        return baseCoreData.size() * stack;
     }
 
     @Override
