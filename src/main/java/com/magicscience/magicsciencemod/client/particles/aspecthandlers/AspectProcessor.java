@@ -60,13 +60,13 @@ public class AspectProcessor {
             spellData.coreStack()
         ).getDamage();
 
-        // ToDo: Сделать динамическое заполнение additionalArgs в зависимости от SpellData
+        // ToDo: переписать на coreId
         additionalArgs.putInt("coreId", spellData.coreId());
     }
 
     public void process() {
+        // !Position warning
         processBlockCollision();
-
         processEntityCollision();
     }
 
@@ -142,6 +142,8 @@ public class AspectProcessor {
     }
 
     private void handleEntityCollision(Entity entity) {
+        // ToDo: Сделать в один пакет
+
         // Send effects
         ModNetwork.CHANNEL.sendToServer(
             new ServerParticleEffectsPacket(

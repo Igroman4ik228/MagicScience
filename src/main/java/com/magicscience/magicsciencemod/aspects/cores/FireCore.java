@@ -3,9 +3,7 @@ package com.magicscience.magicsciencemod.aspects.cores;
 import com.magicscience.magicsciencemod.aspects.cores.collisions.FireCollision;
 import com.magicscience.magicsciencemod.aspects.cores.effects.BornEffect;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -47,9 +45,9 @@ public class FireCore extends BaseMagicCore {
     }
 
     @Override
-    protected void commonProcessingBlock(Block block, Level level, BlockHitResult blockHitResult,
-                                         ServerPlayer sender, Objects... objects) {
-
+    protected void commonProcessingBlock(BlockHitResult blockHitResult,
+                                         Player sender, Objects... objects) {
+        var level = sender.level();
         var blockPos = blockHitResult.getBlockPos();
         BlockState state = level.getBlockState(blockPos);
 

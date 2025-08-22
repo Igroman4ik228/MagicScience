@@ -2,8 +2,7 @@ package com.magicscience.magicsciencemod.aspects.cores;
 
 import com.magicscience.magicsciencemod.aspects.IAction;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -60,23 +59,26 @@ public abstract class BaseMagicCore implements IMagicCore {
     }
 
     @Override
-    public void processingBlock(Block block, Level level, BlockHitResult blockHitResult,
-                                ServerPlayer sender, Objects... objects) {
+    public void processingBlock(BlockHitResult blockHitResult,
+                                Player sender, Objects... objects) {
+        var level = sender.level();
+        var blockPos = blockHitResult.getBlockPos();
+        var block = level.getBlockState(blockPos).getBlock();
         var blockClass = block.getClass();
         var action = this.blockActionMap.get(blockClass);
 
         if (action==null) {
             action = this.groupBlockActionMap.get(blockClass);
             if (action==null) {
-                commonProcessingBlock(block, level, blockHitResult, sender, objects);
+                commonProcessingBlock(blockHitResult, sender, objects);
             }
         }
 
-        action.execute(level, blockHitResult, sender, objects);
+        action.execute(blockHitResult, sender, objects);
     }
 
-    protected abstract void commonProcessingBlock(Block block, Level level, BlockHitResult blockHitResult,
-                                                  ServerPlayer sender, Objects... objects);
+    protected abstract void commonProcessingBlock(BlockHitResult blockHitResult,
+                                                  Player sender, Objects... objects);
 
     @Override
     @NotNull

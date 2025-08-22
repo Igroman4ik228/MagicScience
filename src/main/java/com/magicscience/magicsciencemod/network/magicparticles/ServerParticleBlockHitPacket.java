@@ -61,39 +61,6 @@ public class ServerParticleBlockHitPacket implements IServerPacket {
         LOGGER.info("Block hit at {} state {} coreId {}", blockPos, state, coreId);
 
         var core = CoreTypeHelper.findInstance(coreId);
-        core.processingBlock(state.getBlock(), level, blockHitResult, player);
-
-//        if (coreId==CoreTypes.FIRE.getId()) {
-//            if (state.getBlock()==Blocks.TNT) {
-//                level.removeBlock(blockPos, false);
-//
-//                var centerBlockPos = blockPos.getCenter();
-//                PrimedTnt primed = new PrimedTnt(
-//                    level,
-//                    centerBlockPos.x,
-//                    centerBlockPos.y,
-//                    centerBlockPos.z,
-//                    player
-//                );
-//                level.addFreshEntity(primed);
-//                LOGGER.info("Ignited TNT at {}", blockPos);
-//                return;
-//            }
-//
-//            // todo: particle remove
-//            if (state.isFlammable(level, blockPos, blockHitResult.getDirection())) {
-//                var abovePos = blockPos.relative(blockHitResult.getDirection());
-//
-//                if (level.getBlockState(abovePos).isAir()) {
-//                    level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
-//                    LOGGER.info("Ignited block at {} with fire on {}", abovePos, blockPos);
-//
-//                    ModNetwork.CHANNEL.send(
-//                        PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
-//                        new ClientRemoveParticlePacket(particleUUID)
-//                    );
-//                }
-//            }
-//        }
+        core.processingBlock(blockHitResult, player);
     }
 }

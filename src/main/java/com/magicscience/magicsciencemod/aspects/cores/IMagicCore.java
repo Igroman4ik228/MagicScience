@@ -2,9 +2,7 @@ package com.magicscience.magicsciencemod.aspects.cores;
 
 import com.magicscience.magicsciencemod.aspects.IMagicAspect;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
-import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.level.Level;
-import net.minecraft.world.level.block.Block;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,7 +18,7 @@ public interface IMagicCore extends IMagicAspect {
 
     IMagicCore cloneWithArguments(Object... args);
 
-    void processingBlock(Block block, Level level, BlockHitResult blockHitResult, ServerPlayer sender, Objects... objects);
+    void processingBlock(BlockHitResult blockHitResult, Player sender, Objects... objects);
 
     @NotNull Collection<IMagicEffect> getMagicEffects();
 }
