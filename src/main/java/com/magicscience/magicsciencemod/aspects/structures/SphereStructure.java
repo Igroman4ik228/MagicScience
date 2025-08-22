@@ -1,21 +1,25 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
+import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
+import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.concurrent.ThreadLocalRandom;
 
 public class SphereStructure extends BaseMagicStructure {
-    public SphereStructure(int manaCost, int countParticles, int size, int stack) {
-        super(manaCost, countParticles, size, stack);
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.SPHERE);
+
+    public SphereStructure(BaseStructureData baseStructureData, int stack) {
+        super(baseStructureData, stack);
     }
 
     public SphereStructure() {
-        this(30, 30, 3, 1);
+        this(CONFIG.toData(), 1);
     }
 
     public SphereStructure(int stack) {
-        this(30, 30, 3, stack);
+        this(CONFIG.toData(), stack);
     }
 
     @Override
@@ -26,7 +30,7 @@ public class SphereStructure extends BaseMagicStructure {
 
     @Override
     @NotNull
-    public Vec3 calculateStartParticlePosition(Vec3 basePosition) {
+    public Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
         double radius = 0.3 * getSize();
         var rnd = ThreadLocalRandom.current();
 
@@ -39,5 +43,4 @@ public class SphereStructure extends BaseMagicStructure {
 
         return basePosition.add(x, y, z);
     }
-
 }

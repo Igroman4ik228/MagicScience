@@ -1,30 +1,33 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
 import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import org.jetbrains.annotations.Nullable;
+
+import java.util.function.Supplier;
 
 public enum StructureTypes implements IMagicType<IMagicStructure> {
     NONE(null),
-    CLOT(new ClotStructure()),
-    SPHERE(new SphereStructure());
+    CLOT(ClotStructure::new),
+    SPHERE(SphereStructure::new);
 
-    private final IMagicStructure prototype;
+    private final @Nullable Supplier<IMagicStructure> prototype;
 
-    StructureTypes(IMagicStructure prototype) {
+    StructureTypes(@Nullable Supplier<IMagicStructure> prototype) {
         this.prototype = prototype;
     }
 
-    public IMagicStructure getPrototype() {
-        return prototype;
-    }
-
     @Override
+    @Nullable
     public IMagicStructure getInstance() {
-        return prototype;
+        if (prototype==null) return null;
+        return prototype.get();
     }
 
     @Override
+    @Nullable
     public IMagicStructure newInstance(Object... args) {
-        return prototype.cloneWithArguments(args);
+        if (prototype==null) return null;
+        return prototype.get().cloneWithArguments(args);
     }
 
     @Override

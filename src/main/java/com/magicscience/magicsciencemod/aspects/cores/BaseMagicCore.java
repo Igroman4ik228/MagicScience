@@ -6,55 +6,43 @@ import org.jetbrains.annotations.NotNull;
 import java.util.Collection;
 
 public abstract class BaseMagicCore implements IMagicCore {
-    private final int manaCost;
-    private final int damage;
-    private final int particleLifeTime;
-    private final int particleCount;
-    private final float size;
+    private final @NotNull BaseCoreData baseCoreData;
     private final int stack;
     private final @NotNull Collection<IMagicEffect> effects;
 
     public BaseMagicCore(
-        int manaCost,
-        int damage,
-        int particleLifeTime,
-        int particleCount,
-        float size,
+        @NotNull BaseCoreData baseCoreData,
         int stack,
         @NotNull Collection<IMagicEffect> effects
     ) {
-        this.manaCost = manaCost;
-        this.damage = damage;
-        this.particleLifeTime = particleLifeTime;
-        this.particleCount = particleCount;
-        this.size = size;
+        this.baseCoreData = baseCoreData;
         this.stack = Math.max(1, stack);
         this.effects = effects;
     }
 
     @Override
     public int getManaCost() {
-        return manaCost * stack;
+        return baseCoreData.manaCost() * stack;
     }
 
     @Override
     public int getDamage() {
-        return damage * stack;
+        return baseCoreData.damage() * stack;
     }
 
     @Override
     public int getParticleLifeTime() {
-        return particleLifeTime;
+        return baseCoreData.particleLifeTime();
     }
 
     @Override
     public int getParticleCount() {
-        return particleCount;
+        return baseCoreData.particleCount();
     }
 
     @Override
     public float getSize() {
-        return size * stack;
+        return baseCoreData.size() * stack;
     }
 
     @Override

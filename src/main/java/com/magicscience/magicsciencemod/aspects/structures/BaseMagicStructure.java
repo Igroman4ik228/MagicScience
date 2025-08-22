@@ -4,31 +4,25 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseMagicStructure implements IMagicStructure {
-    private final int manaCost;
-    private final int countParticles;
-    private final int size;
+    private final @NotNull BaseStructureData baseStructureData;
     private final int stack;
 
     public BaseMagicStructure(
-        int manaCost,
-        int countParticles,
-        int size,
+        @NotNull BaseStructureData baseStructureData,
         int stack
     ) {
-        this.manaCost = manaCost;
-        this.countParticles = countParticles;
-        this.size = size;
+        this.baseStructureData = baseStructureData;
         this.stack = Math.max(1, stack);
     }
 
     @Override
     public int getManaCost() {
-        return manaCost;
+        return baseStructureData.manaCost();
     }
 
     @Override
     public int getCountParticles() {
-        return countParticles * stack;
+        return baseStructureData.countParticles() * stack;
     }
 
     @Override
@@ -38,7 +32,7 @@ public abstract class BaseMagicStructure implements IMagicStructure {
 
     @Override
     public int getSize() {
-        return size * stack;
+        return baseStructureData.size() * stack;
     }
 
     @NotNull

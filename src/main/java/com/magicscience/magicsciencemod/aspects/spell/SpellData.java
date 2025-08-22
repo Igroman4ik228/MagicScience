@@ -11,5 +11,6 @@ public record SpellData(
     int structureId,
     int structureStack,
     int particleSpeed,
-    int particleLifeTime) {
+    int particleLifeTime
+) {
 }

@@ -2,29 +2,32 @@ package com.magicscience.magicsciencemod.aspects.attributes;
 
 import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
 
+import javax.annotation.Nullable;
+import java.util.function.Supplier;
+
 public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     NONE(null),
-    VECTOR(new VectorAttribute()),
-    SELF_SPECTRE(new SelfSpectreAttribute());
+    VECTOR(VectorAttribute::new),
+    SELF_SPECTRE(SelfSpectreAttribute::new);
 
-    private final IMagicAttribute prototype;
+    private final @Nullable Supplier<IMagicAttribute> prototype;
 
-    AttributeTypes(IMagicAttribute prototype) {
+    AttributeTypes(@Nullable Supplier<IMagicAttribute> prototype) {
         this.prototype = prototype;
     }
 
-    public IMagicAttribute getPrototype() {
-        return prototype;
-    }
-
     @Override
+    @Nullable
     public IMagicAttribute getInstance() {
-        return prototype;
+        if (prototype==null) return null;
+        return prototype.get();
     }
 
     @Override
+    @Nullable
     public IMagicAttribute newInstance(Object... args) {
-        return prototype.cloneWithArguments(args);
+        if (prototype==null) return null;
+        return prototype.get().cloneWithArguments(args);
     }
 
     @Override

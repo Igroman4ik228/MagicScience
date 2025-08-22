@@ -2,6 +2,7 @@ package com.magicscience.magicsciencemod;
 
 import com.magicscience.magicsciencemod.client.creativemenu.ModCreativeTab;
 import com.magicscience.magicsciencemod.client.menu.ModMenuTypes;
+import com.magicscience.magicsciencemod.config.server.ServerConfig;
 import com.magicscience.magicsciencemod.events.ManaEvents;
 import com.magicscience.magicsciencemod.events.ModCapabilityEvents;
 import com.magicscience.magicsciencemod.registry.*;
@@ -13,6 +14,7 @@ import net.minecraftforge.event.server.ServerStoppingEvent;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.config.ModConfig;
 import net.minecraftforge.fml.event.lifecycle.FMLClientSetupEvent;
 import net.minecraftforge.fml.event.lifecycle.FMLCommonSetupEvent;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
@@ -25,6 +27,8 @@ public class MagicScienceMod {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public MagicScienceMod(FMLJavaModLoadingContext context) {
+        context.registerConfig(ModConfig.Type.SERVER, ServerConfig.SPEC, "MagicScience.toml");
+
         IEventBus modEventBus = context.getModEventBus();
 
         // Network

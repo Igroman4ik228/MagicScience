@@ -1,6 +1,5 @@
 package com.magicscience.magicsciencemod.aspects.spell;
 
-import com.magicscience.magicsciencemod.aspects.IMagicAspect;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IMagicParticleSpeed;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
@@ -11,7 +10,7 @@ import org.jetbrains.annotations.Nullable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Spell implements IMagicAspect {
+public class Spell implements ISpell {
     private final @NotNull IMagicCore magicCore;
     private final @NotNull List<IMagicAttribute> magicAttributes;
     private final @Nullable IMagicStructure magicStructure;

@@ -1,28 +1,29 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
 import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import org.jetbrains.annotations.NotNull;
+
+import java.util.function.Supplier;
 
 public enum CoreTypes implements IMagicType<IMagicCore> {
-    FIRE(new FireCore());
+    FIRE(FireCore::new);
 
-    private final IMagicCore prototype;
+    private final @NotNull Supplier<IMagicCore> prototype;
 
-    CoreTypes(IMagicCore prototype) {
+    CoreTypes(@NotNull Supplier<IMagicCore> prototype) {
         this.prototype = prototype;
     }
 
-    public IMagicCore getPrototype() {
-        return prototype;
-    }
-
     @Override
+    @NotNull
     public IMagicCore getInstance() {
-        return prototype;
+        return prototype.get();
     }
 
     @Override
+    @NotNull
     public IMagicCore newInstance(Object... args) {
-        return prototype.cloneWithArguments(args);
+        return prototype.get().cloneWithArguments(args);
     }
 
     @Override

@@ -1,11 +1,11 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 public abstract class BaseMagicAttribute implements IMagicAttribute {
-    private final int manaCost;
+    private final BaseAttributeData baseAttributeData;
     private final int stack;
 
-    protected BaseMagicAttribute(int manaCost, int stack) {
-        this.manaCost = manaCost;
+    protected BaseMagicAttribute(BaseAttributeData baseAttributeData, int stack) {
+        this.baseAttributeData = baseAttributeData;
         this.stack = Math.max(1, stack);
     }
 
@@ -16,7 +16,7 @@ public abstract class BaseMagicAttribute implements IMagicAttribute {
 
     @Override
     public int getManaCost() {
-        return manaCost * stack;
+        return baseAttributeData.manaCost() * stack;
     }
 
     @Override

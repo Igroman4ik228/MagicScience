@@ -1,21 +1,25 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IMagicParticleSpeed;
+import com.magicscience.magicsciencemod.config.server.attribute.AttributeConfig;
+import com.magicscience.magicsciencemod.config.server.attribute.VectorAttributeConfig;
 
 public class VectorAttribute extends BaseMagicAttribute implements IMagicParticleSpeed {
+    private static final VectorAttributeConfig CONFIG = (VectorAttributeConfig) AttributeConfig.get(AttributeTypes.VECTOR);
+
     private final int particleSpeed;
 
-    public VectorAttribute(int manaCost, int stack, int particleSpeed) {
-        super(manaCost, stack);
+    public VectorAttribute(BaseAttributeData baseAttributeData, int stack, int particleSpeed) {
+        super(baseAttributeData, stack);
         this.particleSpeed = particleSpeed;
     }
 
     public VectorAttribute() {
-        this(20, 1,2);
+        this(CONFIG.toData(), 1, CONFIG.getParticleSpeed());
     }
 
     public VectorAttribute(int stack) {
-        this(20, 1, 2);
+        this(CONFIG.toData(), stack, CONFIG.getParticleSpeed());
     }
 
     @Override
@@ -25,6 +29,6 @@ public class VectorAttribute extends BaseMagicAttribute implements IMagicParticl
 
     @Override
     public int getParticleSpeed() {
-        return particleSpeed * getStack();
+        return particleSpeed * getStack() / 2;
     }
 }

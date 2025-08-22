@@ -1,6 +1,8 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;
+import com.magicscience.magicsciencemod.config.server.attribute.AttributeConfig;
+import com.magicscience.magicsciencemod.config.server.attribute.IBaseAttributeConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
@@ -12,16 +14,18 @@ import java.util.Collection;
 import java.util.function.Predicate;
 
 public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterMagicAttribute {
-    public SelfSpectreAttribute(int manaCost, int stack) {
-        super(manaCost, stack);
+    private static final IBaseAttributeConfig CONFIG = AttributeConfig.get(AttributeTypes.SELF_SPECTRE);
+
+    public SelfSpectreAttribute(BaseAttributeData baseAttributeData, int stack) {
+        super(baseAttributeData, stack);
     }
 
     public SelfSpectreAttribute() {
-        this(10, 1);
+        this(CONFIG.toData(), 1);
     }
 
     public SelfSpectreAttribute(int stack) {
-        this(10, stack);
+        this(CONFIG.toData(), stack);
     }
 
     @Override
@@ -32,7 +36,7 @@ public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterM
         if (player==null)
             return entity -> true;
 
-        return entity -> !(player.getId()== entity.getId());
+        return entity -> !(player.getId()==entity.getId());
     }
 
     @Override
