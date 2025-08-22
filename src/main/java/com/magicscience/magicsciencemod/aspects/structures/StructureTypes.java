@@ -8,12 +8,18 @@ import java.util.function.Supplier;
 public enum StructureTypes implements IMagicType<IMagicStructure> {
     NONE(null),
     CLOT(ClotStructure::new),
-    SPHERE(SphereStructure::new);
+    SPHERE(SphereStructure::new),
+    WALL(WallStructure::new),
+    RAY(RayStructure::new);
 
     private final @Nullable Supplier<IMagicStructure> prototype;
 
     StructureTypes(@Nullable Supplier<IMagicStructure> prototype) {
         this.prototype = prototype;
+    }
+
+    public IMagicStructure getPrototype() {
+        return prototype;
     }
 
     @Override
