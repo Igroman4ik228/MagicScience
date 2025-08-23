@@ -33,7 +33,6 @@ public class AttributeConfig {
                 new BaseAttributeData(10)
             )
         );
-
         add(
             new BaseAttributeConfig(
                 builder,

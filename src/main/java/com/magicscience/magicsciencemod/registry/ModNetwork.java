@@ -43,19 +43,14 @@ public class ModNetwork {
             ServerCastParticlePacket::new
         );
         registerServer(
-            ServerParticleDamagePacket.class,
-            ServerParticleDamagePacket::encode,
-            ServerParticleDamagePacket::new
-        );
-        registerServer(
-            ServerParticleEffectsPacket.class,
-            ServerParticleEffectsPacket::encode,
-            ServerParticleEffectsPacket::new
-        );
-        registerServer(
             ServerParticleBlockHitPacket.class,
             ServerParticleBlockHitPacket::encode,
             ServerParticleBlockHitPacket::new
+        );
+        registerServer(
+            ServerParticleEntityHitPacket.class,
+            ServerParticleEntityHitPacket::encode,
+            ServerParticleEntityHitPacket::new
         );
 
         // Client

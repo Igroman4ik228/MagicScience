@@ -23,40 +23,12 @@ public class ServerCastParticlePacket implements IServerPacket {
     }
 
     public ServerCastParticlePacket(FriendlyByteBuf buf) {
-        int ownerId = buf.readInt();
-        int coreId = buf.readVarInt();
-        int coreStack = buf.readVarInt();
-        int[] attributeIds = buf.readVarIntArray();
-        int[] attributeStacks = buf.readVarIntArray();
-        int structureId = buf.readVarInt();
-        int structureStack = buf.readVarInt();
-        int particleSpeed = buf.readInt();
-        int particleLifeTime = buf.readInt();
-
-        this.spellData = new SpellData(
-            ownerId,
-            coreId,
-            coreStack,
-            attributeIds,
-            attributeStacks,
-            structureId,
-            structureStack,
-            particleSpeed,
-            particleLifeTime
-        );
+        this.spellData = SpellData.decode(buf);
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(spellData.ownerId());
-        buf.writeVarInt(spellData.coreId());
-        buf.writeVarInt(spellData.coreStack());
-        buf.writeVarIntArray(spellData.attributeIds());
-        buf.writeVarIntArray(spellData.attributeStack());
-        buf.writeVarInt(spellData.structureId());
-        buf.writeVarInt(spellData.structureStack());
-        buf.writeInt(spellData.particleSpeed());
-        buf.writeInt(spellData.particleLifeTime());
+        spellData.encode(buf);
     }
 
     @Override

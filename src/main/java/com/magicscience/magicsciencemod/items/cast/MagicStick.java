@@ -61,7 +61,7 @@ public class MagicStick extends Item implements ICast {
                 ATTRIBUTE_FACTORY.create(AttributeTypes.SELF_SPECTRE, 1),
                 ATTRIBUTE_FACTORY.create(AttributeTypes.VECTOR, 3)
             ),
-            STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 1),
+            STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 40),
             player.getId()
         );
 

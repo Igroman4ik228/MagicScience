@@ -26,36 +26,14 @@ public class ClientSpawnParticlePacket implements IClientPacket {
     }
 
     public ClientSpawnParticlePacket(FriendlyByteBuf buf) {
-        this.spellData = new SpellData(
-            buf.readInt(),               // ownerId
-            buf.readVarInt(),            // coreId
-            buf.readVarInt(),            // coreStack
-            buf.readVarIntArray(),       // attributeIds
-            buf.readVarIntArray(),       // attributeStack
-            buf.readVarInt(),            // structureId
-            buf.readVarInt(),            // structureStack
-            buf.readInt(),                // particleSpeed
-            buf.readInt()                  // particleLifeTime
-        );
+        this.spellData = SpellData.decode(buf);
         this.position = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
         this.direction = new Vec3(buf.readDouble(), buf.readDouble(), buf.readDouble());
     }
 
     @Override
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(spellData.ownerId());
-        buf.writeVarInt(spellData.coreId());
-        buf.writeVarInt(spellData.coreStack());
-
-        buf.writeVarIntArray(spellData.attributeIds());
-        buf.writeVarIntArray(spellData.attributeStack());
-
-        buf.writeVarInt(spellData.structureId());
-        buf.writeVarInt(spellData.structureStack());
-
-        buf.writeInt(spellData.particleSpeed());
-        buf.writeInt(spellData.particleLifeTime());
-
+        this.spellData.encode(buf);
         buf.writeDouble(position.x);
         buf.writeDouble(position.y);
         buf.writeDouble(position.z);

@@ -1,5 +1,7 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
+import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
+import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -7,25 +9,29 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class RayStructure extends BaseMagicStructure {
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.RAY);
+
     public RayStructure(BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);
     }
 
     public RayStructure() {
-        this(new BaseStructureData(20, 15, 1), 1);
+        this(CONFIG.toData(), 1);
     }
 
     public RayStructure(int stack) {
-        this(new BaseStructureData(20, 15, 1), stack);
+        this(CONFIG.toData(), stack);
     }
 
     @Override
-    public @NotNull IMagicStructure cloneWithArguments(Object... args) {
+    @NotNull
+    public IMagicStructure cloneWithArguments(Object... args) {
         return new RayStructure((int) args[0]);
     }
 
     @Override
-    public @NotNull Vec3 calculateStartParticlePosition(Vec3 basePosition) {
+    @NotNull
+    public Vec3 calculateStartParticlePosition(Vec3 basePosition) {
 
         var random = ThreadLocalRandom.current();
         var mc = Minecraft.getInstance();

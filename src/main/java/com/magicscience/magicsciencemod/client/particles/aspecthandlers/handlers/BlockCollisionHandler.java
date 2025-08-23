@@ -1,0 +1,87 @@
+package com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers;
+
+import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import com.magicscience.magicsciencemod.client.particles.MagicParticle;
+import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleBlockHitPacket;
+import com.magicscience.magicsciencemod.registry.ModNetwork;
+import com.magicscience.magicsciencemod.util.MathHelper;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.level.ClipContext;
+import net.minecraft.world.level.block.Blocks;
+import net.minecraft.world.level.block.state.BlockState;
+import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.phys.HitResult;
+import net.minecraft.world.phys.Vec3;
+
+import java.util.function.Predicate;
+
+public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
+
+    public BlockCollisionHandler(MagicParticle particle, SpellData spellData, Predicate<BlockState> blockFilter, ClientLevel level) {
+        super(particle, spellData, blockFilter, level);
+    }
+
+    public void handleCollision() {
+        Vec3 center = particle.getBoundingBox().getCenter();
+        Vec3 direction = particle.getDirectionPos();
+
+        // No speed
+        if (direction.lengthSqr()==0) {
+            BlockPos pos = BlockPos.containing(center);
+
+            handleBlockCollision(
+                new BlockHitResult(
+                    center,
+                    MathHelper.getClosestDirection(pos, center),
+                    pos,
+                    true
+                )
+            );
+            return;
+        }
+
+        rayTraceBlock(center, direction);
+    }
+
+    private void rayTraceBlock(Vec3 start, Vec3 direction) {
+        Vec3 end = start.add(direction);
+
+        var blockHitResult = level.clip(
+            new ClipContext(
+                start,
+                end,
+                ClipContext.Block.OUTLINE,
+                ClipContext.Fluid.ANY,
+                null
+            )
+        );
+
+        handleBlockCollision(blockHitResult);
+    }
+
+    private void handleBlockCollision(BlockHitResult blockHitResult) {
+        var blockPos = blockHitResult.getBlockPos();
+        var blockState = level.getBlockState(blockPos);
+
+        if (blockHitResult.getType()!=HitResult.Type.BLOCK) return;
+        if (blockState.isAir()) return;
+        if (filter.test(blockState)) return;
+
+        if (spellData.coreId()==CoreTypes.FIRE.getId()) {
+            if (blockState.getBlock()==Blocks.WATER) {
+                particle.remove();
+                return;
+            }
+        }
+
+        ModNetwork.CHANNEL.sendToServer(
+            new ServerParticleBlockHitPacket(
+                blockHitResult,
+                particle.getParticleUUID(),
+                spellData.coreId()
+            )
+        );
+    }
+}

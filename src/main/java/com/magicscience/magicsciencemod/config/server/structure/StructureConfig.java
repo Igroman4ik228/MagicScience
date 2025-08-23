@@ -33,12 +33,25 @@ public class StructureConfig {
                 new BaseStructureData(20, 10, 1)
             )
         );
-
         add(
             new BaseStructureConfig(
                 builder,
                 StructureTypes.SPHERE,
                 new BaseStructureData(30, 30, 1)
+            )
+        );
+        add(
+            new BaseStructureConfig(
+                builder,
+                StructureTypes.RAY,
+                new BaseStructureData(20, 15, 1)
+            )
+        );
+        add(
+            new BaseStructureConfig(
+                builder,
+                StructureTypes.WALL,
+                new BaseStructureData(20, 10, 1)
             )
         );
 

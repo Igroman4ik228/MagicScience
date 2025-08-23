@@ -1,5 +1,7 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
+import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
+import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -7,16 +9,18 @@ import org.jetbrains.annotations.NotNull;
 import java.util.concurrent.ThreadLocalRandom;
 
 public class WallStructure extends BaseMagicStructure {
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.WALL);
+
     public WallStructure(BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);
     }
 
     public WallStructure() {
-        this(new BaseStructureData(20, 10, 1), 1);
+        this(CONFIG.toData(), 1);
     }
 
     public WallStructure(int stack) {
-        this(new BaseStructureData(20, 50, 1), stack);
+        this(CONFIG.toData(), stack);
     }
 
     @Override
@@ -26,9 +30,10 @@ public class WallStructure extends BaseMagicStructure {
     }
 
     @Override
-    public @NotNull Vec3 calculateStartParticlePosition(Vec3 basePosition) {
+    @NotNull
+    public Vec3 calculateStartParticlePosition(Vec3 basePosition) {
         var mc = Minecraft.getInstance();
-        if (mc.player == null) return basePosition;
+        if (mc.player==null) return basePosition;
 
         Vec3 lookDir = mc.player.getLookAngle().normalize();
         Vec3 worldUp = new Vec3(0.0, 1.0, 0.0);     // global "up" axis
