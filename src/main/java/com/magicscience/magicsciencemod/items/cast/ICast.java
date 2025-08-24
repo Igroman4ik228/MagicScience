@@ -1,12 +1,18 @@
 package com.magicscience.magicsciencemod.items.cast;
 
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.player.Player;
+import org.jetbrains.annotations.NotNull;
 
 public interface ICast {
-    void cast(Player player, int manaCost);
+    void castClient(LocalPlayer player);
 
-    Spell getSpell();
+    void castServer(@NotNull ServerPlayer player, @NotNull SpellData spellData);
+
+    Spell getSpell(Player player);
 
     void setSpell(Spell newSpell);
 }

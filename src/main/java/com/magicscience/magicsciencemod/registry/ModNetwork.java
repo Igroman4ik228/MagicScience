@@ -3,7 +3,10 @@ package com.magicscience.magicsciencemod.registry;
 import com.magicscience.magicsciencemod.network.IClientPacket;
 import com.magicscience.magicsciencemod.network.IPacket;
 import com.magicscience.magicsciencemod.network.IServerPacket;
-import com.magicscience.magicsciencemod.network.magicparticles.*;
+import com.magicscience.magicsciencemod.network.magicparticles.ClientRemoveParticlePacket;
+import com.magicscience.magicsciencemod.network.magicparticles.ClientSpawnParticlePacket;
+import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleBlockHitPacket;
+import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleEntityHitPacket;
 import com.magicscience.magicsciencemod.network.mana.ClientSyncManaPacket;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
@@ -36,11 +39,6 @@ public class ModNetwork {
             ServerParticleBlockHitPacket.class,
             ServerParticleBlockHitPacket::encode,
             ServerParticleBlockHitPacket::new
-        );
-        registerServer(
-            ServerCastParticlePacket.class,
-            ServerCastParticlePacket::encode,
-            ServerCastParticlePacket::new
         );
         registerServer(
             ServerParticleBlockHitPacket.class,

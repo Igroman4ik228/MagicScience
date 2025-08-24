@@ -2,5 +2,13 @@
   "item.magicscience.magic_stick": "Magic Stick",
   "creativetab.magic_science_tab": "Magic Science",
   "item.magicscience.magic_ink": "Magic Inc",
-  "block.magicscience.magic_workbench": "Magic Workbench"
+  "item.magicscience.magic_scroll": "Magic Scroll",
+  "block.magicscience.magic_workbench": "Magic Workbench",
+  "aspect.magicscience.firecore": "Fire",
+  "aspect.magicscience.clotstructure": "Clot",
+  "aspect.magicscience.spherestructure": "Sphere",
+  "aspect.magicscience.wallstructure": "Wall",
+  "aspect.magicscience.raystructure": "Ray",
+  "aspect.magicscience.vectorattribute": "Vector",
+  "aspect.magicscience.selfspectreattribute": "SelfSpectre"
 }

@@ -7,11 +7,16 @@ import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
+import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import com.magicscience.magicsciencemod.items.Scroll;
 import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
-import com.magicscience.magicsciencemod.network.magicparticles.ServerCastParticlePacket;
+import com.magicscience.magicsciencemod.network.magicparticles.ClientSpawnParticlePacket;
 import com.magicscience.magicsciencemod.registry.ModNetwork;
+import com.magicscience.magicsciencemod.util.ScrollDataUtils;
 import com.mojang.logging.LogUtils;
+import net.minecraft.client.player.LocalPlayer;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.sounds.SoundEvents;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.InteractionResultHolder;
@@ -21,6 +26,7 @@ import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.Level;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
+import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
@@ -46,57 +52,107 @@ public class MagicStick extends Item implements ICast {
         @NotNull Player player,
         @NotNull InteractionHand hand
     ) {
-        if (!level.isClientSide)
-            return InteractionResultHolder.pass(player.getItemInHand(hand));
-
         // Check main hand
         if (hand!=InteractionHand.MAIN_HAND)
             return InteractionResultHolder.pass(player.getItemInHand(hand));
 
-        // ToDo: сделать отдельный класс
-        // Dynamic create spell
-        var spell = new Spell(
-            CORE_FACTORY.create(CoreTypes.FIRE, 1),
-            List.of(
-                ATTRIBUTE_FACTORY.create(AttributeTypes.SELF_SPECTRE, 1),
-                ATTRIBUTE_FACTORY.create(AttributeTypes.VECTOR, 3)
-            ),
-            STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 40),
-            player.getId()
-        );
+        //  Общая логика
 
-        setSpell(spell);
+        setSpell(getSpell(player));
 
-        cast(player, spell.getManaCost());
+        int manaCost = spell.getManaCost();
+
+        if (!player.isCreative()) {
+            int mana = ManaCapabilityHelper.get(player).get().getMana();
+
+            LOGGER.info("mana: {}, manacost {}", mana, manaCost);
+
+            // No mana
+            if (mana < manaCost) {
+                LOGGER.info("Not enough mana: {}/{}", mana, manaCost);
+
+                if (level.isClientSide) {
+                    // ToDo: Вынести в client/sound
+                    // sound cancel cast
+                    player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F);
+                }
+
+                return InteractionResultHolder.pass(player.getItemInHand(hand));
+            }
+
+            if (!level.isClientSide) {
+                ManaCapabilityHelper.removeMana(player, spell.getManaCost());
+            }
+        }
+
+
+        if (level.isClientSide) {
+            // Только на клиенте
+            if (player instanceof LocalPlayer localPlayer) {
+                castClient(localPlayer);
+            }
+        } else {
+            // Только на сервере
+            if (player instanceof ServerPlayer serverPlayer) {
+                castServer(serverPlayer, SpellConverter.toData(spell));
+            }
+        }
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void cast(Player player, int manaCost) {
-        if (!player.isCreative()) {
-            int mana = ManaCapabilityHelper.get(player).get().getMana();
-            if (mana < manaCost) {
-                LOGGER.info("Not enough mana: {}/{}", mana, manaCost);
-                // ToDo: Вынести в client/sound
-                // sound cancel cast
-                player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F);
-                return;
-            }
-        }
-
-        ModNetwork.CHANNEL.sendToServer(
-            new ServerCastParticlePacket(SpellConverter.toData(spell))
-        );
-
+    public void castClient(LocalPlayer player) {
         // ToDo: Вынести в client/sound
         player.playSound(SoundEvents.FIRECHARGE_USE, 1.0F, 1.0F);
     }
 
     @Override
-    public Spell getSpell() {
-        return spell;
+    public void castServer(
+        @NotNull ServerPlayer player,
+        @NotNull SpellData spellData
+    ) {
+        // ToDo: add uuid for player
+//        if (player.getId()!=spellData.ownerId())
+//            return;
+
+        LOGGER.info("ServerboundCastParticlePacket");
+        LOGGER.info("SpellData received:");
+        LOGGER.info("  SpellData: {}", spellData);
+
+        Spell spell = SpellConverter.toSpell(spellData);
+
+        ModNetwork.CHANNEL.send(
+            PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
+            new ClientSpawnParticlePacket(
+                spellData,
+                player.position().add(0, player.getEyeHeight(), 0),
+                player.getLookAngle().normalize().scale(spell.getParticleSpeed())
+            )
+        );
+    }
+
+    @Override
+    public Spell getSpell(@NotNull Player player) {
+        // ToDo: It`s dev-code. Edit to relise
+        // Check if the player is holding a Scroll in the off-hand
+        ItemStack offHandStack = player.getItemInHand(InteractionHand.OFF_HAND);
+        if (offHandStack.getItem() instanceof Scroll) {
+            var spellData = ScrollDataUtils.readFromStack(offHandStack);
+            if (spellData==null) return spell;
+            return SpellConverter.toSpell(spellData);
+        } else {
+            return new Spell(
+                CORE_FACTORY.create(CoreTypes.FIRE, 1),
+                List.of(
+                    ATTRIBUTE_FACTORY.create(AttributeTypes.SELF_SPECTRE, 1),
+                    ATTRIBUTE_FACTORY.create(AttributeTypes.VECTOR, 3)
+                ),
+                STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 40),
+                player.getId()
+            );
+        }
     }
 
     @Override
