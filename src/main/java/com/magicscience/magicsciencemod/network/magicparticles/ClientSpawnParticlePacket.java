@@ -49,7 +49,7 @@ public class ClientSpawnParticlePacket implements IClientPacket {
         if (player==null) return;
 
         LOGGER.info("Received ClientboundSpawnParticlePacket:");
-        LOGGER.info("  Owner ID: {}", spellData.ownerId());
+        LOGGER.info("  Owner ID: {}", spellData.ownerUUID());
         LOGGER.info("  Core ID: {}", spellData.coreId());
         LOGGER.info("  Core Stack: {}", spellData.coreStack());
 

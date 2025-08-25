@@ -37,7 +37,7 @@ public class MagicParticleCreator {
 
             level.addParticle(
                 new MagicParticleOptions(
-                    spellData.ownerId(),
+                    spellData.ownerUUID(),
                     spellData.coreId(),
                     spellData.coreStack(),
                     spellData.attributeIds(),

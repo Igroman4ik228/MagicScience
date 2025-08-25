@@ -36,7 +36,7 @@ public class EntityCollisionHandler extends BaseCollisionHandler<Entity> {
                 entity.getId(),
                 spellData.coreId(),
                 damage,
-                spellData.ownerId()
+                spellData.ownerUUID()
             )
         );
 

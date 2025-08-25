@@ -8,8 +8,10 @@ import net.minecraft.core.particles.ParticleType;
 import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 public record MagicParticleOptions(
-    int ownerId,
+    UUID ownerUUID,
     int coreId,
     int coreStack,
     int[] attributeIds,
@@ -29,7 +31,9 @@ public record MagicParticleOptions(
                 StringReader reader
             ) throws CommandSyntaxException {
                 reader.expect(' ');
-                int ownerId = reader.readInt();
+                // Читаем UUID в виде строки (формат стандартный 8-4-4-4-12)
+                String uuidStr = reader.readUnquotedString();
+                UUID ownerUUID = UUID.fromString(uuidStr);
                 reader.expect(' ');
                 int coreId = reader.readInt();
                 reader.expect(' ');
@@ -54,7 +58,17 @@ public record MagicParticleOptions(
                     reader.expect(' ');
                     attributeStack[i] = reader.readInt();
                 }
-                return new MagicParticleOptions(ownerId, coreId, coreStack, attributeIds, attributeStack, structureId, structureStack, particleSpeed, particleLifeTime);
+                return new MagicParticleOptions(
+                    ownerUUID,
+                    coreId,
+                    coreStack,
+                    attributeIds,
+                    attributeStack,
+                    structureId,
+                    structureStack,
+                    particleSpeed,
+                    particleLifeTime
+                );
             }
 
             @Override
@@ -63,7 +77,7 @@ public record MagicParticleOptions(
                 @NotNull ParticleType<MagicParticleOptions> type,
                 FriendlyByteBuf buf
             ) {
-                int ownerId = buf.readInt();
+                UUID ownerUUID = buf.readUUID();
                 int coreId = buf.readInt();
                 int coreStack = buf.readInt();
                 int structureId = buf.readInt();
@@ -79,8 +93,17 @@ public record MagicParticleOptions(
                 for (int i = 0; i < attrCount; i++) {
                     attributeStack[i] = buf.readInt();
                 }
-                return new MagicParticleOptions(ownerId, coreId, coreStack, attributeIds, attributeStack,
-                    structureId, structureStack, particleSpeed, particleLifeTime);
+                return new MagicParticleOptions(
+                    ownerUUID,
+                    coreId,
+                    coreStack,
+                    attributeIds,
+                    attributeStack,
+                    structureId,
+                    structureStack,
+                    particleSpeed,
+                    particleLifeTime
+                );
             }
         };
 
@@ -93,7 +116,7 @@ public record MagicParticleOptions(
 
     @Override
     public void writeToNetwork(FriendlyByteBuf buf) {
-        buf.writeInt(ownerId);
+        buf.writeUUID(ownerUUID);
         buf.writeInt(coreId);
         buf.writeInt(coreStack);
         buf.writeInt(structureId);
@@ -114,7 +137,7 @@ public record MagicParticleOptions(
     @NotNull
     public String writeToString() {
         StringBuilder sb = new StringBuilder();
-        sb.append(ownerId).append(" ")
+        sb.append(ownerUUID.toString()).append(" ")
             .append(coreId).append(" ")
             .append(coreStack).append(" ")
             .append(structureId).append(" ")

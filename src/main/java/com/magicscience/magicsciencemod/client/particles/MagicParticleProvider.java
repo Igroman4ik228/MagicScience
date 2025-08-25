@@ -25,7 +25,7 @@ public class MagicParticleProvider implements ParticleProvider<MagicParticleOpti
         double xd, double yd, double zd
     ) {
         var spellData = new SpellData(
-            data.ownerId(),
+            data.ownerUUID(),
             data.coreId(),
             data.coreStack(),
             data.attributeIds(),

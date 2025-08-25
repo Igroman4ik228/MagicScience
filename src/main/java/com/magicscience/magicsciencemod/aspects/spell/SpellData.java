@@ -3,8 +3,10 @@ package com.magicscience.magicsciencemod.aspects.spell;
 import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.UUID;
+
 public record SpellData(
-    int ownerId,
+    @NotNull UUID ownerUUID,
     int coreId,
     int coreStack,
     int @NotNull [] attributeIds,
@@ -16,7 +18,7 @@ public record SpellData(
 ) {
     public static SpellData decode(FriendlyByteBuf buf) {
         return new SpellData(
-            buf.readInt(),               // ownerId
+            buf.readUUID(),               // ownerUUID
             buf.readVarInt(),            // coreId
             buf.readVarInt(),            // coreStack
             buf.readVarIntArray(),       // attributeIds
@@ -29,7 +31,7 @@ public record SpellData(
     }
 
     public void encode(FriendlyByteBuf buf) {
-        buf.writeInt(this.ownerId());
+        buf.writeUUID(this.ownerUUID());
         buf.writeVarInt(this.coreId());
         buf.writeVarInt(this.coreStack());
         buf.writeVarIntArray(this.attributeIds());

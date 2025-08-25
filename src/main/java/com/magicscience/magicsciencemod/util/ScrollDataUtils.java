@@ -14,7 +14,7 @@ import java.util.stream.IntStream;
 public final class ScrollDataUtils {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final String kOwnerId = "OwnerId";
+    private static final String kOwnerUUID = "OwnerUUID";
     private static final String kCoreId = "CoreId";
     private static final String kCoreStack = "CoreStack";
     private static final String kAttrIds = "AttributeIds";
@@ -29,7 +29,7 @@ public final class ScrollDataUtils {
 
     public static void writeToStack(ItemStack stack, SpellData d) {
         CompoundTag t = stack.getOrCreateTag();
-        t.putInt(kOwnerId, d.ownerId());
+        t.putUUID(kOwnerUUID, d.ownerUUID());
         t.putInt(kCoreId, d.coreId());
         t.putInt(kCoreStack, d.coreStack());
         t.putIntArray(kAttrIds, d.attributeIds());
@@ -46,19 +46,13 @@ public final class ScrollDataUtils {
             LOGGER.info("No NBT tag found for ItemStack: {}", stack);
             return null;
         }
-
-        // read AttributeIds
-        int[] attrIds = getIntArrayFromTag(t, kAttrIds);
-
-        // read AttributeStacks
-        int[] attrStacks = getIntArrayFromTag(t, kAttrStacks);
-
+        
         return new SpellData(
-            t.getInt(kOwnerId),
+            t.getUUID(kOwnerUUID),
             t.getInt(kCoreId),
             t.getInt(kCoreStack),
-            attrIds,
-            attrStacks,
+            getIntArrayFromTag(t, kAttrIds),
+            getIntArrayFromTag(t, kAttrStacks),
             t.getInt(kStructId),
             t.getInt(kStructStack),
             t.getInt(kParticleSpeed),

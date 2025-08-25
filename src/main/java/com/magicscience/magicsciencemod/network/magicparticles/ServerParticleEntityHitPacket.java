@@ -9,26 +9,28 @@ import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import org.slf4j.Logger;
 
+import java.util.UUID;
+
 public class ServerParticleEntityHitPacket implements IServerPacket {
     private static final Logger LOGGER = LogUtils.getLogger();
 
     private final int entityId;
     private final int coreId;
     private final float damage;
-    private final int ownerId;
+    private final UUID ownerUUID;
 
-    public ServerParticleEntityHitPacket(int entityId, int coreId, float damage, int ownerId) {
+    public ServerParticleEntityHitPacket(int entityId, int coreId, float damage, UUID ownerUUID) {
         this.entityId = entityId;
         this.coreId = coreId;
         this.damage = damage;
-        this.ownerId = ownerId;
+        this.ownerUUID = ownerUUID;
     }
 
     public ServerParticleEntityHitPacket(FriendlyByteBuf buf) {
         this.entityId = buf.readInt();
         this.coreId = buf.readInt();
         this.damage = buf.readFloat();
-        this.ownerId = buf.readInt();
+        this.ownerUUID = buf.readUUID();
     }
 
     @Override
@@ -36,7 +38,7 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
         buf.writeInt(entityId);
         buf.writeInt(coreId);
         buf.writeFloat(damage);
-        buf.writeInt(ownerId);
+        buf.writeUUID(ownerUUID);
     }
 
     @Override
@@ -57,7 +59,7 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
 
         // Damage
         // Get particle owner
-        Entity owner = level.getEntity(ownerId);
+        Entity owner = level.getEntity(ownerUUID);
         if (!(owner instanceof ServerPlayer ownerPlayer)) return;
 
         // Damage

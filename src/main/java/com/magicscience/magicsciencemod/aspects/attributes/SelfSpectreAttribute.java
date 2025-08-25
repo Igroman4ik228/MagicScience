@@ -36,7 +36,7 @@ public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterM
         if (player==null)
             return entity -> true;
 
-        return entity -> !(player.getId()==entity.getId());
+        return entity -> !(player.getUUID()==entity.getUUID());
     }
 
     @Override

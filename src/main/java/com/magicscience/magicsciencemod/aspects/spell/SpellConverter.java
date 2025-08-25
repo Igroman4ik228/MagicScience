@@ -31,7 +31,7 @@ public class SpellConverter {
         }
 
         return new SpellData(
-            spell.getOwnerId(),
+            spell.getOwnerUUID(),
             CoreTypeHelper.findId(spell.getMagicCore()),
             spell.getMagicCore().getStack(),
             attributeIds,
@@ -59,7 +59,7 @@ public class SpellConverter {
             coreFactory.createById(data.coreId(), data.coreStack()),
             attributes,
             structureFactory.createById(data.structureId(), data.structureStack()),
-            data.ownerId()
+            data.ownerUUID()
         );
     }
 }

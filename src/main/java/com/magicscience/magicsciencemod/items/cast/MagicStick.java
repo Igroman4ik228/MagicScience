@@ -7,7 +7,6 @@ import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.spell.Spell;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
-import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.magicscience.magicsciencemod.items.Scroll;
 import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
@@ -61,45 +60,35 @@ public class MagicStick extends Item implements ICast {
         setSpell(getSpell(player));
 
         int manaCost = spell.getManaCost();
-
-        if (!player.isCreative()) {
-            int mana = ManaCapabilityHelper.get(player).get().getMana();
-
-            LOGGER.info("mana: {}, manacost {}", mana, manaCost);
-
-            // No mana
-            if (mana < manaCost) {
-                LOGGER.info("Not enough mana: {}/{}", mana, manaCost);
-
-                if (level.isClientSide) {
-                    // ToDo: Вынести в client/sound
-                    // sound cancel cast
-                    player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F);
-                }
-
-                return InteractionResultHolder.pass(player.getItemInHand(hand));
+        if (!hasEnoughMana(player, manaCost)) {
+            if (level.isClientSide) {
+                // ToDo: Вынести в client/sound
+                // sound cancel cast
+                player.playSound(SoundEvents.SHIELD_BLOCK, 1.0F, 0.5F);
             }
 
-            if (!level.isClientSide) {
-                ManaCapabilityHelper.removeMana(player, spell.getManaCost());
-            }
+            return InteractionResultHolder.pass(player.getItemInHand(hand));
         }
 
+        if (!level.isClientSide) {
+            ManaCapabilityHelper.removeMana(player, spell.getManaCost());
+        }
 
-        if (level.isClientSide) {
-            // Только на клиенте
-            if (player instanceof LocalPlayer localPlayer) {
-                castClient(localPlayer);
-            }
-        } else {
-            // Только на сервере
-            if (player instanceof ServerPlayer serverPlayer) {
-                castServer(serverPlayer, SpellConverter.toData(spell));
-            }
+        if (level.isClientSide && player instanceof LocalPlayer localPlayer) {
+            castClient(localPlayer);
+        } else if (player instanceof ServerPlayer serverPlayer) {
+            castServer(serverPlayer);
         }
 
         return InteractionResultHolder.sidedSuccess(player.getItemInHand(hand), level.isClientSide());
     }
+
+    private boolean hasEnoughMana(Player player, int manaCost) {
+        if (player.isCreative()) return true;
+
+        return ManaCapabilityHelper.canRemove(player, manaCost);
+    }
+
 
     @Override
     @OnlyIn(Dist.CLIENT)
@@ -110,18 +99,16 @@ public class MagicStick extends Item implements ICast {
 
     @Override
     public void castServer(
-        @NotNull ServerPlayer player,
-        @NotNull SpellData spellData
+        @NotNull ServerPlayer player
     ) {
-        // ToDo: add uuid for player
-//        if (player.getId()!=spellData.ownerId())
+        var spellData = SpellConverter.toData(spell);
+        // ToDo: i dont know
+//        if (!player.getUUID().equals(spellData.ownerUUID()))
 //            return;
 
         LOGGER.info("ServerboundCastParticlePacket");
         LOGGER.info("SpellData received:");
         LOGGER.info("  SpellData: {}", spellData);
-
-        Spell spell = SpellConverter.toSpell(spellData);
 
         ModNetwork.CHANNEL.send(
             PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
@@ -150,7 +137,7 @@ public class MagicStick extends Item implements ICast {
                     ATTRIBUTE_FACTORY.create(AttributeTypes.VECTOR, 3)
                 ),
                 STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 40),
-                player.getId()
+                player.getUUID()
             );
         }
     }
