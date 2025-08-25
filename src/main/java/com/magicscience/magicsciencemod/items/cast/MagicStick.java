@@ -102,9 +102,9 @@ public class MagicStick extends Item implements ICast {
         @NotNull ServerPlayer player
     ) {
         var spellData = SpellConverter.toData(spell);
-        // ToDo: i dont know
-//        if (!player.getUUID().equals(spellData.ownerUUID()))
-//            return;
+        
+        if (!player.getUUID().equals(spellData.ownerUUID()))
+            return;
 
         LOGGER.info("ServerboundCastParticlePacket");
         LOGGER.info("SpellData received:");
