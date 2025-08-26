@@ -4,6 +4,7 @@ import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypeHelper;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
+import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypeHelper;
@@ -32,13 +33,14 @@ public class Scroll extends Item {
      */
     public static ItemStack of(SpellData data, Item item) {
         ItemStack stack = new ItemStack(item);
-        ScrollDataUtils.writeToStack(stack, data);
+        var scrollData = SpellConverter.toScroll(data);
+        ScrollDataUtils.writeSpellData(scrollData, stack);
         return stack;
     }
 
     @Override
     public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        SpellData data = ScrollDataUtils.readFromStack(stack);
+        ScrollData data = ScrollDataUtils.readSpellData(stack);
         if (data==null) {
             tooltip.add(Component.translatable("tooltip.magicscience.scroll.empty").withStyle(ChatFormatting.GRAY));
             return;
@@ -64,7 +66,7 @@ public class Scroll extends Item {
                     .withStyle(ChatFormatting.RED));
             }
         }
-        
+
         // Structure
         IMagicStructure structure = StructureTypeHelper.findInstance(data.structureId());
         tooltip.add(Component.translatable(structure.getTranslationKey())
@@ -72,4 +74,3 @@ public class Scroll extends Item {
             .withStyle(ChatFormatting.DARK_GREEN));
     }
 }
-

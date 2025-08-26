@@ -7,10 +7,12 @@ import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypeHelper;
+import com.magicscience.magicsciencemod.items.ScrollData;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
 
 public class SpellConverter {
     @NotNull
@@ -44,6 +46,51 @@ public class SpellConverter {
     }
 
     @NotNull
+    public static SpellData toData(Spell spell, UUID ownerUUID) {
+        List<IMagicAttribute> attributes = spell.getMagicAttributes();
+        int[] attributeIds = attributes.stream()
+            .mapToInt(AttributeTypeHelper::findId)
+            .toArray();
+
+        var attributeStack = new int[attributeIds.length];
+        for (int i = 0; i!=attributeStack.length; i++) {
+            attributeStack[i] = attributes.get(i).getStack();
+        }
+
+        int structureStack = 0;
+        if (spell.getStructure()!=null) {
+            structureStack = spell.getStructure().getStack();
+        }
+
+        return new SpellData(
+            ownerUUID,
+            CoreTypeHelper.findId(spell.getMagicCore()),
+            spell.getMagicCore().getStack(),
+            attributeIds,
+            attributeStack,
+            StructureTypeHelper.findId(spell.getStructure()),
+            structureStack,
+            spell.getParticleSpeed(),
+            spell.getParticleLifeTime()
+        );
+    }
+
+    @NotNull
+    public static ScrollData toScroll(SpellData spellData) {
+        return new ScrollData(
+            spellData.ownerUUID(),
+            spellData.coreId(),
+            spellData.coreStack(),
+            spellData.attributeIds(),
+            spellData.attributeStack(),
+            spellData.structureId(),
+            spellData.structureStack(),
+            spellData.particleSpeed(),
+            spellData.particleLifeTime()
+        );
+    }
+
+    @NotNull
     public static Spell toSpell(SpellData data) {
         List<IMagicAttribute> attributes = new ArrayList<>();
 
@@ -60,6 +107,26 @@ public class SpellConverter {
             attributes,
             structureFactory.createById(data.structureId(), data.structureStack()),
             data.ownerUUID()
+        );
+    }
+
+    @NotNull
+    public static Spell toSpell(ScrollData data, UUID ownerUUID) {
+        List<IMagicAttribute> attributes = new ArrayList<>();
+
+        var attributeFactory = new MagicAttributeFactory();
+        var coreFactory = new MagicCoreFactory();
+        var structureFactory = new MagicStructureFactory();
+
+        for (int i = 0; i!=data.attributeIds().length; i++) {
+            attributes.add(attributeFactory.createById(data.attributeIds()[i], data.attributeStack()[i]));
+        }
+
+        return new Spell(
+            coreFactory.createById(data.coreId(), data.coreStack()),
+            attributes,
+            structureFactory.createById(data.structureId(), data.structureStack()),
+            ownerUUID
         );
     }
 }

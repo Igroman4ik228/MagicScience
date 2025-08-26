@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.util;
 
-import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import com.magicscience.magicsciencemod.items.ScrollData;
 import com.mojang.logging.LogUtils;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.nbt.IntArrayTag;
@@ -9,12 +9,13 @@ import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
 import org.slf4j.Logger;
 
+import java.util.UUID;
 import java.util.stream.IntStream;
 
 public final class ScrollDataUtils {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final String kOwnerUUID = "OwnerUUID";
+    private static final String kAuthorUUID = "AuthorUUID";
     private static final String kCoreId = "CoreId";
     private static final String kCoreStack = "CoreStack";
     private static final String kAttrIds = "AttributeIds";
@@ -27,36 +28,49 @@ public final class ScrollDataUtils {
     private ScrollDataUtils() {
     }
 
-    public static void writeToStack(ItemStack stack, SpellData d) {
-        CompoundTag t = stack.getOrCreateTag();
-        t.putUUID(kOwnerUUID, d.ownerUUID());
-        t.putInt(kCoreId, d.coreId());
-        t.putInt(kCoreStack, d.coreStack());
-        t.putIntArray(kAttrIds, d.attributeIds());
-        t.putIntArray(kAttrStacks, d.attributeStack());
-        t.putInt(kStructId, d.structureId());
-        t.putInt(kStructStack, d.structureStack());
-        t.putInt(kParticleSpeed, d.particleSpeed());
-        t.putInt(kParticleLife, d.particleLifeTime());
+    public static void writeSpellData(ScrollData data, Object target) {
+        CompoundTag tag = target instanceof ItemStack stack
+            ? stack.getOrCreateTag()
+            :(CompoundTag) target;
+
+        if (data.authorUUID()!=null) {
+            tag.putUUID(kAuthorUUID, data.authorUUID());
+        }
+        tag.putInt(kCoreId, data.coreId());
+        tag.putInt(kCoreStack, data.coreStack());
+        tag.put(kAttrIds, new IntArrayTag(data.attributeIds()));
+        tag.put(kAttrStacks, new IntArrayTag(data.attributeStack()));
+        tag.putInt(kStructId, data.structureId());
+        tag.putInt(kStructStack, data.structureStack());
+        tag.putInt(kParticleSpeed, data.particleSpeed());
+        tag.putInt(kParticleLife, data.particleLifeTime());
     }
 
-    public static SpellData readFromStack(ItemStack stack) {
-        CompoundTag t = stack.getTag();
-        if (t==null) {
-            LOGGER.info("No NBT tag found for ItemStack: {}", stack);
+    public static ScrollData readSpellData(Object source) {
+        CompoundTag tag = source instanceof ItemStack stack
+            ? stack.getTag()
+            :(CompoundTag) source;
+
+        if (tag==null) {
+            LOGGER.info("No NBT tag found for source: {}", source);
             return null;
         }
-        
-        return new SpellData(
-            t.getUUID(kOwnerUUID),
-            t.getInt(kCoreId),
-            t.getInt(kCoreStack),
-            getIntArrayFromTag(t, kAttrIds),
-            getIntArrayFromTag(t, kAttrStacks),
-            t.getInt(kStructId),
-            t.getInt(kStructStack),
-            t.getInt(kParticleSpeed),
-            t.getInt(kParticleLife)
+
+        UUID authorUUID = null;
+        if (tag.contains(kAuthorUUID)) {
+            authorUUID = tag.getUUID(kAuthorUUID);
+        }
+
+        return new ScrollData(
+            authorUUID,
+            tag.getInt(kCoreId),
+            tag.getInt(kCoreStack),
+            getIntArrayFromTag(tag, kAttrIds),
+            getIntArrayFromTag(tag, kAttrStacks),
+            tag.getInt(kStructId),
+            tag.getInt(kStructStack),
+            tag.getInt(kParticleSpeed),
+            tag.getInt(kParticleLife)
         );
     }
 
