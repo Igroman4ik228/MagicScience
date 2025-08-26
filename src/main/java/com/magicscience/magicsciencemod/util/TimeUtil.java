@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.util;
 
-public class TimeHelper {
+public class TimeUtil {
 
     public static final int TICKS_PER_SECOND = 20;
     public static final int TICKS_PER_MINUTE = 60 * TICKS_PER_SECOND;

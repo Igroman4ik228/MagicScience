@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.events;
 
 import com.magicscience.magicsciencemod.mana.ManaCapabilityHelper;
-import com.magicscience.magicsciencemod.util.TimeHelper;
+import com.magicscience.magicsciencemod.util.TimeUtil;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.event.TickEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
@@ -10,13 +10,13 @@ import net.minecraftforge.fml.common.Mod;
 @Mod.EventBusSubscriber
 public class ManaEvents {
     private static final String MANA_REGEN_COOLDOWN = "mana_regen_cd";
-    private static final int COOLDOWN_TICKS = TimeHelper.seconds(1);
+    private static final int COOLDOWN_TICKS = TimeUtil.seconds(1);
 
     @SubscribeEvent
     public static void onPlayerTick(TickEvent.PlayerTickEvent event) {
         if (!(event.player instanceof ServerPlayer serverPlayer))
             return;
-        if (event.phase != TickEvent.Phase.END)
+        if (event.phase!=TickEvent.Phase.END)
             return;
 
         var data = serverPlayer.getPersistentData();

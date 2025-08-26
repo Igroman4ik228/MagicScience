@@ -4,7 +4,7 @@ import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.world.phys.Vec3;
 
-public class MathHelper {
+public class BlockMathUtil {
     private static final int BLOCK_SIZE = 1;
 
     public static Direction getClosestDirection(BlockPos pos, Vec3 center) {

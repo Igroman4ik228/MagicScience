@@ -5,7 +5,7 @@ import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.client.particles.MagicParticle;
 import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleBlockHitPacket;
 import com.magicscience.magicsciencemod.registry.ModNetwork;
-import com.magicscience.magicsciencemod.util.MathHelper;
+import com.magicscience.magicsciencemod.util.BlockMathUtil;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.level.ClipContext;
@@ -34,7 +34,7 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
             handleBlockCollision(
                 new BlockHitResult(
                     center,
-                    MathHelper.getClosestDirection(pos, center),
+                    BlockMathUtil.getClosestDirection(pos, center),
                     pos,
                     true
                 )
