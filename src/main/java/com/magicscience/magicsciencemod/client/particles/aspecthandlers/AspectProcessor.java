@@ -8,17 +8,13 @@ import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers.BlockCollisionHandler;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers.EntityCollisionHandler;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers.ICollisionHandler;
-import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import java.util.Collection;
 import java.util.List;
 
 public class AspectProcessor {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     private final @NotNull Collection<ICollisionHandler> handlers;
 
     public AspectProcessor(@NotNull MagicParticle particle) {

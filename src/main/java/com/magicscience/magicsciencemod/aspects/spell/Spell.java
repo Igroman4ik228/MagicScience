@@ -15,7 +15,7 @@ public class Spell implements ISpell {
     private final @NotNull IMagicCore magicCore;
     private final @NotNull List<IMagicAttribute> magicAttributes;
     private final @Nullable IMagicStructure magicStructure;
-    private final UUID ownerUUID;
+    private final @NotNull UUID ownerUUID;
     private final int manaCost;
     private final int particleSpeed;
     private final int particleLifeTime;
@@ -24,7 +24,7 @@ public class Spell implements ISpell {
         @NotNull IMagicCore magicCore,
         @NotNull List<IMagicAttribute> magicAttributes,
         @Nullable IMagicStructure magicStructure,
-        UUID ownerUUID
+        @NotNull UUID ownerUUID
     ) {
         this.magicCore = magicCore;
         this.magicAttributes = magicAttributes;
@@ -39,14 +39,14 @@ public class Spell implements ISpell {
     public Spell(
         @NotNull IMagicCore magicCore,
         @NotNull List<IMagicAttribute> magicAttributes,
-        UUID ownerUUID
+        @NotNull UUID ownerUUID
     ) {
         this(magicCore, magicAttributes, null, ownerUUID);
     }
 
     public Spell(
         @NotNull IMagicCore magicCore,
-        UUID ownerUUID
+        @NotNull UUID ownerUUID
     ) {
         this(magicCore, new ArrayList<>(), null, ownerUUID);
     }
@@ -93,6 +93,7 @@ public class Spell implements ISpell {
         return magicStructure;
     }
 
+    @NotNull
     public UUID getOwnerUUID() {
         return ownerUUID;
     }

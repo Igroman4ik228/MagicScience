@@ -35,11 +35,6 @@ public class MagicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
     private static final int MAX_INK_LEVEL = 1000;    // Максимальная ёмкость уровня чернил
     private static final int INK_PER_ITEM = 10;       // Количество чернил за одну единицу MAGIC_INK
     private static final int TICKS_PER_INK = 20;      // Тиков, необходимых для обработки 1 единицы чернил (20 тиков = 1 секунда)
-
-    private int inkLevel = 0;                         // Текущий уровень чернил
-    private int inkProcessingTicks = 0;               // Счётчик тиков для обработки
-    private int inkToProcess = 0;                     // Общее количество чернил, ожидающих обработки
-
     private final ItemStackHandler itemHandler = new ItemStackHandler(6) {
         @Override
         protected void onContentsChanged(int slot) {
@@ -50,51 +45,36 @@ public class MagicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
         @Override
         public boolean isItemValid(int slot, @NotNull ItemStack stack) {
             // Слот для ядра
-            if (slot == 0) {
+            if (slot==0) {
                 return true;
             }
             // Слот для атрибута
-            if (slot == 1) {
+            if (slot==1) {
                 return true;
             }
             // Слот для структуры
-            if (slot == 2) {
+            if (slot==2) {
                 return true;
             }
             // Слот для магических чернил
-            if (slot == 3) {
+            if (slot==3) {
                 return stack.is(ModItems.MAGIC_INK.get());
             }
             // Слот для бумаги
-            if (slot == 4) {
+            if (slot==4) {
                 return stack.is(Items.PAPER);
             }
             // Слот для результата
-            if (slot == 5) {
-                return false;
-            }
-            return true;
+            return slot!=5;
         }
     };
-
     private final LazyOptional<IItemHandler> handlerOptional = LazyOptional.of(() -> itemHandler);
+    private int inkLevel = 0;                         // Текущий уровень чернил
+    private int inkProcessingTicks = 0;               // Счётчик тиков для обработки
+    private int inkToProcess = 0;                     // Общее количество чернил, ожидающих обработки
 
     public MagicWorkbenchBlockEntity(BlockPos pos, BlockState state) {
         super(ModBlockEntities.MAGIC_WORKBENCH.get(), pos, state);
-    }
-
-    @Override
-    public Component getDisplayName() {
-        return Component.translatable("block.magicscience.magic_workbench");
-    }
-
-    @Override
-    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
-        return new MagicWorkbenchMenu(id, playerInventory, this);
-    }
-
-    public ItemStackHandler getItemHandler() {
-        return itemHandler;
     }
 
     public static void serverTick(Level level, BlockPos pos, BlockState state, MagicWorkbenchBlockEntity entity) {
@@ -108,6 +88,21 @@ public class MagicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
             setChanged(level, pos, state);
             level.sendBlockUpdated(pos, state, state, 3);
         }
+    }
+
+    @Override
+    @NotNull
+    public Component getDisplayName() {
+        return Component.translatable("block.magicscience.magic_workbench");
+    }
+
+    @Override
+    public AbstractContainerMenu createMenu(int id, Inventory playerInventory, Player player) {
+        return new MagicWorkbenchMenu(id, playerInventory, this);
+    }
+
+    public ItemStackHandler getItemHandler() {
+        return itemHandler;
     }
 
     public int getInkLevel() {
@@ -145,13 +140,14 @@ public class MagicWorkbenchBlockEntity extends BlockEntity implements MenuProvid
     @NotNull
     @Override
     public <T> LazyOptional<T> getCapability(@NotNull Capability<T> cap, @Nullable Direction side) {
-        if (cap == ForgeCapabilities.ITEM_HANDLER) {
+        if (cap==ForgeCapabilities.ITEM_HANDLER) {
             return handlerOptional.cast();
         }
         return super.getCapability(cap, side);
     }
 
     @Override
+    @NotNull
     public CompoundTag getUpdateTag() {
         return saveWithoutMetadata();
     }

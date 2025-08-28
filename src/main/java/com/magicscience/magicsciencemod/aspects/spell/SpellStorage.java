@@ -87,7 +87,7 @@ public class SpellStorage {
         for (int i = 0; i < player.getInventory().getContainerSize(); i++) {
             ItemStack stack = player.getInventory().getItem(i);
             if (stack.getItem() instanceof Scroll) {
-                ScrollData data = ScrollDataUtils.readSpellData(stack);
+                ScrollData data = ScrollDataUtils.readScrollData(stack);
                 if (data!=null && !spells.contains(data)) {
                     spells.add(data);
                     LOGGER.debug("Added spell from inventory slot {}: {}", i, data);
@@ -117,7 +117,7 @@ public class SpellStorage {
         ListTag listTag = new ListTag();
         for (ScrollData data : spellList) {
             CompoundTag spellTag = new CompoundTag();
-            ScrollDataUtils.writeSpellData(data, spellTag);
+            ScrollDataUtils.writeScrollData(data, spellTag);
             listTag.add(spellTag);
         }
         tag.put(NBT_SPELL_LIST, listTag);
@@ -158,7 +158,7 @@ public class SpellStorage {
         if (!tag.contains(NBT_SPELL_LIST)) return list;
         ListTag listTag = tag.getList(NBT_SPELL_LIST, Tag.TAG_COMPOUND);
         for (int i = 0; i < listTag.size(); i++) {
-            ScrollData data = ScrollDataUtils.readSpellData(listTag.getCompound(i));
+            ScrollData data = ScrollDataUtils.readScrollData(listTag.getCompound(i));
             if (data!=null) {
                 list.add(data);
             }

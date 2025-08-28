@@ -10,7 +10,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class SphereStructure extends BaseMagicStructure {
     private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.SPHERE);
 
-    public SphereStructure(BaseStructureData baseStructureData, int stack) {
+    public SphereStructure(@NotNull BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);
     }
 

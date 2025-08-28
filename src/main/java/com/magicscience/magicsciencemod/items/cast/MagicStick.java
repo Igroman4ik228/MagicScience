@@ -52,7 +52,7 @@ public class MagicStick extends Item implements ICast {
 
         // Get spell just before checking mana and casting
         Spell spell = getSpell(player, castStack);
-        LOGGER.debug("Selected spell for cast: {}", spell);
+        LOGGER.debug("Selected spell for cast: {}", SpellConverter.toData(spell));
 
         int manaCost = spell.getManaCost();
         if (!hasEnoughMana(player, manaCost)) {
@@ -87,13 +87,15 @@ public class MagicStick extends Item implements ICast {
     }
 
     @Override
-    public void castServer(@NotNull ServerPlayer player, Spell spell) {
-        var spellData = SpellConverter.toData(spell, player.getUUID());
+    public void castServer(@NotNull ServerPlayer player, @NotNull Spell spell) {
+        var spellData = SpellConverter.toData(spell);
         if (!player.getUUID().equals(spellData.ownerUUID())) {
             return;
         }
+
         LOGGER.info("ServerboundCastParticlePacket");
         LOGGER.info("SpellData received: {}", spellData);
+
         ModNetwork.CHANNEL.send(
             PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
             new ClientSpawnParticlePacket(

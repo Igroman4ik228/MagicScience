@@ -12,7 +12,6 @@ import java.util.Optional;
 import java.util.function.Consumer;
 
 public class ManaCapabilityHelper {
-
     public static Optional<IMana> get(@NotNull Player player) {
         return player.getCapability(ModCapabilities.MANA_CAPABILITY).resolve();
     }

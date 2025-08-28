@@ -16,7 +16,7 @@ import java.util.function.Predicate;
 public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterMagicAttribute {
     private static final IBaseAttributeConfig CONFIG = AttributeConfig.get(AttributeTypes.SELF_SPECTRE);
 
-    public SelfSpectreAttribute(BaseAttributeData baseAttributeData, int stack) {
+    public SelfSpectreAttribute(@NotNull BaseAttributeData baseAttributeData, int stack) {
         super(baseAttributeData, stack);
     }
 

@@ -28,7 +28,8 @@ public final class ScrollDataUtils {
     private ScrollDataUtils() {
     }
 
-    public static void writeSpellData(ScrollData data, Object target) {
+    // ToDo: Change Object to concrete type
+    public static void writeScrollData(ScrollData data, Object target) {
         CompoundTag tag = target instanceof ItemStack stack
             ? stack.getOrCreateTag()
             :(CompoundTag) target;
@@ -46,7 +47,8 @@ public final class ScrollDataUtils {
         tag.putInt(kParticleLife, data.particleLifeTime());
     }
 
-    public static ScrollData readSpellData(Object source) {
+    // ToDo: Change Object to concrete type
+    public static ScrollData readScrollData(Object source) {
         CompoundTag tag = source instanceof ItemStack stack
             ? stack.getTag()
             :(CompoundTag) source;

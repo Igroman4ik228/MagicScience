@@ -7,6 +7,7 @@ import com.mojang.logging.LogUtils;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
+import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -17,9 +18,9 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
     private final int entityId;
     private final int coreId;
     private final float damage;
-    private final UUID ownerUUID;
+    private final @NotNull UUID ownerUUID;
 
-    public ServerParticleEntityHitPacket(int entityId, int coreId, float damage, UUID ownerUUID) {
+    public ServerParticleEntityHitPacket(int entityId, int coreId, float damage, @NotNull UUID ownerUUID) {
         this.entityId = entityId;
         this.coreId = coreId;
         this.damage = damage;

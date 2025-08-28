@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class WallStructure extends BaseMagicStructure {
     private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.WALL);
 
-    public WallStructure(BaseStructureData baseStructureData, int stack) {
+    public WallStructure(@NotNull BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);
     }
 

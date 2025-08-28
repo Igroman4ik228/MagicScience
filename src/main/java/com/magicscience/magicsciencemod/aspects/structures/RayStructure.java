@@ -11,7 +11,7 @@ import java.util.concurrent.ThreadLocalRandom;
 public class RayStructure extends BaseMagicStructure {
     private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.RAY);
 
-    public RayStructure(BaseStructureData baseStructureData, int stack) {
+    public RayStructure(@NotNull BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);
     }
 

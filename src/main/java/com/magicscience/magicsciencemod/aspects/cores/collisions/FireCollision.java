@@ -1,17 +1,18 @@
 package com.magicscience.magicsciencemod.aspects.cores.collisions;
 
-import com.mojang.logging.LogUtils;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.item.PrimedTnt;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.BlockHitResult;
-import org.slf4j.Logger;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 public class FireCollision {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
-    public static void collisionTnt(BlockHitResult blockHitResult, Player sender, Objects... objects) {
+    public static void collisionTnt(
+        @NotNull BlockHitResult blockHitResult,
+        @NotNull ServerPlayer sender,
+        Objects... objects
+    ) {
         var level = sender.level();
         var blockPos = blockHitResult.getBlockPos();
         level.removeBlock(blockPos, false);

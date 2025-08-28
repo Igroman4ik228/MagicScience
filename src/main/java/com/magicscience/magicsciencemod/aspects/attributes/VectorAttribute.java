@@ -3,13 +3,14 @@ package com.magicscience.magicsciencemod.aspects.attributes;
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IMagicParticleSpeed;
 import com.magicscience.magicsciencemod.config.server.attribute.AttributeConfig;
 import com.magicscience.magicsciencemod.config.server.attribute.VectorAttributeConfig;
+import org.jetbrains.annotations.NotNull;
 
 public class VectorAttribute extends BaseMagicAttribute implements IMagicParticleSpeed {
     private static final VectorAttributeConfig CONFIG = (VectorAttributeConfig) AttributeConfig.get(AttributeTypes.VECTOR);
 
     private final int particleSpeed;
 
-    public VectorAttribute(BaseAttributeData baseAttributeData, int stack, int particleSpeed) {
+    public VectorAttribute(@NotNull BaseAttributeData baseAttributeData, int stack, int particleSpeed) {
         super(baseAttributeData, stack);
         this.particleSpeed = particleSpeed;
     }

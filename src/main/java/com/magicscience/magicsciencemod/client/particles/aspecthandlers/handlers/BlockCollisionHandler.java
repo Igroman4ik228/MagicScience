@@ -14,12 +14,17 @@ import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.phys.BlockHitResult;
 import net.minecraft.world.phys.HitResult;
 import net.minecraft.world.phys.Vec3;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Predicate;
 
 public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
-
-    public BlockCollisionHandler(MagicParticle particle, SpellData spellData, Predicate<BlockState> blockFilter, ClientLevel level) {
+    public BlockCollisionHandler(
+        @NotNull MagicParticle particle,
+        @NotNull SpellData spellData,
+        @NotNull Predicate<BlockState> blockFilter,
+        @NotNull ClientLevel level
+    ) {
         super(particle, spellData, blockFilter, level);
     }
 
@@ -61,7 +66,7 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
         handleBlockCollision(blockHitResult);
     }
 
-    private void handleBlockCollision(BlockHitResult blockHitResult) {
+    private void handleBlockCollision(@NotNull BlockHitResult blockHitResult) {
         var blockPos = blockHitResult.getBlockPos();
         var blockState = level.getBlockState(blockPos);
 

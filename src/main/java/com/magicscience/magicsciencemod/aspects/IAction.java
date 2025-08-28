@@ -1,11 +1,16 @@
 package com.magicscience.magicsciencemod.aspects;
 
-import net.minecraft.world.entity.player.Player;
+import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.phys.BlockHitResult;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 @FunctionalInterface
 public interface IAction {
-    void execute(BlockHitResult blockHitResult, Player sender, Objects... objects);
+    void execute(
+        @NotNull BlockHitResult blockHitResult,
+        @NotNull ServerPlayer sender,
+        Objects... objects
+    );
 }

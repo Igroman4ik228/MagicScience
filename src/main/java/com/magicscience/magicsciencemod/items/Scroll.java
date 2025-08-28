@@ -4,26 +4,21 @@ import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypeHelper;
 import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.cores.CoreTypeHelper;
 import com.magicscience.magicsciencemod.aspects.cores.IMagicCore;
-import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
-import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
 import com.magicscience.magicsciencemod.aspects.structures.StructureTypeHelper;
 import com.magicscience.magicsciencemod.util.ScrollDataUtils;
-import com.mojang.logging.LogUtils;
 import net.minecraft.ChatFormatting;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.TooltipFlag;
 import net.minecraft.world.level.Level;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
-import org.slf4j.Logger;
 
 import java.util.List;
 
 public class Scroll extends Item {
-    private static final Logger LOGGER = LogUtils.getLogger();
-
     public Scroll(Properties properties) {
         super(properties);
     }
@@ -31,18 +26,23 @@ public class Scroll extends Item {
     /**
      * Удобный фабричный метод: создаёт стек свитка с уже записанным SpellData
      */
-    public static ItemStack of(SpellData data, Item item) {
+    public static ItemStack of(@NotNull ScrollData data, @NotNull Item item) {
         ItemStack stack = new ItemStack(item);
-        var scrollData = SpellConverter.toScroll(data);
-        ScrollDataUtils.writeSpellData(scrollData, stack);
+        ScrollDataUtils.writeScrollData(data, stack);
         return stack;
     }
 
     @Override
-    public void appendHoverText(ItemStack stack, @Nullable Level level, List<Component> tooltip, TooltipFlag flag) {
-        ScrollData data = ScrollDataUtils.readSpellData(stack);
+    public void appendHoverText(
+        @NotNull ItemStack stack,
+        @Nullable Level level,
+        @NotNull List<Component> tooltip,
+        @NotNull TooltipFlag flag
+    ) {
+        ScrollData data = ScrollDataUtils.readScrollData(stack);
         if (data==null) {
-            tooltip.add(Component.translatable("tooltip.magicscience.scroll.empty").withStyle(ChatFormatting.GRAY));
+            tooltip.add(Component.translatable("tooltip.magicscience.scroll.empty")
+                .withStyle(ChatFormatting.GRAY));
             return;
         }
 
