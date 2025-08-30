@@ -8,7 +8,8 @@ import java.util.function.Supplier;
 public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     NONE(null),
     VECTOR(VectorAttribute::new),
-    SELF_SPECTRE(SelfSpectreAttribute::new);
+    SELF_SPECTRE(SelfSpectreAttribute::new),
+    SPREADING(SpreadingAttribute::new);
 
     private final @Nullable Supplier<IMagicAttribute> prototype;
 

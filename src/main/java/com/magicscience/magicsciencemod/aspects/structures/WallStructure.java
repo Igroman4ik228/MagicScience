@@ -50,7 +50,6 @@ public class WallStructure extends BaseMagicStructure {
         Vec3 upDir = right.cross(lookDir).normalize();
 
         final double baseForwardDistance = 1.0;
-        final double distancePerSize = 0.4;
         final double baseHalfWidth = 0.5;
         final double widthPerParticle = 0.25;
         final double widthPerSize = 0.3;
@@ -61,8 +60,6 @@ public class WallStructure extends BaseMagicStructure {
         int size = this.getSize();
         int countParticles = this.getCountParticles();
 
-        double forwardDistance = baseForwardDistance + size * distancePerSize;
-
         double baseSpread = Math.sqrt(Math.max(1, countParticles));
         double halfWidth = baseHalfWidth + baseSpread * widthPerParticle + size * widthPerSize;
         double halfHeight = baseHalfHeight + baseSpread * heightPerParticle + size * heightPerSize;
@@ -71,7 +68,7 @@ public class WallStructure extends BaseMagicStructure {
         double offsetRight = (random.nextDouble() - 0.5) * halfWidth;
         double offsetUp = (random.nextDouble() - 0.5) * halfHeight;
 
-        Vec3 wallCenter = basePosition.add(lookDir.scale(forwardDistance));
+        Vec3 wallCenter = basePosition.add(lookDir.scale(baseForwardDistance));
 
         return wallCenter.add(right.scale(offsetRight)).add(upDir.scale(offsetUp));
     }
