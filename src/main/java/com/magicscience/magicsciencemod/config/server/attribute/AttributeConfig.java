@@ -18,7 +18,7 @@ public class AttributeConfig {
     @NotNull
     public static IBaseAttributeConfig get(@NotNull AttributeTypes sectionType) {
         var cfg = CONFIGS.get(sectionType);
-        if (cfg==null)
+        if (cfg == null)
             throw new IllegalStateException("No attribute config for type: " + sectionType);
         return cfg;
     }
@@ -48,9 +48,9 @@ public class AttributeConfig {
             )
         );
         add(
-            new SubsidenceAttributeConfig(
+            new GravityAttributeConfig(
                 builder,
-                AttributeTypes.SUBSIDENCE,
+                AttributeTypes.GRAVITY,
                 new BaseAttributeData(10)
             )
         );

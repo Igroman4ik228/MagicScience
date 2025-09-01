@@ -1,24 +1,24 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 import com.magicscience.magicsciencemod.config.server.attribute.AttributeConfig;
-import com.magicscience.magicsciencemod.config.server.attribute.SubsidenceAttributeConfig;
+import com.magicscience.magicsciencemod.config.server.attribute.GravityAttributeConfig;
 import org.jetbrains.annotations.NotNull;
 
-public class SubsidenceAttribute extends BaseMagicAttribute {
-    private static final SubsidenceAttributeConfig CONFIG = (SubsidenceAttributeConfig) AttributeConfig.get(AttributeTypes.SUBSIDENCE);
+public class GravityAttribute extends BaseMagicAttribute {
+    private static final GravityAttributeConfig CONFIG = (GravityAttributeConfig) AttributeConfig.get(AttributeTypes.GRAVITY);
 
     private final float gravity;
 
-    public SubsidenceAttribute(@NotNull BaseAttributeData baseAttributeData, int stack, float gravity) {
+    public GravityAttribute(@NotNull BaseAttributeData baseAttributeData, int stack, float gravity) {
         super(baseAttributeData, stack);
         this.gravity = gravity;
     }
 
-    public SubsidenceAttribute() {
+    public GravityAttribute() {
         this(CONFIG.toData(), 1, CONFIG.getGravity());
     }
 
-    public SubsidenceAttribute(int stack) {
+    public GravityAttribute(int stack) {
         this(CONFIG.toData(), stack, CONFIG.getGravity());
     }
 
@@ -28,6 +28,6 @@ public class SubsidenceAttribute extends BaseMagicAttribute {
 
     @Override
     public IMagicAttribute cloneWithArguments(Object... args) {
-        return new SubsidenceAttribute((int) args[0]);
+        return new GravityAttribute((int) args[0]);
     }
 }

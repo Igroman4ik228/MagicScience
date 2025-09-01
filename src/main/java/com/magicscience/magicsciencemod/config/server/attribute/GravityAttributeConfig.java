@@ -5,10 +5,10 @@ import com.magicscience.magicsciencemod.aspects.attributes.BaseAttributeData;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
-public class SubsidenceAttributeConfig extends BaseAttributeConfig {
+public class GravityAttributeConfig extends BaseAttributeConfig {
     private final @NotNull ForgeConfigSpec.DoubleValue gravity;
 
-    public SubsidenceAttributeConfig(
+    public GravityAttributeConfig(
         @NotNull ForgeConfigSpec.Builder builder,
         @NotNull AttributeTypes sectionType,
         @NotNull BaseAttributeData defaults

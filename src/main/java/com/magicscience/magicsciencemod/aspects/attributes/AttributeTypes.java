@@ -10,7 +10,7 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     VECTOR(VectorAttribute::new),
     SELF_SPECTRE(SelfSpectreAttribute::new),
     SPREADING(SpreadingAttribute::new),
-    SUBSIDENCE(SubsidenceAttribute::new);
+    GRAVITY(GravityAttribute::new);
 
     private final @Nullable Supplier<IMagicAttribute> prototype;
 
@@ -21,14 +21,14 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     @Override
     @Nullable
     public IMagicAttribute getInstance() {
-        if (prototype==null) return null;
+        if (prototype == null) return null;
         return prototype.get();
     }
 
     @Override
     @Nullable
     public IMagicAttribute newInstance(Object... args) {
-        if (prototype==null) return null;
+        if (prototype == null) return null;
         return prototype.get().cloneWithArguments(args);
     }
 
