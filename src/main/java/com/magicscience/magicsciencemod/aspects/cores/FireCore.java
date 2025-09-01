@@ -6,6 +6,8 @@ import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
 import com.magicscience.magicsciencemod.config.server.core.CoreConfig;
 import com.magicscience.magicsciencemod.config.server.core.FireCoreConfig;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.TntBlock;
 import net.minecraft.world.level.block.state.BlockState;
@@ -42,6 +44,8 @@ public class FireCore extends BaseMagicCore {
 
     private void fillBlockActionMaps() {
         this.blockActionMap.put(TntBlock.class, FireCollision::collisionTnt);
+
+        this.entityActionMap.put(Creeper.class, FireCollision::collisionCreeper);
     }
 
     @Override
@@ -61,6 +65,14 @@ public class FireCore extends BaseMagicCore {
                 level.setBlockAndUpdate(abovePos, Blocks.FIRE.defaultBlockState());
             }
         }
+    }
+
+    protected void commonProcessingEntity(
+        @NotNull Entity entity,
+        @NotNull ServerPlayer sender,
+        Objects... objects
+    ) {
+
     }
 
     public int getBurnDuration() {

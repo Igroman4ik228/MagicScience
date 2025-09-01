@@ -1,7 +1,9 @@
 package com.magicscience.magicsciencemod.aspects.cores.collisions;
 
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.entity.item.PrimedTnt;
+import net.minecraft.world.entity.monster.Creeper;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
 
@@ -26,5 +28,15 @@ public class FireCollision {
             sender
         );
         level.addFreshEntity(primed);
+    }
+
+    public static void collisionCreeper(
+        @NotNull Entity entity,
+        @NotNull ServerPlayer sender,
+        Objects... objects
+    ) {
+        if (entity instanceof Creeper creeper) {
+            creeper.ignite();
+        }
     }
 }

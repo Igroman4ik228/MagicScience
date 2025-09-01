@@ -1,5 +1,7 @@
 package com.magicscience.magicsciencemod.client.particles;
 
+import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
+import com.magicscience.magicsciencemod.aspects.attributes.SubsidenceAttribute;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.AspectProcessor;
 import com.mojang.logging.LogUtils;
@@ -10,6 +12,7 @@ import net.minecraft.client.particle.TextureSheetParticle;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -33,6 +36,11 @@ public class MagicParticle extends TextureSheetParticle {
         this.yd = yd;
         this.zd = zd;
         this.lifetime = spellData.particleLifeTime();
+
+//        var subsidenceAttribute = getSubsidenceAttribute(attributes);
+
+
+        this.gravity = 0.1f;
         this.setSize(0.1f, 0.1f);
 
         // ToDo: В будущем может быть усложнение взятия индекса спрайта
@@ -106,5 +114,15 @@ public class MagicParticle extends TextureSheetParticle {
     @NotNull
     public Vec3 getDirectionPos() {
         return new Vec3(xd, yd, zd);
+    }
+
+    @Nullable
+    private SubsidenceAttribute getSubsidenceAttribute(@NotNull Iterable<IMagicAttribute> attributes) {
+        for (var attr : attributes) {
+            if (attr instanceof SubsidenceAttribute subsidenceAttribute) {
+                return subsidenceAttribute;
+            }
+        }
+        return null;
     }
 }

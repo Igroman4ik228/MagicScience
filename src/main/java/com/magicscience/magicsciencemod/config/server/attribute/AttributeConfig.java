@@ -40,6 +40,20 @@ public class AttributeConfig {
                 new BaseAttributeData(10)
             )
         );
+        add(
+            new BaseAttributeConfig(
+                builder,
+                AttributeTypes.SPREADING,
+                new BaseAttributeData(10)
+            )
+        );
+        add(
+            new SubsidenceAttributeConfig(
+                builder,
+                AttributeTypes.SUBSIDENCE,
+                new BaseAttributeData(10)
+            )
+        );
 
         builder.pop();
     }

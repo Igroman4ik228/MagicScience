@@ -1,11 +1,11 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
 import com.magicscience.magicsciencemod.config.server.attribute.AttributeConfig;
-import com.magicscience.magicsciencemod.config.server.attribute.VectorAttributeConfig;
+import com.magicscience.magicsciencemod.config.server.attribute.IBaseAttributeConfig;
 import org.jetbrains.annotations.NotNull;
 
 public class SpreadingAttribute extends BaseMagicAttribute {
-    private static final VectorAttributeConfig CONFIG = (VectorAttributeConfig) AttributeConfig.get(AttributeTypes.VECTOR);
+    private static final IBaseAttributeConfig CONFIG = AttributeConfig.get(AttributeTypes.SPREADING);
 
     public SpreadingAttribute(@NotNull BaseAttributeData baseAttributeData, int stack) {
         super(baseAttributeData, stack);

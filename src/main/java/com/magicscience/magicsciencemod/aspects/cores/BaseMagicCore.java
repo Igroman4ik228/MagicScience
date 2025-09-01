@@ -1,8 +1,10 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
-import com.magicscience.magicsciencemod.aspects.IAction;
+import com.magicscience.magicsciencemod.aspects.cores.collisions.IActions.IActionBlock;
+import com.magicscience.magicsciencemod.aspects.cores.collisions.IActions.IActionEntity;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
 import net.minecraft.server.level.ServerPlayer;
+import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
@@ -13,8 +15,10 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public abstract class BaseMagicCore implements IMagicCore {
-    protected final HashMap<Class<? extends Block>, IAction> blockActionMap = new HashMap<>();
-    protected final HashMap<Predicate<Class<? extends Block>>, IAction> groupBlockActionMap = new HashMap<>();
+    protected final HashMap<Class<? extends Block>, IActionBlock> blockActionMap = new HashMap<>();
+    protected final HashMap<Predicate<Class<? extends Block>>, IActionBlock> groupBlockActionMap = new HashMap<>();
+    protected final HashMap<Class<? extends Entity>, IActionEntity> entityActionMap = new HashMap<>();
+    protected final HashMap<Predicate<? extends Entity>, IActionEntity> groupEntityActionMap = new HashMap<>();
     private final @NotNull BaseCoreData baseCoreData;
     private final int stack;
     private final @NotNull Collection<IMagicEffect> effects;
@@ -73,6 +77,32 @@ public abstract class BaseMagicCore implements IMagicCore {
 
     protected abstract void commonProcessingBlock(
         @NotNull BlockHitResult blockHitResult,
+        @NotNull ServerPlayer sender,
+        Objects... objects
+    );
+
+    @Override
+    public void processingEntity(
+        @NotNull Entity entity,
+        @NotNull ServerPlayer sender,
+        Objects... objects
+    ) {
+        var entityClass = entity.getClass();
+
+        var action = this.entityActionMap.get(entityClass);
+
+        if (action==null) {
+            action = this.groupEntityActionMap.get(entityClass);
+            if (action==null) {
+                commonProcessingEntity(entity, sender, objects);
+            }
+        }
+
+        action.execute(entity, sender, objects);
+    }
+
+    protected abstract void commonProcessingEntity(
+        @NotNull Entity entity,
         @NotNull ServerPlayer sender,
         Objects... objects
     );

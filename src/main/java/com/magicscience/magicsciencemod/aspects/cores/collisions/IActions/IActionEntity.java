@@ -1,15 +1,15 @@
-package com.magicscience.magicsciencemod.aspects;
+package com.magicscience.magicsciencemod.aspects.cores.collisions.IActions;
 
 import net.minecraft.server.level.ServerPlayer;
-import net.minecraft.world.phys.BlockHitResult;
+import net.minecraft.world.entity.Entity;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Objects;
 
 @FunctionalInterface
-public interface IAction {
+public interface IActionEntity {
     void execute(
-        @NotNull BlockHitResult blockHitResult,
+        @NotNull Entity entity,
         @NotNull ServerPlayer sender,
         Objects... objects
     );

@@ -49,6 +49,10 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
         Entity target = level.getEntity(entityId);
         if (target==null) return;
 
+        // Core collision
+//        var core = CoreTypeHelper.findInstance(coreId);
+//        core.processingEntity(target, player);
+
         // Effect
         // get list of effects for current core
         var effects = CoreTypeHelper.findInstance(coreId).getMagicEffects();
