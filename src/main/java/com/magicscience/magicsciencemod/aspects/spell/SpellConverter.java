@@ -10,9 +10,9 @@ import com.magicscience.magicsciencemod.aspects.structures.StructureTypeHelper;
 import com.magicscience.magicsciencemod.items.ScrollData;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
+import java.util.stream.IntStream;
 
 public class SpellConverter {
     private static final MagicCoreFactory CORE_FACTORY = new MagicCoreFactory();
@@ -31,7 +31,7 @@ public class SpellConverter {
             .mapToInt(IMagicAttribute::getStack)
             .toArray();
 
-        int structureId = spell.getStructure()!=null ? spell.getStructure().getStack():0;
+        int structureId = spell.getStructure() != null ? spell.getStructure().getStack() : 0;
 
         return new SpellData(
             spell.getOwnerUUID(),
@@ -63,11 +63,7 @@ public class SpellConverter {
 
     @NotNull
     public static Spell toSpell(@NotNull SpellData data) {
-        List<IMagicAttribute> attributes = new ArrayList<>();
-
-        for (int i = 0; i!=data.attributeIds().length; i++) {
-            attributes.add(ATTRIBUTE_FACTORY.createById(data.attributeIds()[i], data.attributeStack()[i]));
-        }
+        List<IMagicAttribute> attributes = createAttributes(data.attributeIds(), data.attributeStack());
 
         return new Spell(
             CORE_FACTORY.createById(data.coreId(), data.coreStack()),
@@ -79,11 +75,7 @@ public class SpellConverter {
 
     @NotNull
     public static Spell toSpell(@NotNull ScrollData data, @NotNull UUID ownerUUID) {
-        List<IMagicAttribute> attributes = new ArrayList<>();
-
-        for (int i = 0; i!=data.attributeIds().length; i++) {
-            attributes.add(ATTRIBUTE_FACTORY.createById(data.attributeIds()[i], data.attributeStack()[i]));
-        }
+        List<IMagicAttribute> attributes = createAttributes(data.attributeIds(), data.attributeStack());
 
         return new Spell(
             CORE_FACTORY.createById(data.coreId(), data.coreStack()),
@@ -91,5 +83,12 @@ public class SpellConverter {
             STRUCTURE_FACTORY.createById(data.structureId(), data.structureStack()),
             ownerUUID
         );
+    }
+
+    @NotNull
+    private static List<IMagicAttribute> createAttributes(int[] ids, int[] stacks) {
+        return IntStream.range(0, ids.length)
+            .mapToObj(i -> ATTRIBUTE_FACTORY.createById(ids[i], stacks[i]))
+            .toList();
     }
 }

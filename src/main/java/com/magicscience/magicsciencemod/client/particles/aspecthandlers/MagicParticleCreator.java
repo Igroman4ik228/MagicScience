@@ -40,27 +40,36 @@ public class MagicParticleCreator {
         var mc = Minecraft.getInstance();
 
         var player = mc.player;
-        if (player==null) return;
+        if (player == null) return;
         var level = mc.level;
-        if (level==null) return;
+        if (level == null) return;
 
         var spell = SpellConverter.toSpell(spellData);
-        var structure = spell.getStructure();
-        if (structure==null) return;
 
         var attributes = spell.getMagicAttributes();
         boolean isSpreading = containsSpreadingAttribute(attributes);
+
+        double vx = direction.x;
+        double vy = isSpreading ? 0 : direction.y;
+        double vz = direction.z;
+
+        var structure = spell.getStructure();
+        var playerPos = player.position().add(0, 1, 0);
+        if (structure == null) {
+            level.addParticle(
+                pParticleData,
+                playerPos.x, playerPos.y, playerPos.z,
+                vx, vy, vz
+            );
+            return;
+        }
 
         for (int i = 0; i < structure.getCountParticles(); i++) {
             var startPos = structure.calculateStartParticlePosition(position);
 
             double px = startPos.x;
-            double py = isSpreading ? player.position().y:startPos.y;
+            double py = isSpreading ? player.position().y : startPos.y;
             double pz = startPos.z;
-
-            double vx = direction.x;
-            double vy = isSpreading ? 0:direction.y;
-            double vz = direction.z;
 
             level.addParticle(
                 pParticleData,
@@ -78,6 +87,4 @@ public class MagicParticleCreator {
         }
         return false;
     }
-
-
 }

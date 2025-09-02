@@ -35,12 +35,7 @@ public class MagicParticle extends TextureSheetParticle {
         this.yd = yd;
         this.zd = zd;
         this.lifetime = spellData.particleLifeTime();
-
-        var spell = SpellConverter.toSpell(spellData);
-        var gravityAttribute = (GravityAttribute) spell.getMagicAttributes(GravityAttribute.class);
-        if (gravityAttribute != null) {
-            this.gravity = gravityAttribute.getGravity();
-        }
+        this.spellData = spellData;
 
         this.setSize(0.1f, 0.1f);
 
@@ -54,7 +49,7 @@ public class MagicParticle extends TextureSheetParticle {
             )
         );
 
-        this.spellData = spellData;
+        initGravity();
 
         this.particleUUID = UUID.randomUUID();
         ParticleRegistry.register(this);
@@ -70,6 +65,14 @@ public class MagicParticle extends TextureSheetParticle {
     ) {
         int ageForSprite = index * lifetime / (FRAME_COUNT - 1);
         return sprites.get(ageForSprite, lifetime);
+    }
+
+    private void initGravity() {
+        var spell = SpellConverter.toSpell(spellData);
+        var gravityAttribute = (GravityAttribute) spell.getMagicAttributes(GravityAttribute.class);
+        if (gravityAttribute != null) {
+            this.gravity = gravityAttribute.getGravity();
+        }
     }
 
     @Override
