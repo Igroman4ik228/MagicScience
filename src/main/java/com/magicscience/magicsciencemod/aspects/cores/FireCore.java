@@ -72,7 +72,6 @@ public class FireCore extends BaseMagicCore {
         @NotNull ServerPlayer sender,
         Objects... objects
     ) {
-
     }
 
     public int getBurnDuration() {

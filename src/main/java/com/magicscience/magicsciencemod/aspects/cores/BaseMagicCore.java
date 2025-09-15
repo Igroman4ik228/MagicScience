@@ -72,6 +72,7 @@ public abstract class BaseMagicCore implements IMagicCore {
             }
         }
 
+        if (action==null) return;
         action.execute(blockHitResult, sender, objects);
     }
 
@@ -98,6 +99,7 @@ public abstract class BaseMagicCore implements IMagicCore {
             }
         }
 
+        if (action==null) return;
         action.execute(entity, sender, objects);
     }
 
