@@ -2,13 +2,19 @@ package com.magicscience.magicsciencemod.aspects.structures;
 
 import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
 import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
+import com.magicscience.magicsciencemod.mathutils.MathUtils;
 import net.minecraft.client.Minecraft;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.concurrent.ThreadLocalRandom;
-
 public class WallStructure extends BaseMagicStructure {
+    public static final double BASE_FORWARD_DISTANCE = 1.0;
+    public static final double BASE_HALF_WIDTH = 0.5;
+    public static final double WIDTH_PER_PARTICLE = 0.25;
+    public static final double WIDTH_PER_SIZE = 0.3;
+    public static final double BASE_HALF_HEIGHT = 1.2;
+    public static final double HEIGHT_PER_PARTICLE = 0.30;
+    public static final double HEIGHT_PER_SIZE = 0.5;
     private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.WALL);
 
     public WallStructure(@NotNull BaseStructureData baseStructureData, int stack) {
@@ -33,43 +39,27 @@ public class WallStructure extends BaseMagicStructure {
     @NotNull
     public Vec3 calculateStartParticlePosition(Vec3 basePosition) {
         var mc = Minecraft.getInstance();
-        if (mc.player==null) return basePosition;
+        if (mc.player == null) return basePosition;
 
         Vec3 lookDir = mc.player.getLookAngle().normalize();
-        Vec3 worldUp = new Vec3(0.0, 1.0, 0.0);     // global "up" axis
+        Vec3 worldUp = new Vec3(0.0, 1.0, 0.0);
 
-        // Vector pointing to the right relative to lookDir
-        Vec3 right = lookDir.cross(worldUp);
-        if (right.lengthSqr() < 1e-6) {
-            right = new Vec3(1.0, 0.0, 0.0); // fallback if looking straight up/down
-        } else {
-            right = right.normalize();
-        }
-
-        // Vector pointing up relative to lookDir
-        Vec3 upDir = right.cross(lookDir).normalize();
-
-        final double baseForwardDistance = 1.0;
-        final double baseHalfWidth = 0.5;
-        final double widthPerParticle = 0.25;
-        final double widthPerSize = 0.3;
-        final double baseHalfHeight = 1.2;
-        final double heightPerParticle = 0.30;
-        final double heightPerSize = 0.5;
+        Vec3[] basis = MathUtils.localSystemCoordinatesUpRight(lookDir, worldUp);
+        Vec3 right = basis[0];
+        Vec3 upDir = basis[1];
 
         int size = this.getSize();
         int countParticles = this.getCountParticles();
 
         double baseSpread = Math.sqrt(Math.max(1, countParticles));
-        double halfWidth = baseHalfWidth + baseSpread * widthPerParticle + size * widthPerSize;
-        double halfHeight = baseHalfHeight + baseSpread * heightPerParticle + size * heightPerSize;
+        double halfWidth = BASE_HALF_WIDTH + baseSpread * WIDTH_PER_PARTICLE + size * WIDTH_PER_SIZE;
+        double halfHeight = BASE_HALF_HEIGHT + baseSpread * HEIGHT_PER_PARTICLE + size * HEIGHT_PER_SIZE;
 
-        var random = ThreadLocalRandom.current();
-        double offsetRight = (random.nextDouble() - 0.5) * halfWidth;
-        double offsetUp = (random.nextDouble() - 0.5) * halfHeight;
+        double[] offsets = MathUtils.offsetTwoAxes(halfWidth, halfHeight);
+        double offsetRight = offsets[0];
+        double offsetUp = offsets[1];
 
-        Vec3 wallCenter = basePosition.add(lookDir.scale(baseForwardDistance));
-
+        Vec3 wallCenter = basePosition.add(lookDir.scale(BASE_FORWARD_DISTANCE));
         return wallCenter.add(right.scale(offsetRight)).add(upDir.scale(offsetUp));
     }
 }

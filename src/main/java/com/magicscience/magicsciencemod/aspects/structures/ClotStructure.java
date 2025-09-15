@@ -2,6 +2,7 @@ package com.magicscience.magicsciencemod.aspects.structures;
 
 import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
 import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
+import com.magicscience.magicsciencemod.mathutils.MathUtils;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -33,17 +34,10 @@ public class ClotStructure extends BaseMagicStructure {
     public Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
         double radius = 0.3 * getSize();
         var rnd = ThreadLocalRandom.current();
-
         double u = rnd.nextDouble();
         double r = radius * Math.cbrt(u);
 
-        double theta = Math.acos(2 * rnd.nextDouble() - 1);
-        double phi = 2 * Math.PI * rnd.nextDouble();
-
-        double x = r * Math.sin(theta) * Math.cos(phi);
-        double y = r * Math.sin(theta) * Math.sin(phi);
-        double z = r * Math.cos(theta);
-
-        return basePosition.add(x, y, z);
+        double[] angles = MathUtils.randomAngles();
+        return MathUtils.sphericalCoordinatesXYZ(basePosition, r, angles[0], angles[1]);
     }
 }
