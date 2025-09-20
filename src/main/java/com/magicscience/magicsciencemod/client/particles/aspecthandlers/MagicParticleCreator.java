@@ -4,8 +4,12 @@ import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.attributes.SpreadingAttribute;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
+import com.magicscience.magicsciencemod.aspects.structures.IDynamicMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
 import com.magicscience.magicsciencemod.client.particles.MagicParticleOptions;
 import net.minecraft.client.Minecraft;
+import net.minecraft.client.multiplayer.ClientLevel;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
@@ -37,50 +41,72 @@ public class MagicParticleCreator {
 
     @OnlyIn(Dist.CLIENT)
     public void create() {
-        var mc = Minecraft.getInstance();
-
-        var player = mc.player;
-        if (player == null) return;
-        var level = mc.level;
-        if (level == null) return;
+        Minecraft mc = Minecraft.getInstance();
+        LocalPlayer player = mc.player;
+        if (player==null) return;
+        ClientLevel level = mc.level;
+        if (level==null) return;
 
         var spell = SpellConverter.toSpell(spellData);
+        boolean isSpreading = containsSpreadingAttribute(spell.getMagicAttributes());
+        Vec3 baseVelocity = getBaseVelocity(isSpreading);
 
-        var attributes = spell.getMagicAttributes();
-        boolean isSpreading = containsSpreadingAttribute(attributes);
-
-        double vx = direction.x;
-        double vy = isSpreading ? 0 : direction.y;
-        double vz = direction.z;
-
-        var structure = spell.getStructure();
-        var playerPos = player.position().add(0, 1, 0);
-        if (structure == null) {
-            level.addParticle(
-                pParticleData,
-                playerPos.x, playerPos.y, playerPos.z,
-                vx, vy, vz
-            );
-            return;
+        IMagicStructure structure = spell.getStructure();
+        if (structure==null) {
+            spawnSingleParticle(level, player, baseVelocity);
+        } else {
+            spawnStructuredParticles(level, player, structure, isSpreading, baseVelocity);
         }
+    }
 
+    private Vec3 getBaseVelocity(boolean isSpreading) {
+        return new Vec3(
+            direction.x,
+            isSpreading ? 0:direction.y,
+            direction.z
+        );
+    }
+
+    private void spawnSingleParticle(ClientLevel level, LocalPlayer player, Vec3 velocity) {
+        Vec3 playerPos = player.position().add(0, 1, 0);
+        level.addParticle(
+            pParticleData,
+            playerPos.x, playerPos.y, playerPos.z,
+            velocity.x, velocity.y, velocity.z
+        );
+    }
+
+    private void spawnStructuredParticles(ClientLevel level,
+                                          LocalPlayer player,
+                                          IMagicStructure structure,
+                                          boolean isSpreading,
+                                          Vec3 baseVelocity) {
         for (int i = 0; i < structure.getCountParticles(); i++) {
-            var startPos = structure.calculateStartParticlePosition(position);
+            Vec3 startPos = structure.calculateStartParticlePosition(position);
+            Vec3 offset = calculateOffset(structure, startPos, player);
 
+            Vec3 velocity = baseVelocity.add(offset);
             double px = startPos.x;
-            double py = isSpreading ? player.position().y : startPos.y;
+            double py = isSpreading ? player.position().y:startPos.y;
             double pz = startPos.z;
 
             level.addParticle(
                 pParticleData,
                 px, py, pz,
-                vx, vy, vz
+                velocity.x, velocity.y, velocity.z
             );
         }
     }
 
+    private Vec3 calculateOffset(IMagicStructure structure, Vec3 startPos, LocalPlayer player) {
+        if (structure instanceof IDynamicMagicStructure dynamic) {
+            return dynamic.calculateStartParticleVectors(startPos, player);
+        }
+        return Vec3.ZERO;
+    }
+
     private boolean containsSpreadingAttribute(@NotNull Iterable<IMagicAttribute> attributes) {
-        for (var attr : attributes) {
+        for (IMagicAttribute attr : attributes) {
             if (attr instanceof SpreadingAttribute) {
                 return true;
             }

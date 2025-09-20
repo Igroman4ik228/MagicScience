@@ -21,14 +21,14 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     @Override
     @Nullable
     public IMagicAttribute getInstance() {
-        if (prototype == null) return null;
+        if (prototype==null) return null;
         return prototype.get();
     }
 
     @Override
     @Nullable
     public IMagicAttribute newInstance(Object... args) {
-        if (prototype == null) return null;
+        if (prototype==null) return null;
         return prototype.get().cloneWithArguments(args);
     }
 

@@ -54,6 +54,13 @@ public class StructureConfig {
                 new BaseStructureData(20, 10, 1)
             )
         );
+        add(
+            new BaseStructureConfig(
+                builder,
+                StructureTypes.WAVE,
+                new BaseStructureData(30, 25, 1)
+            )
+        );
 
         builder.pop();
     }

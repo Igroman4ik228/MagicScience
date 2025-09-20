@@ -10,7 +10,8 @@ public enum StructureTypes implements IMagicType<IMagicStructure> {
     CLOT(ClotStructure::new),
     SPHERE(SphereStructure::new),
     WALL(WallStructure::new),
-    RAY(RayStructure::new);
+    RAY(RayStructure::new),
+    WAVE(WaveStructure::new);
 
     private final @Nullable Supplier<IMagicStructure> prototype;
 
