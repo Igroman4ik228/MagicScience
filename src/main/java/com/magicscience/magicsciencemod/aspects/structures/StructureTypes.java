@@ -11,7 +11,8 @@ public enum StructureTypes implements IMagicType<IMagicStructure> {
     SPHERE(SphereStructure::new),
     WALL(WallStructure::new),
     RAY(RayStructure::new),
-    WAVE(WaveStructure::new);
+    WAVE(WaveStructure::new),
+    CONE(ConeStructure::new);
 
     private final @Nullable Supplier<IMagicStructure> prototype;
 

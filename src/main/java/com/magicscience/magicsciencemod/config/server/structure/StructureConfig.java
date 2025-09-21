@@ -61,6 +61,13 @@ public class StructureConfig {
                 new BaseStructureData(30, 25, 1)
             )
         );
+        add(
+            new BaseStructureConfig(
+                builder,
+                StructureTypes.CONE,
+                new BaseStructureData(30, 25, 1)
+            )
+        );
 
         builder.pop();
     }
