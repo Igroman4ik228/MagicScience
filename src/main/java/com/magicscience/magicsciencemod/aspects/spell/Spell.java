@@ -68,7 +68,7 @@ public class Spell implements ISpell {
             totalCost += attribute.getManaCost();
         }
 
-        if (magicStructure != null)
+        if (magicStructure!=null)
             totalCost += magicStructure.getManaCost();
 
         return totalCost;
@@ -89,13 +89,13 @@ public class Spell implements ISpell {
     }
 
     @Nullable
-    public <T extends IMagicAttribute> IMagicAttribute getMagicAttributes(Class<T> cls) {
+    public <T extends IMagicAttribute> T getMagicAttributes(Class<T> cls) {
         for (var attr : magicAttributes) {
-            if (cls.isInstance(attr)) return attr;
+            if (cls.isInstance(attr))
+                return cls.cast(attr);
         }
         return null;
     }
-
 
     @Nullable
     public IMagicStructure getStructure() {

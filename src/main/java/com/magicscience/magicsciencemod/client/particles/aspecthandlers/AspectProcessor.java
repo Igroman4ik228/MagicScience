@@ -26,9 +26,7 @@ public class AspectProcessor {
 
         var blockFilter = new ConfigBlockFilter()
             .and(new CoreBlockFilter(spellData.coreId()));
-
-
-        // !Position warning
+        
         this.handlers = List.of(
             new BlockCollisionHandler(particle, spellData, blockFilter, level),
             new EntityCollisionHandler(particle, spellData, entityFilter, level)

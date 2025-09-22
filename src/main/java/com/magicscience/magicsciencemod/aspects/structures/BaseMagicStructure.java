@@ -36,7 +36,7 @@ public abstract class BaseMagicStructure implements IMagicStructure {
     }
 
     @NotNull
-    public abstract Vec3 calculateStartParticlePosition(Vec3 basePosition);
+    public abstract Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition);
 
     @Override
     public boolean equals(Object o) {

@@ -32,11 +32,9 @@ public class EntityCollisionHandler extends BaseCollisionHandler<Entity> {
 
     @Override
     public void handleCollision() {
-        // Particle remove -> just first entity
-        level.getEntities((Entity) null, particle.getBoundingBox(), filter)
-            .stream()
-            .findFirst()
-            .ifPresent(this::handleEntityCollision);
+        var entities = level.getEntities((Entity) null, particle.getBoundingBox(), filter);
+        if (entities.isEmpty()) return;
+        handleEntityCollision(entities.get(0));
     }
 
     private void handleEntityCollision(@NotNull Entity entity) {

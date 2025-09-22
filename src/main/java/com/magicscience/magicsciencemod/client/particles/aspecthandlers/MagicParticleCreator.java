@@ -4,8 +4,8 @@ import com.magicscience.magicsciencemod.aspects.attributes.IMagicAttribute;
 import com.magicscience.magicsciencemod.aspects.attributes.SpreadingAttribute;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
-import com.magicscience.magicsciencemod.aspects.structures.IDynamicMagicStructure;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.dynamic.IDynamicMagicStructure;
 import com.magicscience.magicsciencemod.client.particles.MagicParticleOptions;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
@@ -19,14 +19,14 @@ public class MagicParticleCreator {
     private final @NotNull SpellData spellData;
     private final @NotNull Vec3 position;
     private final @NotNull Vec3 direction;
-    private final @NotNull MagicParticleOptions pParticleData;
+    private final @NotNull MagicParticleOptions particleOptions;
 
     public MagicParticleCreator(@NotNull SpellData spellData, @NotNull Vec3 position, @NotNull Vec3 direction) {
         this.spellData = spellData;
         this.position = position;
         this.direction = direction;
 
-        this.pParticleData = new MagicParticleOptions(
+        this.particleOptions = new MagicParticleOptions(
             spellData.ownerUUID(),
             spellData.coreId(),
             spellData.coreStack(),
@@ -60,47 +60,56 @@ public class MagicParticleCreator {
     }
 
     private Vec3 getBaseVelocity(boolean isSpreading) {
+        var directionY = direction.y;
+        if (isSpreading)
+            directionY = 0;
+
         return new Vec3(
             direction.x,
-            isSpreading ? 0:direction.y,
+            directionY,
             direction.z
         );
     }
 
-    private void spawnSingleParticle(ClientLevel level, LocalPlayer player, Vec3 velocity) {
+    private void spawnSingleParticle(@NotNull ClientLevel level, @NotNull LocalPlayer player, @NotNull Vec3 velocity) {
         Vec3 playerPos = player.position().add(0, 1, 0);
         level.addParticle(
-            pParticleData,
+            particleOptions,
             playerPos.x, playerPos.y, playerPos.z,
             velocity.x, velocity.y, velocity.z
         );
     }
 
-    private void spawnStructuredParticles(ClientLevel level,
-                                          LocalPlayer player,
-                                          IMagicStructure structure,
-                                          boolean isSpreading,
-                                          Vec3 baseVelocity) {
+    private void spawnStructuredParticles(
+        @NotNull ClientLevel level,
+        @NotNull LocalPlayer player,
+        @NotNull IMagicStructure structure,
+        boolean isSpreading,
+        @NotNull Vec3 baseVelocity
+    ) {
         for (int i = 0; i < structure.getCountParticles(); i++) {
             Vec3 startPos = structure.calculateStartParticlePosition(position);
+            // For dynamic structure
             Vec3 offset = calculateOffset(structure, startPos, player);
 
             Vec3 velocity = baseVelocity.add(offset);
-            double px = startPos.x;
-            double py = isSpreading ? player.position().y:startPos.y;
-            double pz = startPos.z;
+
+            double pY = startPos.y;
+            if (isSpreading) {
+                pY = player.position().y;
+            }
 
             level.addParticle(
-                pParticleData,
-                px, py, pz,
+                particleOptions,
+                startPos.x, pY, startPos.z,
                 velocity.x, velocity.y, velocity.z
             );
         }
     }
 
-    private Vec3 calculateOffset(IMagicStructure structure, Vec3 startPos, LocalPlayer player) {
-        if (structure instanceof IDynamicMagicStructure dynamic) {
-            return dynamic.calculateStartParticleVectors(startPos, player);
+    private Vec3 calculateOffset(@NotNull IMagicStructure structure, @NotNull Vec3 startPos, @NotNull LocalPlayer player) {
+        if (structure instanceof IDynamicMagicStructure dynamicStructure) {
+            return dynamicStructure.calculateStartParticleVectors(startPos, player);
         }
         return Vec3.ZERO;
     }

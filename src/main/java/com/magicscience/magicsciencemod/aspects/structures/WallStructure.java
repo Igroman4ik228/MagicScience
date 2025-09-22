@@ -37,9 +37,9 @@ public class WallStructure extends BaseMagicStructure {
 
     @Override
     @NotNull
-    public Vec3 calculateStartParticlePosition(Vec3 basePosition) {
+    public Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
         var mc = Minecraft.getInstance();
-        if (mc.player == null) return basePosition;
+        if (mc.player==null) return basePosition;
 
         Vec3 lookDir = mc.player.getLookAngle().normalize();
         Vec3 worldUp = new Vec3(0.0, 1.0, 0.0);

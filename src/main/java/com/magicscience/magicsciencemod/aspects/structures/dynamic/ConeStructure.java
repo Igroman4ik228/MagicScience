@@ -1,5 +1,9 @@
-package com.magicscience.magicsciencemod.aspects.structures;
+package com.magicscience.magicsciencemod.aspects.structures.dynamic;
 
+import com.magicscience.magicsciencemod.aspects.structures.BaseMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.BaseStructureData;
+import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
 import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
 import net.minecraft.world.entity.player.Player;
@@ -29,12 +33,12 @@ public class ConeStructure extends BaseMagicStructure implements IDynamicMagicSt
     }
 
     @Override
-    public @NotNull Vec3 calculateStartParticlePosition(Vec3 basePosition) {
+    public @NotNull Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
         return basePosition;
     }
 
     @Override
-    public Vec3 calculateStartParticleVectors(Vec3 startPosition, Player player) {
+    public @NotNull Vec3 calculateStartParticleVectors(Vec3 startPosition, Player player) {
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
 
         Vec3 look = player.getLookAngle().normalize();

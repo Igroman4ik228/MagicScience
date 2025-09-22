@@ -6,10 +6,14 @@ import org.jetbrains.annotations.NotNull;
 
 public interface IMagicStructure extends IMagicAspect {
     int getCountParticles();
+
     @NotNull
     IMagicStructure cloneWithArguments(Object... args);
+
     int getStack();
+
     int getSize();
+
     @NotNull
-    Vec3 calculateStartParticlePosition(Vec3 basePosition);
+    Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition);
 }

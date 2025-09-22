@@ -1,5 +1,9 @@
-package com.magicscience.magicsciencemod.aspects.structures;
+package com.magicscience.magicsciencemod.aspects.structures.dynamic;
 
+import com.magicscience.magicsciencemod.aspects.structures.BaseMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.BaseStructureData;
+import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
 import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
 import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
 import net.minecraft.world.entity.player.Player;
@@ -29,7 +33,7 @@ public class WaveStructure extends BaseMagicStructure implements IDynamicMagicSt
     }
 
     @Override
-    public @NotNull Vec3 calculateStartParticlePosition(Vec3 basePosition) {
+    public @NotNull Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
         double radius = 0.8 * CONFIG.toData().size();
         ThreadLocalRandom rnd = ThreadLocalRandom.current();
 
@@ -44,7 +48,7 @@ public class WaveStructure extends BaseMagicStructure implements IDynamicMagicSt
     }
 
     @Override
-    public Vec3 calculateStartParticleVectors(Vec3 startPosition, Player player) {
+    public @NotNull Vec3 calculateStartParticleVectors(Vec3 startPosition, Player player) {
         Vec3 playerPos = player.position().add(0, player.getBbHeight() / 2.0, 0); // центр игрока
         Vec3 ray = new Vec3(
             startPosition.x - playerPos.x,

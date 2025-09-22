@@ -69,8 +69,8 @@ public class MagicParticle extends TextureSheetParticle {
 
     private void initGravity() {
         var spell = SpellConverter.toSpell(spellData);
-        var gravityAttribute = (GravityAttribute) spell.getMagicAttributes(GravityAttribute.class);
-        if (gravityAttribute != null) {
+        var gravityAttribute = spell.getMagicAttributes(GravityAttribute.class);
+        if (gravityAttribute!=null) {
             this.gravity = gravityAttribute.getGravity();
         }
     }

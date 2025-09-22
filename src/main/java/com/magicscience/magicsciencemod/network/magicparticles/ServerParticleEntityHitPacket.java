@@ -53,7 +53,7 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
         // Core collision
         var core = CoreTypeHelper.findInstance(coreId);
         core.processingEntity(target, player);
-        
+
         // Effect
         // get list of effects for current core
         var effects = CoreTypeHelper.findInstance(coreId).getMagicEffects();
@@ -65,12 +65,10 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
 
         // Damage
         // Get particle owner
-        Entity owner = level.getEntity(ownerUUID);
+        var owner = level.getPlayerByUUID(ownerUUID);
         if (!(owner instanceof ServerPlayer ownerPlayer)) return;
 
         // Damage
         target.hurt(target.damageSources().playerAttack(ownerPlayer), damage);
-
-
     }
 }

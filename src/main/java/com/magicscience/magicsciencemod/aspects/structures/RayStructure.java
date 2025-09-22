@@ -35,10 +35,10 @@ public class RayStructure extends BaseMagicStructure {
 
     @Override
     @NotNull
-    public Vec3 calculateStartParticlePosition(Vec3 basePosition) {
+    public Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
         var random = ThreadLocalRandom.current();
         var mc = Minecraft.getInstance();
-        if (mc.player == null) return basePosition;
+        if (mc.player==null) return basePosition;
 
         Vec3 dir = mc.player.getLookAngle().normalize();
 

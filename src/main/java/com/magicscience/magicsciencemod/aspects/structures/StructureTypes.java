@@ -1,6 +1,8 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
 import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import com.magicscience.magicsciencemod.aspects.structures.dynamic.ConeStructure;
+import com.magicscience.magicsciencemod.aspects.structures.dynamic.WaveStructure;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;

@@ -19,6 +19,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
+    private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
+
     public BlockCollisionHandler(
         @NotNull MagicParticle particle,
         @NotNull SpellData spellData,
@@ -34,20 +36,25 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
 
         // No speed
         if (direction.lengthSqr()==0) {
-            BlockPos pos = BlockPos.containing(center);
-
-            handleBlockCollision(
-                new BlockHitResult(
-                    center,
-                    BlockMathUtil.getClosestDirection(pos, center),
-                    pos,
-                    true
-                )
-            );
+            handleStaticPosition(center);
             return;
         }
 
         rayTraceBlock(center, direction);
+    }
+
+    private void handleStaticPosition(@NotNull Vec3 center) {
+        // Static and inside in block
+        BlockPos pos = BlockPos.containing(center);
+        mutablePos.set(pos);
+        handleBlockCollision(
+            new BlockHitResult(
+                center,
+                BlockMathUtil.getClosestDirection(mutablePos, center),
+                pos,
+                true
+            )
+        );
     }
 
     private void rayTraceBlock(Vec3 start, Vec3 direction) {
@@ -67,10 +74,11 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
     }
 
     private void handleBlockCollision(@NotNull BlockHitResult blockHitResult) {
+        if (blockHitResult.getType()!=HitResult.Type.BLOCK) return;
+
         var blockPos = blockHitResult.getBlockPos();
         var blockState = level.getBlockState(blockPos);
 
-        if (blockHitResult.getType()!=HitResult.Type.BLOCK) return;
         if (blockState.isAir()) return;
         if (filter.test(blockState)) return;
 
