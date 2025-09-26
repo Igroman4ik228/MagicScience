@@ -19,8 +19,6 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Predicate;
 
 public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
-    private final BlockPos.MutableBlockPos mutablePos = new BlockPos.MutableBlockPos();
-
     public BlockCollisionHandler(
         @NotNull MagicParticle particle,
         @NotNull SpellData spellData,
@@ -46,11 +44,10 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
     private void handleStaticPosition(@NotNull Vec3 center) {
         // Static and inside in block
         BlockPos pos = BlockPos.containing(center);
-        mutablePos.set(pos);
         handleBlockCollision(
             new BlockHitResult(
                 center,
-                BlockMathUtil.getClosestDirection(mutablePos, center),
+                BlockMathUtil.getClosestDirection(pos, center),
                 pos,
                 true
             )

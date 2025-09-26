@@ -77,7 +77,10 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        this.aspectProcessor.process();
+        // one of 4 tick
+        if (this.age % 4==0) {
+            this.aspectProcessor.process();
+        }
 
         super.tick();
     }

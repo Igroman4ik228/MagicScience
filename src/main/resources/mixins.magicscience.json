@@ -3,8 +3,11 @@
   "minVersion": "0.8",
   "package": "com.magicscience.magicsciencemod.mixins",
   "compatibilityLevel": "JAVA_17",
-  "mixins": [],
+  "plugin": "com.magicscience.magicsciencemod.mixins.AdjusterMixinPlugin",
+  "mixins": [
+  ],
   "client": [
+    "CollisionMixin",
     "ParticleEngineMixin"
   ],
   "server": []
