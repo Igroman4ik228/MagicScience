@@ -4,8 +4,7 @@
   "package": "com.magicscience.magicsciencemod.mixins",
   "compatibilityLevel": "JAVA_17",
   "plugin": "com.magicscience.magicsciencemod.mixins.AdjusterMixinPlugin",
-  "mixins": [
-  ],
+  "mixins": [],
   "client": [
     "ParticleEngineMixin"
   ],
