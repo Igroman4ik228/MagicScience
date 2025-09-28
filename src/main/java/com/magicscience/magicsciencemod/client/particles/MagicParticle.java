@@ -88,7 +88,7 @@ public class MagicParticle extends TextureSheetParticle {
 //        if (this.age % 4==0) {
 //            this.aspectProcessor.process();
 //        }
-//        this.aspectProcessor.process();
+        this.aspectProcessor.process();
 
         super.tick();
     }
