@@ -4,6 +4,7 @@ import com.magicscience.magicsciencemod.aspects.attributes.GravityAttribute;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.AspectProcessor;
+import com.magicscience.magicsciencemod.util.ParticleCollisionHelper;
 import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
@@ -21,7 +22,7 @@ public class MagicParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FRAME_COUNT = 3;
     private static final double MAXIMUM_COLLISION_VELOCITY_SQUARED = Mth.square(100.0D);
-    private static final double COLLISION_EPSILON = 1.0E-5D;
+    private static final float COLLISION_EPSILON = 1.0E-5F;
 
     private final @NotNull UUID particleUUID;
     private final @NotNull SpellData spellData;
@@ -87,56 +88,57 @@ public class MagicParticle extends TextureSheetParticle {
 //        if (this.age % 4==0) {
 //            this.aspectProcessor.process();
 //        }
-        this.aspectProcessor.process();
+//        this.aspectProcessor.process();
 
         super.tick();
     }
 
     @Override
     public void move(double dx, double dy, double dz) {
-        super.move(dx, dy, dz);
+        if (stoppedByCollision)
+            return;
 
-//        ToDo: finish collideWithBlock
+        double originalDx = dx;
+        double originalDy = dy;
+        double originalDz = dz;
 
-//        if (stoppedByCollision)
-//            return;
-//
-//        double originalDy = dy;
-//
-//        boolean hasMovement = (dx!=0 || dy!=0 || dz!=0);
-//
-//        if (this.hasPhysics &&
-//            hasMovement &&
-//            dx * dx + dy * dy + dz * dz < MAXIMUM_COLLISION_VELOCITY_SQUARED
-//        ) {
-//            Vec3 vec = ParticleCollisionHelper.collideWithBlock(
-//                new Vec3(dx, dy, dz),
-//                this.getBoundingBox(),
-//                this.level
-//            );
-//
-//            dx = vec.x;
-//            dy = vec.y;
-//            dz = vec.z;
-//
-//            hasMovement = (dx!=0 || dy!=0 || dz!=0);
-//        }
-//
-//        if (hasMovement) {
-//            this.setBoundingBox(this.getBoundingBox().move(dx, dy, dz));
-//            this.setLocationFromBoundingbox();
-//        }
-//
-//        if (Math.abs(originalDy) >= COLLISION_EPSILON && Math.abs(dy) < COLLISION_EPSILON) {
-//            this.stoppedByCollision = true;
-//        }
-//
-//        this.onGround = originalDy!=dy && originalDy < 0;
-//
-//        if (dx==0)
-//            this.xd = 0.0D;
-//        if (dz==0)
-//            this.zd = 0.0D;
+        boolean hasMovement = (dx!=0 || dy!=0 || dz!=0);
+
+        if (this.hasPhysics &&
+            hasMovement &&
+            dx * dx + dy * dy + dz * dz < MAXIMUM_COLLISION_VELOCITY_SQUARED
+        ) {
+            Vec3 vec = ParticleCollisionHelper.collideWithBlock(
+                new Vec3(dx, dy, dz),
+                this.getBoundingBox(),
+                this.level
+            );
+
+            dx = vec.x;
+            dy = vec.y;
+            dz = vec.z;
+
+            hasMovement = (dx!=0 || dy!=0 || dz!=0);
+        }
+
+        if (hasMovement) {
+            this.setBoundingBox(this.getBoundingBox().move(dx, dy, dz));
+            this.setLocationFromBoundingbox();
+        }
+
+        if (Math.abs(originalDy) >= (double) COLLISION_EPSILON && Math.abs(dy) < (double) COLLISION_EPSILON) {
+            this.stoppedByCollision = true;
+        }
+
+        this.onGround = originalDy!=dy && originalDy < 0.0D;
+
+        if (originalDx!=dx) {
+            this.xd = 0.0D;
+        }
+        if (originalDz!=dz) {
+            this.zd = 0.0D;
+        }
+
     }
 
     @Override
