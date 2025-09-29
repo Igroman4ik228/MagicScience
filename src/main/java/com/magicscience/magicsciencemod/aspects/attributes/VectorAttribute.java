@@ -30,6 +30,11 @@ public class VectorAttribute extends BaseMagicAttribute implements IMagicParticl
 
     @Override
     public int getParticleSpeed() {
-        return particleSpeed * getStack() / 2;
+        int speed = particleSpeed * getStack();
+        if (speed <= 1) {
+            return 1;
+        }
+
+        return speed / 2;
     }
 }

@@ -24,7 +24,7 @@ public class MagicParticle extends TextureSheetParticle {
     private static final double MAXIMUM_COLLISION_VELOCITY_SQUARED = Mth.square(100.0D);
     private static final float COLLISION_EPSILON = 1.0E-5F;
 
-    private final @NotNull UUID particleUUID;
+    private final @NotNull UUID particleUUID = UUID.randomUUID();
     private final @NotNull SpellData spellData;
     private final @NotNull AspectProcessor aspectProcessor;
 
@@ -58,7 +58,6 @@ public class MagicParticle extends TextureSheetParticle {
 
         initGravity();
 
-        this.particleUUID = UUID.randomUUID();
         ParticleRegistry.register(this);
 
         this.aspectProcessor = new AspectProcessor(this);
@@ -74,6 +73,10 @@ public class MagicParticle extends TextureSheetParticle {
         return sprites.get(ageForSprite, lifetime);
     }
 
+    public static boolean hasMovement(double xd, double yd, double zd) {
+        return xd!=0.0D || yd!=0.0D || zd!=0.0D;
+    }
+
     private void initGravity() {
         var spell = SpellConverter.toSpell(spellData);
         var gravityAttribute = spell.getMagicAttributes(GravityAttribute.class);
@@ -84,44 +87,41 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        // ? Every 4 ticks
-//        if (this.age % 4==0) {
-//            this.aspectProcessor.process();
-//        }
-        this.aspectProcessor.process();
+        // ToDo: Вызов в зависимости от скорости партикла (выбрать подходящую зависимость)
+        // Скорости нет = 4 тика
+        if (!this.hasMovement() || stoppedByCollision) {
+            if (this.age % 4==0) {
+                aspectProcessor.process();
+            }
+        } else {
+            aspectProcessor.process();
+        }
 
         super.tick();
     }
 
     @Override
     public void move(double dx, double dy, double dz) {
-        if (stoppedByCollision)
+        if (this.stoppedByCollision)
             return;
 
         double originalDx = dx;
         double originalDy = dy;
         double originalDz = dz;
 
-        boolean hasMovement = (dx!=0 || dy!=0 || dz!=0);
-
-        if (this.hasPhysics &&
-            hasMovement &&
-            dx * dx + dy * dy + dz * dz < MAXIMUM_COLLISION_VELOCITY_SQUARED
-        ) {
-            Vec3 vec = ParticleCollisionHelper.collideWithBlock(
+        if (this.shouldAttemptCollision(dx, dy, dz)) {
+            Vec3 collided = ParticleCollisionHelper.collideWithBlock(
                 new Vec3(dx, dy, dz),
                 this.getBoundingBox(),
                 this.level
             );
 
-            dx = vec.x;
-            dy = vec.y;
-            dz = vec.z;
-
-            hasMovement = (dx!=0 || dy!=0 || dz!=0);
+            dx = collided.x;
+            dy = collided.y;
+            dz = collided.z;
         }
 
-        if (hasMovement) {
+        if (hasMovement(dx, dy, dz)) {
             this.setBoundingBox(this.getBoundingBox().move(dx, dy, dz));
             this.setLocationFromBoundingbox();
         }
@@ -135,9 +135,23 @@ public class MagicParticle extends TextureSheetParticle {
         if (originalDx!=dx) {
             this.xd = 0.0D;
         }
+
         if (originalDz!=dz) {
             this.zd = 0.0D;
         }
+    }
+
+    private boolean shouldAttemptCollision(double dx, double dy, double dz) {
+        if (!hasPhysics || !hasMovement(dx, dy, dz)) {
+            return false;
+        }
+
+        double squaredLength = dx * dx + dy * dy + dz * dz;
+        return squaredLength < MAXIMUM_COLLISION_VELOCITY_SQUARED;
+    }
+
+    public boolean hasMovement() {
+        return hasMovement(this.xd, this.yd, this.zd);
     }
 
     @Override
@@ -173,8 +187,12 @@ public class MagicParticle extends TextureSheetParticle {
         return particleUUID;
     }
 
+    public boolean isStoppedByCollision() {
+        return stoppedByCollision;
+    }
+
     @NotNull
-    public Vec3 getDirectionPos() {
+    public Vec3 getDirectionVec() {
         return new Vec3(xd, yd, zd);
     }
 }

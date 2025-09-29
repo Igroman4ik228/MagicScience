@@ -53,8 +53,8 @@ public class Spell implements ISpell {
 
     private int calculateParticleSpeed() {
         for (var attribute : getMagicAttributes()) {
-            if (attribute instanceof IMagicParticleSpeed) {
-                return ((IMagicParticleSpeed) attribute).getParticleSpeed();
+            if (attribute instanceof IMagicParticleSpeed particleSpeedAttribute) {
+                return particleSpeedAttribute.getParticleSpeed();
             }
         }
 

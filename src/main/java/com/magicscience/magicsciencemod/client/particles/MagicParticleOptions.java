@@ -28,7 +28,7 @@ public record MagicParticleOptions(
             @NotNull
             public MagicParticleOptions fromCommand(
                 @NotNull ParticleType<MagicParticleOptions> type,
-                StringReader reader
+                @NotNull StringReader reader
             ) throws CommandSyntaxException {
                 reader.expect(' ');
                 // Читаем UUID в виде строки (формат стандартный 8-4-4-4-12)
@@ -75,7 +75,7 @@ public record MagicParticleOptions(
             @NotNull
             public MagicParticleOptions fromNetwork(
                 @NotNull ParticleType<MagicParticleOptions> type,
-                FriendlyByteBuf buf
+                @NotNull FriendlyByteBuf buf
             ) {
                 UUID ownerUUID = buf.readUUID();
                 int coreId = buf.readInt();
@@ -115,7 +115,7 @@ public record MagicParticleOptions(
     }
 
     @Override
-    public void writeToNetwork(FriendlyByteBuf buf) {
+    public void writeToNetwork(@NotNull FriendlyByteBuf buf) {
         buf.writeUUID(ownerUUID);
         buf.writeInt(coreId);
         buf.writeInt(coreStack);

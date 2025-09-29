@@ -30,7 +30,7 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
 
     public void handleCollision() {
         Vec3 center = particle.getBoundingBox().getCenter();
-        Vec3 direction = particle.getDirectionPos();
+        Vec3 direction = particle.getDirectionVec();
 
         // No speed
         if (direction.lengthSqr()==0) {
