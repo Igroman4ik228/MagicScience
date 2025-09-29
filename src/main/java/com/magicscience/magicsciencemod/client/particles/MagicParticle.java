@@ -138,7 +138,6 @@ public class MagicParticle extends TextureSheetParticle {
         if (originalDz!=dz) {
             this.zd = 0.0D;
         }
-
     }
 
     @Override

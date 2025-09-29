@@ -12,27 +12,23 @@ import net.minecraft.world.phys.shapes.Shapes;
 import net.minecraft.world.phys.shapes.VoxelShape;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class ParticleCollisionHelper {
-    private static final VoxelShape SHAPE_BLOCK = Shapes.block();
-//    private static final double EPSILON = 0.001D;
+    private static final VoxelShape SHAPE_FULL_BLOCK = Shapes.block();
 
-    public static @NotNull Vec3 collideWithBlock(
+    @NotNull
+    public static Vec3 collideWithBlock(
         @NotNull Vec3 deltaMovement,
         @NotNull AABB collisionBox,
         @NotNull Level level
-
-
     ) {
-        double dx = deltaMovement.x;
-        double dy = deltaMovement.y;
-        double dz = deltaMovement.z;
+        List<VoxelShape> potentialShapes = new ArrayList<>();
 
         AABB expanded = collisionBox.expandTowards(deltaMovement);
 
-        //?
-        var blockPositions = BlockPos.betweenClosed(
+        Iterable<BlockPos> blockPositions = BlockPos.betweenClosed(
             Mth.floor(expanded.minX),
             Mth.floor(expanded.minY),
             Mth.floor(expanded.minZ),
@@ -40,63 +36,31 @@ public class ParticleCollisionHelper {
             Mth.floor(expanded.maxY),
             Mth.floor(expanded.maxZ)
         );
-//
-//        int minX = Mth.floor(expanded.minX - 1.0E-7D) - 1;
-//        int maxX = Mth.floor(expanded.maxX + 1.0E-7D) + 1;
-//        int minY = Mth.floor(expanded.minY - 1.0E-7D) - 1;
-//        int maxY = Mth.floor(expanded.maxY + 1.0E-7D) + 1;
-//        int minZ = Mth.floor(expanded.minZ - 1.0E-7D) - 1;
-//        int maxZ = Mth.floor(expanded.maxZ + 1.0E-7D) + 1;
-//
-//        var blockPositions = BlockPos.betweenClosed(minX, minY, minZ, maxX, maxY, maxZ);
 
-        for (BlockPos blockPos : blockPositions) {
-            if (dx==0.0D && dy==0.0D && dz==0.0D)
-                break;
+        for (BlockPos pos : blockPositions) {
+            BlockState blockState = level.getBlockState(pos);
 
-            BlockState blockState = level.getBlockState(blockPos);
             if (blockState.isAir() || blockState.is(Blocks.MOVING_PISTON))
                 continue;
 
-            if (blockState.isCollisionShapeFullBlock(level, blockPos)) {
-//                int bx = blockPos.getX();
-//                int by = blockPos.getY();
-//                int bz = blockPos.getZ();
-//                AABB blockBox = new AABB(bx, by, bz, bx + 1.0D, by + 1.0D, bz + 1.0D);
-//                dx = collideAxis(collisionBox, dx, 1, 0, 0, blockBox);
-//                dy = collideAxis(collisionBox, dy, 0, 1, 0, blockBox);
-//                dz = collideAxis(collisionBox, dz, 0, 0, 1, blockBox);
-
-                VoxelShape blockShape = SHAPE_BLOCK.move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                Vec3 movement = collideWithShape(new Vec3(dx, dy, dz), collisionBox, blockShape);
-
-                dx = movement.x;
-                dy = movement.y;
-                dz = movement.z;
-            } else {
-                VoxelShape shape = blockState.getCollisionShape(level, blockPos);
+            VoxelShape shape = SHAPE_FULL_BLOCK;
+            if (!blockState.isCollisionShapeFullBlock(level, pos)) {
+                shape = blockState.getCollisionShape(level, pos);
 
                 if (shape.isEmpty())
                     continue;
-
-                VoxelShape movedShape = shape.move(blockPos.getX(), blockPos.getY(), blockPos.getZ());
-                Vec3 movement = collideWithShape(new Vec3(dx, dy, dz), collisionBox, movedShape);
-
-                dx = movement.x;
-                dy = movement.y;
-                dz = movement.z;
             }
+
+            potentialShapes.add(shape.move(pos.getX(), pos.getY(), pos.getZ()));
         }
 
-        return new Vec3(dx, dy, dz);
+        return collideWithShapes(deltaMovement, collisionBox, potentialShapes);
     }
 
-    private static Vec3 collideWithShape(Vec3 deltaMovement, AABB entityBB, @NotNull VoxelShape shape) {
-        if (shape.isEmpty()) {
+    @NotNull
+    private static Vec3 collideWithShapes(@NotNull Vec3 deltaMovement, @NotNull AABB entityBB, @NotNull List<VoxelShape> shapes) {
+        if (shapes.isEmpty())
             return deltaMovement;
-        }
-
-        var shapes = List.of(shape);
 
         double dx = deltaMovement.x;
         double dy = deltaMovement.y;
@@ -130,34 +94,5 @@ public class ParticleCollisionHelper {
         }
 
         return new Vec3(dx, dy, dz);
-    }
-
-    private static double collideAxis(
-        AABB collisionBox,
-        double movement,
-        int axisX, int axisY, int axisZ,
-        AABB blockBox
-    ) {
-        if (movement==0.0D)
-            return 0.0D;
-
-        AABB moved = collisionBox.move(axisX * movement, axisY * movement, axisZ * movement);
-        if (!moved.intersects(blockBox)) {
-            return movement;
-        }
-
-        if (movement > 0.0D) {
-            if (axisX==1)
-                return Math.min(movement, blockBox.minX - collisionBox.maxX);
-            if (axisY==1)
-                return Math.min(movement, blockBox.minY - collisionBox.maxY);
-            return Math.min(movement, blockBox.minZ - collisionBox.maxZ);
-        } else {
-            if (axisX==1)
-                return Math.max(movement, blockBox.maxX - collisionBox.minX);
-            if (axisY==1)
-                return Math.max(movement, blockBox.maxY - collisionBox.minY);
-            return Math.max(movement, blockBox.maxZ - collisionBox.minZ);
-        }
     }
 }
