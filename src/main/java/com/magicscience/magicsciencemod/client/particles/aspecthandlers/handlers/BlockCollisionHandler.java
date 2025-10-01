@@ -54,7 +54,7 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
         );
     }
 
-    private void rayTraceBlock(Vec3 start, Vec3 direction) {
+    private void rayTraceBlock(@NotNull Vec3 start, Vec3 direction) {
         Vec3 end = start.add(direction);
 
         var blockHitResult = level.clip(

@@ -31,11 +31,11 @@ public class MagicParticle extends TextureSheetParticle {
     private boolean stoppedByCollision;
 
     public MagicParticle(
-        ClientLevel level,
+        @NotNull ClientLevel level,
         double x, double y, double z,
         double xd, double yd, double zd,
-        SpriteSet sprites,
-        SpellData spellData
+        @NotNull SpriteSet sprites,
+        @NotNull SpellData spellData
     ) {
         super(level, x, y, z);
         this.xd = xd;
@@ -74,13 +74,13 @@ public class MagicParticle extends TextureSheetParticle {
     }
 
     public static boolean hasMovement(double xd, double yd, double zd) {
-        return xd!=0.0D || yd!=0.0D || zd!=0.0D;
+        return xd != 0.0D || yd != 0.0D || zd != 0.0D;
     }
 
     private void initGravity() {
         var spell = SpellConverter.toSpell(spellData);
         var gravityAttribute = spell.getMagicAttributes(GravityAttribute.class);
-        if (gravityAttribute!=null) {
+        if (gravityAttribute != null) {
             this.gravity = gravityAttribute.getGravity();
         }
     }
@@ -90,7 +90,7 @@ public class MagicParticle extends TextureSheetParticle {
         // ToDo: Вызов в зависимости от скорости партикла (выбрать подходящую зависимость)
         // Скорости нет = 4 тика
         if (!this.hasMovement() || stoppedByCollision) {
-            if (this.age % 4==0) {
+            if (this.age % 4 == 0) {
                 aspectProcessor.process();
             }
         } else {
@@ -130,13 +130,13 @@ public class MagicParticle extends TextureSheetParticle {
             this.stoppedByCollision = true;
         }
 
-        this.onGround = originalDy!=dy && originalDy < 0.0D;
+        this.onGround = originalDy != dy && originalDy < 0.0D;
 
-        if (originalDx!=dx) {
+        if (originalDx != dx) {
             this.xd = 0.0D;
         }
 
-        if (originalDz!=dz) {
+        if (originalDz != dz) {
             this.zd = 0.0D;
         }
     }

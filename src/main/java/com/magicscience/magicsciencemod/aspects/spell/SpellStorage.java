@@ -191,6 +191,7 @@ public class SpellStorage {
      * Returns the default spell for the player.
      */
     private static Spell getDefaultSpell(@NotNull Player player) {
+        // ToDo: delete this or debug mod
         return new Spell(
             CORE_FACTORY.create(CoreTypes.FIRE, 1),
             List.of(

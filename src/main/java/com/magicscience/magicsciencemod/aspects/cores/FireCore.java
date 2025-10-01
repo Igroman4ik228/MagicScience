@@ -43,9 +43,9 @@ public class FireCore extends BaseMagicCore {
     }
 
     private void fillBlockActionMaps() {
-        this.blockActionMap.put(TntBlock.class, FireCollision::collisionTnt);
+        this.blockActions.put(TntBlock.class, FireCollision::collisionTnt);
 
-        this.entityActionMap.put(Creeper.class, FireCollision::collisionCreeper);
+        this.entityActions.put(Creeper.class, FireCollision::collisionCreeper);
     }
 
     @Override
