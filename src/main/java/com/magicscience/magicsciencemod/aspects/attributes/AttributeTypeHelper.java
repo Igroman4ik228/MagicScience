@@ -7,9 +7,13 @@ import org.jetbrains.annotations.Nullable;
 public final class AttributeTypeHelper {
     private static final Class<AttributeTypes> enumClass = AttributeTypes.class;
 
-    @NotNull
+    @Nullable
     public static IMagicAttribute findInstance(int id) {
-        return IMagicType.findInstance(id, enumClass);
+        try {
+            return IMagicType.findInstance(id, enumClass);
+        } catch (IllegalArgumentException e) {
+            return null;
+        }
     }
 
     public static int findId(@Nullable IMagicAttribute attribute) {

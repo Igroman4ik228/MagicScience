@@ -14,28 +14,24 @@ public record ScrollData(
     int @NotNull [] attributeIds,
     int @NotNull [] attributeStack,
     int structureId,
-    int structureStack,
-    int particleSpeed,
-    int particleLifeTime
+    int structureStack
 ) {
     @Override
     public boolean equals(Object o) {
-        if (this==o) return true;
-        if (o==null || getClass()!=o.getClass()) return false;
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         ScrollData that = (ScrollData) o;
-        return coreId==that.coreId &&
-            coreStack==that.coreStack &&
-            structureId==that.structureId &&
-            structureStack==that.structureStack &&
-            particleSpeed==that.particleSpeed &&
-            particleLifeTime==that.particleLifeTime &&
+        return coreId == that.coreId &&
+            coreStack == that.coreStack &&
+            structureId == that.structureId &&
+            structureStack == that.structureStack &&
             Arrays.equals(attributeIds, that.attributeIds) &&
             Arrays.equals(attributeStack, that.attributeStack);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(coreId, coreStack, structureId, structureStack, particleSpeed, particleLifeTime,
+        return Objects.hash(coreId, coreStack, structureId, structureStack,
             Arrays.hashCode(attributeIds), Arrays.hashCode(attributeStack));
     }
 }

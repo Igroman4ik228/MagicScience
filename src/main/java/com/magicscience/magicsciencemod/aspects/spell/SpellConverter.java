@@ -55,9 +55,7 @@ public class SpellConverter {
             spellData.attributeIds(),
             spellData.attributeStack(),
             spellData.structureId(),
-            spellData.structureStack(),
-            spellData.particleSpeed(),
-            spellData.particleLifeTime()
+            spellData.structureStack()
         );
     }
 

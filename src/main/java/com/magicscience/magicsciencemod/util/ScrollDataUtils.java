@@ -7,6 +7,8 @@ import net.minecraft.nbt.IntArrayTag;
 import net.minecraft.nbt.ListTag;
 import net.minecraft.nbt.Tag;
 import net.minecraft.world.item.ItemStack;
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 import org.slf4j.Logger;
 
 import java.util.UUID;
@@ -22,19 +24,17 @@ public final class ScrollDataUtils {
     private static final String kAttrStacks = "AttributeStacks";
     private static final String kStructId = "StructureId";
     private static final String kStructStack = "StructureStack";
-    private static final String kParticleSpeed = "ParticleSpeed";
-    private static final String kParticleLife = "ParticleLifeTime";
 
     private ScrollDataUtils() {
     }
 
     // ToDo: Change Object to concrete type
-    public static void writeScrollData(ScrollData data, Object target) {
+    public static void writeScrollData(@NotNull ScrollData data, Object target) {
         CompoundTag tag = target instanceof ItemStack stack
             ? stack.getOrCreateTag()
-            :(CompoundTag) target;
+            : (CompoundTag) target;
 
-        if (data.authorUUID()!=null) {
+        if (data.authorUUID() != null) {
             tag.putUUID(kAuthorUUID, data.authorUUID());
         }
         tag.putInt(kCoreId, data.coreId());
@@ -43,17 +43,15 @@ public final class ScrollDataUtils {
         tag.put(kAttrStacks, new IntArrayTag(data.attributeStack()));
         tag.putInt(kStructId, data.structureId());
         tag.putInt(kStructStack, data.structureStack());
-        tag.putInt(kParticleSpeed, data.particleSpeed());
-        tag.putInt(kParticleLife, data.particleLifeTime());
     }
 
     // ToDo: Change Object to concrete type
-    public static ScrollData readScrollData(Object source) {
+    public static @Nullable ScrollData readScrollData(Object source) {
         CompoundTag tag = source instanceof ItemStack stack
             ? stack.getTag()
-            :(CompoundTag) source;
+            : (CompoundTag) source;
 
-        if (tag==null) {
+        if (tag == null) {
             LOGGER.info("No NBT tag found for source: {}", source);
             return null;
         }
@@ -70,9 +68,7 @@ public final class ScrollDataUtils {
             getIntArrayFromTag(tag, kAttrIds),
             getIntArrayFromTag(tag, kAttrStacks),
             tag.getInt(kStructId),
-            tag.getInt(kStructStack),
-            tag.getInt(kParticleSpeed),
-            tag.getInt(kParticleLife)
+            tag.getInt(kStructStack)
         );
     }
 
@@ -86,12 +82,12 @@ public final class ScrollDataUtils {
         if (nbtTag instanceof IntArrayTag) {
             return tag.getIntArray(key);
         }
-        if (nbtTag instanceof ListTag listTag && listTag.getElementType()==Tag.TAG_INT) {
+        if (nbtTag instanceof ListTag listTag && listTag.getElementType() == Tag.TAG_INT) {
             return IntStream.range(0, listTag.size())
                 .map(listTag::getInt)
                 .toArray();
         }
-        LOGGER.warn("Invalid or missing tag for key {}: {}", key, nbtTag==null ? "null":nbtTag.getType().getName());
+        LOGGER.warn("Invalid or missing tag for key {}: {}", key, nbtTag == null ? "null" : nbtTag.getType().getName());
         return new int[0];
     }
 }

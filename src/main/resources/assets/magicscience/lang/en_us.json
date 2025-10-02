@@ -10,5 +10,6 @@
   "aspect.magicscience.wallstructure": "Wall",
   "aspect.magicscience.raystructure": "Ray",
   "aspect.magicscience.vectorattribute": "Vector",
-  "aspect.magicscience.selfspectreattribute": "SelfSpectre"
+  "aspect.magicscience.selfspectreattribute": "SelfSpectre",
+  "tooltip.magicscience.scroll.empty": "Empty"
 }
