@@ -67,17 +67,19 @@ public abstract class BaseMagicCore implements IMagicCore {
         var block = level.getBlockState(blockPos).getBlock();
         var blockClass = block.getClass();
 
-        var action = this.blockActions.get(blockClass);
-
-        if (action==null) {
-            action = this.groupBlockActions.get(blockClass);
-            if (action==null) {
-                commonProcessingBlock(blockHitResult, sender, objects);
-            }
+        var blockAction = this.blockActions.get(blockClass);
+        if (blockAction!=null) {
+            blockAction.execute(blockHitResult, sender, objects);
         }
 
-        if (action==null) return;
-        action.execute(blockHitResult, sender, objects);
+        var groupAction = this.groupBlockActions.get(blockClass);
+        if (groupAction!=null) {
+            groupAction.execute(blockHitResult, sender, objects);
+        }
+
+        if (blockAction==null && groupAction==null) {
+            commonProcessingBlock(blockHitResult, sender, objects);
+        }
     }
 
     protected abstract void commonProcessingBlock(
@@ -94,18 +96,21 @@ public abstract class BaseMagicCore implements IMagicCore {
     ) {
         var entityClass = entity.getClass();
 
-        var action = this.entityActions.get(entityClass);
-
-        if (action==null) {
-            action = this.groupEntityActions.get(entityClass);
-            if (action==null) {
-                commonProcessingEntity(entity, sender, objects);
-            }
+        var entityAction = this.entityActions.get(entityClass);
+        if (entityAction!=null) {
+            entityAction.execute(entity, sender, objects);
         }
 
-        if (action==null) return;
-        action.execute(entity, sender, objects);
+        var groupAction = this.groupEntityActions.get(entityClass);
+        if (groupAction!=null) {
+            groupAction.execute(entity, sender, objects);
+        }
+
+        if (entityAction==null && groupAction==null) {
+            commonProcessingEntity(entity, sender, objects);
+        }
     }
+
 
     protected abstract void commonProcessingEntity(
         @NotNull Entity entity,
@@ -117,5 +122,17 @@ public abstract class BaseMagicCore implements IMagicCore {
     @NotNull
     public Collection<IMagicEffect> getMagicEffects() {
         return effects;
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this==o) return true;
+        if (o==null) return false;
+        return this.getClass()==o.getClass();
+    }
+
+    @Override
+    public int hashCode() {
+        return this.getClass().hashCode();
     }
 }
