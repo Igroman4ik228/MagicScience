@@ -4,13 +4,15 @@ import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.MagicParticleCreator;
 import com.magicscience.magicsciencemod.network.IClientPacket;
 import com.mojang.logging.LogUtils;
-import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
+
+import java.util.Arrays;
 
 public class ClientSpawnParticlePacket implements IClientPacket {
     private static final Logger LOGGER = LogUtils.getLogger();
@@ -32,7 +34,7 @@ public class ClientSpawnParticlePacket implements IClientPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(@NotNull FriendlyByteBuf buf) {
         this.spellData.encode(buf);
         buf.writeDouble(position.x);
         buf.writeDouble(position.y);
@@ -44,20 +46,17 @@ public class ClientSpawnParticlePacket implements IClientPacket {
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void handle() {
-        var player = Minecraft.getInstance().player;
-        if (player==null) return;
-
+    public void handle(@NotNull LocalPlayer player) {
         LOGGER.info("Received ClientboundSpawnParticlePacket:");
         LOGGER.info("  Owner ID: {}", spellData.ownerUUID());
         LOGGER.info("  Core ID: {}", spellData.coreId());
         LOGGER.info("  Core Stack: {}", spellData.coreStack());
 
-        LOGGER.info("  Attribute IDs: {}", java.util.Arrays.toString(spellData.attributeIds()));
-        LOGGER.info("  Attribute Stack: {}", java.util.Arrays.toString(spellData.attributeStack()));
+        LOGGER.info("  Attribute IDs: {}", Arrays.toString(spellData.attributeIds()));
+        LOGGER.info("  Attribute Stack: {}", Arrays.toString(spellData.attributeStack()));
 
         LOGGER.info("  Structure ID: {}", spellData.structureId());
-        LOGGER.info("  Structure ID: {}", spellData.structureStack());
+        LOGGER.info("  Structure Stack: {}", spellData.structureStack());
 
         LOGGER.info("  Particle Speed: {}", spellData.particleSpeed());
 

@@ -40,7 +40,7 @@ public class Scroll extends Item {
         @NotNull TooltipFlag flag
     ) {
         ScrollData data = ScrollDataUtils.readScrollData(stack);
-        if (data == null) {
+        if (data==null) {
             tooltip.add(Component.translatable("tooltip.magicscience.scroll.empty")
                 .withStyle(ChatFormatting.GRAY));
             return;
@@ -55,9 +55,9 @@ public class Scroll extends Item {
         // Attributes
         for (int i = 0; i < data.attributeIds().length; i++) {
             int attrId = data.attributeIds()[i];
-            IMagicAttribute attr = AttributeTypeHelper.findInstance(attrId);
 
-            if (attr != null) {
+            IMagicAttribute attr = AttributeTypeHelper.findInstance(attrId);
+            if (attr!=null) {
                 tooltip.add(Component.translatable(attr.getTranslationKey())
                     .append(" x" + data.attributeStack()[i])
                     .withStyle(ChatFormatting.AQUA));
@@ -66,8 +66,10 @@ public class Scroll extends Item {
 
         // Structure
         IMagicStructure structure = StructureTypeHelper.findInstance(data.structureId());
-        tooltip.add(Component.translatable(structure.getTranslationKey())
-            .append(" x" + data.structureStack())
-            .withStyle(ChatFormatting.DARK_GREEN));
+        if (structure!=null) {
+            tooltip.add(Component.translatable(structure.getTranslationKey())
+                .append(" x" + data.structureStack())
+                .withStyle(ChatFormatting.DARK_GREEN));
+        }
     }
 }

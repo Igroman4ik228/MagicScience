@@ -1,19 +1,21 @@
 package com.magicscience.magicsciencemod.registry;
 
 import com.magicscience.magicsciencemod.network.IClientPacket;
-import com.magicscience.magicsciencemod.network.IPacket;
 import com.magicscience.magicsciencemod.network.IServerPacket;
 import com.magicscience.magicsciencemod.network.magicparticles.ClientRemoveParticlePacket;
 import com.magicscience.magicsciencemod.network.magicparticles.ClientSpawnParticlePacket;
 import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleBlockHitPacket;
 import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleEntityHitPacket;
 import com.magicscience.magicsciencemod.network.mana.ClientSyncManaPacket;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraftforge.network.NetworkDirection;
 import net.minecraftforge.network.NetworkEvent;
 import net.minecraftforge.network.NetworkRegistry;
 import net.minecraftforge.network.simple.SimpleChannel;
+import org.jetbrains.annotations.NotNull;
 
 import java.util.Optional;
 import java.util.function.BiConsumer;
@@ -35,11 +37,6 @@ public class ModNetwork {
 
     public static void register() {
         // Server
-        registerServer(
-            ServerParticleBlockHitPacket.class,
-            ServerParticleBlockHitPacket::encode,
-            ServerParticleBlockHitPacket::new
-        );
         registerServer(
             ServerParticleBlockHitPacket.class,
             ServerParticleBlockHitPacket::encode,
@@ -99,40 +96,47 @@ public class ModNetwork {
         );
     }
 
-    private static <T extends IPacket> void handleCommon(
-        T msg,
-        Supplier<NetworkEvent.Context> ctxSupplier,
-        Runnable mainTask
-    ) {
-        NetworkEvent.Context ctx = ctxSupplier.get();
-
-        if (!msg.prepare()) {
-            ctx.setPacketHandled(true);
-            return;
-        }
-
-        ctx.enqueueWork(mainTask);
-
-        ctx.setPacketHandled(true);
-    }
-
-
+    @NotNull
     private static <T extends IServerPacket> BiConsumer<T, Supplier<NetworkEvent.Context>> createServerHandler() {
         return (msg, ctxSupplier) -> {
             NetworkEvent.Context ctx = ctxSupplier.get();
+
+            if (!msg.prepare()) {
+                ctx.setPacketHandled(true);
+                return;
+            }
+
             ServerPlayer player = ctx.getSender();
             if (player==null) {
                 ctx.setPacketHandled(true);
                 return;
             }
 
-            handleCommon(msg, ctxSupplier, () -> msg.handle(player));
+            ctx.enqueueWork(() -> msg.handle(player));
 
             ctx.setPacketHandled(true);
         };
     }
 
+    @NotNull
     private static <T extends IClientPacket> BiConsumer<T, Supplier<NetworkEvent.Context>> createClientHandler() {
-        return (msg, ctxSupplier) -> handleCommon(msg, ctxSupplier, msg::handle);
+        return (msg, ctxSupplier) -> {
+            NetworkEvent.Context ctx = ctxSupplier.get();
+
+            if (!msg.prepare()) {
+                ctx.setPacketHandled(true);
+                return;
+            }
+
+            LocalPlayer player = Minecraft.getInstance().player;
+            if (player==null) {
+                ctx.setPacketHandled(true);
+                return;
+            }
+
+            ctx.enqueueWork(() -> msg.handle(player));
+            
+            ctx.setPacketHandled(true);
+        };
     }
 }

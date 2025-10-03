@@ -69,14 +69,14 @@ public abstract class BaseMagicCore implements IMagicCore {
 
         var action = this.blockActions.get(blockClass);
 
-        if (action == null) {
+        if (action==null) {
             action = this.groupBlockActions.get(blockClass);
-            if (action == null) {
+            if (action==null) {
                 commonProcessingBlock(blockHitResult, sender, objects);
             }
         }
 
-        if (action == null) return;
+        if (action==null) return;
         action.execute(blockHitResult, sender, objects);
     }
 
@@ -96,14 +96,14 @@ public abstract class BaseMagicCore implements IMagicCore {
 
         var action = this.entityActions.get(entityClass);
 
-        if (action == null) {
+        if (action==null) {
             action = this.groupEntityActions.get(entityClass);
-            if (action == null) {
+            if (action==null) {
                 commonProcessingEntity(entity, sender, objects);
             }
         }
 
-        if (action == null) return;
+        if (action==null) return;
         action.execute(entity, sender, objects);
     }
 
@@ -117,17 +117,5 @@ public abstract class BaseMagicCore implements IMagicCore {
     @NotNull
     public Collection<IMagicEffect> getMagicEffects() {
         return effects;
-    }
-
-    @Override
-    public boolean equals(Object o) {
-        if (this == o) return true;
-        if (o == null) return false;
-        return this.getClass() == o.getClass();
-    }
-
-    @Override
-    public int hashCode() {
-        return this.getClass().hashCode();
     }
 }

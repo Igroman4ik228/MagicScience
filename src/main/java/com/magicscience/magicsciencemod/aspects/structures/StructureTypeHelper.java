@@ -1,22 +1,29 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
-import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import com.magicscience.magicsciencemod.aspects.MagicTypeHelper;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 public final class StructureTypeHelper {
     private static final Class<StructureTypes> enumClass = StructureTypes.class;
 
-    @NotNull
+    @Nullable
     public static IMagicStructure findInstance(int id) {
-        return IMagicType.findInstance(id, enumClass);
+        if (id==StructureTypes.NONE.getId())
+            return null;
+
+        return MagicTypeHelper.findInstance(id, enumClass);
     }
 
-    public static int findId(@NotNull IMagicStructure structure) {
-        return IMagicType.findId(structure, enumClass);
+    public static int findId(@Nullable IMagicStructure structure) {
+        if (structure==null)
+            return StructureTypes.NONE.getId();
+
+        return MagicTypeHelper.findId(structure, enumClass);
     }
 
     @NotNull
     public static StructureTypes findType(int id) {
-        return IMagicType.findType(id, enumClass);
+        return MagicTypeHelper.findType(id, enumClass);
     }
 }

@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
-import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import com.magicscience.magicsciencemod.aspects.MagicTypeHelper;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,19 +9,21 @@ public final class AttributeTypeHelper {
 
     @Nullable
     public static IMagicAttribute findInstance(int id) {
-        try {
-            return IMagicType.findInstance(id, enumClass);
-        } catch (IllegalArgumentException e) {
+        if (id==AttributeTypes.NONE.getId())
             return null;
-        }
+
+        return MagicTypeHelper.findInstance(id, enumClass);
     }
 
     public static int findId(@Nullable IMagicAttribute attribute) {
-        return IMagicType.findId(attribute, enumClass);
+        if (attribute==null)
+            return AttributeTypes.NONE.getId();
+
+        return MagicTypeHelper.findId(attribute, enumClass);
     }
 
     @NotNull
     public static AttributeTypes findType(int id) {
-        return IMagicType.findType(id, enumClass);
+        return MagicTypeHelper.findType(id, enumClass);
     }
 }

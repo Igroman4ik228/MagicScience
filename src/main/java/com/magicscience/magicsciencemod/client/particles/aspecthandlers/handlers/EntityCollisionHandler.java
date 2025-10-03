@@ -19,10 +19,10 @@ public class EntityCollisionHandler extends BaseCollisionHandler<Entity> {
     public EntityCollisionHandler(
         @NotNull MagicParticle particle,
         @NotNull SpellData spellData,
-        @NotNull Predicate<Entity> blockFilter,
+        @NotNull Predicate<Entity> entityFilter,
         @NotNull ClientLevel level
     ) {
-        super(particle, spellData, blockFilter, level);
+        super(particle, spellData, entityFilter, level);
 
         this.damage = CORE_FACTORY.createById(
             spellData.coreId(),
