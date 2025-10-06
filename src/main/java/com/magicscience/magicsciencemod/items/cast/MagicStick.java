@@ -22,6 +22,8 @@ import net.minecraftforge.network.PacketDistributor;
 import org.jetbrains.annotations.NotNull;
 import org.slf4j.Logger;
 
+import java.util.Arrays;
+
 public class MagicStick extends Item implements ICast {
     private static final Logger LOGGER = LogUtils.getLogger();
 
@@ -94,7 +96,18 @@ public class MagicStick extends Item implements ICast {
         }
 
         LOGGER.info("ServerboundCastParticlePacket");
-        LOGGER.info("SpellData received: {}", spellData);
+        LOGGER.info("SpellData received: ownerUUID={}, coreId={}, coreStack={}, attributeIds={}, attributeStack={}, structureId={}, structureStack={}, particleSpeed={}, particleLifeTime={}",
+            spellData.ownerUUID(),
+            spellData.coreId(),
+            spellData.coreStack(),
+            Arrays.toString(spellData.attributeIds()),
+            Arrays.toString(spellData.attributeStack()),
+            spellData.structureId(),
+            spellData.structureStack(),
+            spellData.particleSpeed(),
+            spellData.particleLifeTime()
+        );
+
 
         ModNetwork.CHANNEL.send(
             PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),

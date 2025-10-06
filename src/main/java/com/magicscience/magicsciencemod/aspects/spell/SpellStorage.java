@@ -88,7 +88,7 @@ public class SpellStorage {
             ItemStack stack = player.getInventory().getItem(i);
             if (stack.getItem() instanceof Scroll) {
                 ScrollData data = ScrollDataUtils.readScrollData(stack);
-                if (data != null && !spells.contains(data)) {
+                if (data!=null && !spells.contains(data)) {
                     spells.add(data);
                     LOGGER.debug("Added spell from inventory slot {}: {}", i, data);
                 }
@@ -128,13 +128,13 @@ public class SpellStorage {
      */
     private static void updateSelectedIndex(@NotNull ItemStack castStack, @NotNull List<ScrollData> newList, ScrollData selectedSpell) {
         int currentIndex = getSelectedIndex(castStack);
-        if (selectedSpell != null && currentIndex >= 0 && currentIndex < newList.size() && Objects.equals(newList.get(currentIndex), selectedSpell)) {
+        if (selectedSpell!=null && currentIndex >= 0 && currentIndex < newList.size() && Objects.equals(newList.get(currentIndex), selectedSpell)) {
             // Current index is still valid, no need to change
             LOGGER.debug("Preserving current index: {}", currentIndex);
             return;
         }
 
-        if (selectedSpell != null) {
+        if (selectedSpell!=null) {
             for (int i = 0; i < newList.size(); i++) {
                 if (Objects.equals(newList.get(i), selectedSpell)) {
                     setSelectedIndex(castStack, i);
@@ -144,8 +144,8 @@ public class SpellStorage {
             }
         }
 
-        setSelectedIndex(castStack, newList.isEmpty() ? -1 : 0);
-        LOGGER.debug("Resetting index to {} (list empty: {})", newList.isEmpty() ? -1 : 0, newList.isEmpty());
+        setSelectedIndex(castStack, newList.isEmpty() ? -1:0);
+        LOGGER.debug("Resetting index to {} (list empty: {})", newList.isEmpty() ? -1:0, newList.isEmpty());
     }
 
     /**
@@ -159,7 +159,7 @@ public class SpellStorage {
         ListTag listTag = tag.getList(NBT_SPELL_LIST, Tag.TAG_COMPOUND);
         for (int i = 0; i < listTag.size(); i++) {
             ScrollData data = ScrollDataUtils.readScrollData(listTag.getCompound(i));
-            if (data != null) {
+            if (data!=null) {
                 list.add(data);
             }
         }
@@ -172,7 +172,7 @@ public class SpellStorage {
     private static int getSelectedIndex(@NotNull ItemStack stack) {
         return stack.hasTag() && stack.getTag().contains(NBT_SELECTED_INDEX)
             ? stack.getTag().getInt(NBT_SELECTED_INDEX)
-            : -1;
+            :-1;
     }
 
     /**
@@ -192,14 +192,12 @@ public class SpellStorage {
      */
     private static Spell getDefaultSpell(@NotNull Player player) {
         // ToDo: delete this or debug mod
-        return new Spell(
-            CORE_FACTORY.create(CoreTypes.FIRE, 1),
-            List.of(
+        return Spell.builder(CORE_FACTORY.create(CoreTypes.FIRE, 1), player.getUUID())
+            .magicAttributes(
                 ATTRIBUTE_FACTORY.create(AttributeTypes.SELF_SPECTRE, 1),
                 ATTRIBUTE_FACTORY.create(AttributeTypes.VECTOR, 1)
-            ),
-            STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 3),
-            player.getUUID()
-        );
+            )
+            .magicStructure(STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 3))
+            .build();
     }
 }

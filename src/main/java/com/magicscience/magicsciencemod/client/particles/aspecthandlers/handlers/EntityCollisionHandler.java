@@ -33,14 +33,16 @@ public class EntityCollisionHandler extends BaseCollisionHandler<Entity> {
     @Override
     public void handleCollision() {
         var entities = level.getEntities((Entity) null, particle.getBoundingBox(), filter);
-        if (entities.isEmpty()) return;
+        if (entities.isEmpty())
+            return;
+
         handleEntityCollision(entities.get(0));
     }
 
     private void handleEntityCollision(@NotNull Entity entity) {
         ModNetwork.CHANNEL.sendToServer(
             new ServerParticleEntityHitPacket(
-                entity.getId(),
+                entity.getUUID(),
                 spellData.coreId(),
                 damage,
                 spellData.ownerUUID()

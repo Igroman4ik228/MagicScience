@@ -7,75 +7,38 @@ import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
-import java.util.ArrayList;
-import java.util.List;
-import java.util.UUID;
+import java.util.*;
 
 public class Spell implements ISpell {
     private final @NotNull IMagicCore magicCore;
-    private final @NotNull List<IMagicAttribute> magicAttributes;
+    private final @NotNull Set<IMagicAttribute> magicAttributes;
     private final @Nullable IMagicStructure magicStructure;
     private final @NotNull UUID ownerUUID;
     private final int manaCost;
     private final int particleSpeed;
     private final int particleLifeTime;
 
-    public Spell(
+    private Spell(
         @NotNull IMagicCore magicCore,
-        @NotNull List<IMagicAttribute> magicAttributes,
+        @NotNull Set<IMagicAttribute> magicAttributes,
         @Nullable IMagicStructure magicStructure,
-        @NotNull UUID ownerUUID
+        @NotNull UUID ownerUUID,
+        int manaCost,
+        int particleSpeed,
+        int particleLifeTime
     ) {
         this.magicCore = magicCore;
         this.magicAttributes = magicAttributes;
         this.magicStructure = magicStructure;
         this.ownerUUID = ownerUUID;
-
-        this.manaCost = calculateManaCost();
-        this.particleSpeed = calculateParticleSpeed();
-        this.particleLifeTime = calculateParticleLifeTime();
+        this.manaCost = manaCost;
+        this.particleSpeed = particleSpeed;
+        this.particleLifeTime = particleLifeTime;
     }
 
-    public Spell(
-        @NotNull IMagicCore magicCore,
-        @NotNull List<IMagicAttribute> magicAttributes,
-        @NotNull UUID ownerUUID
-    ) {
-        this(magicCore, magicAttributes, null, ownerUUID);
-    }
-
-    public Spell(
-        @NotNull IMagicCore magicCore,
-        @NotNull UUID ownerUUID
-    ) {
-        this(magicCore, new ArrayList<>(), null, ownerUUID);
-    }
-
-    private int calculateParticleSpeed() {
-        for (var attribute : getMagicAttributes()) {
-            if (attribute instanceof IMagicParticleSpeed particleSpeedAttribute) {
-                return particleSpeedAttribute.getParticleSpeed();
-            }
-        }
-
-        return 0;
-    }
-
-    public int calculateManaCost() {
-        int totalCost = magicCore.getManaCost();
-
-        for (IMagicAttribute attribute : magicAttributes) {
-            totalCost += attribute.getManaCost();
-        }
-
-        if (magicStructure!=null)
-            totalCost += magicStructure.getManaCost();
-
-        return totalCost;
-    }
-
-    private int calculateParticleLifeTime() {
-        return magicCore.getParticleLifeTime();
+    @NotNull
+    public static Builder builder(@NotNull IMagicCore core, @NotNull UUID ownerUUID) {
+        return new Builder(core, ownerUUID);
     }
 
     @NotNull
@@ -84,16 +47,17 @@ public class Spell implements ISpell {
     }
 
     @NotNull
-    public List<IMagicAttribute> getMagicAttributes() {
+    public Set<IMagicAttribute> getMagicAttributes() {
         return magicAttributes;
     }
 
     @Nullable
-    public <T extends IMagicAttribute> T getMagicAttributes(Class<T> cls) {
+    public <T extends IMagicAttribute> T getMagicAttribute(Class<T> cls) {
         for (var attr : magicAttributes) {
             if (cls.isInstance(attr))
                 return cls.cast(attr);
         }
+
         return null;
     }
 
@@ -118,5 +82,84 @@ public class Spell implements ISpell {
 
     public int getParticleLifeTime() {
         return particleLifeTime;
+    }
+
+    public static class Builder {
+        private final @NotNull Set<IMagicAttribute> attributes = new LinkedHashSet<>();
+        private final @NotNull IMagicCore core;
+        private final UUID ownerUUID;
+        private @Nullable IMagicStructure structure = null;
+
+        private Builder(@NotNull IMagicCore core, @NotNull UUID ownerUUID) {
+            this.core = Objects.requireNonNull(core, "magicCore is required");
+            this.ownerUUID = Objects.requireNonNull(ownerUUID, "ownerUUID is required");
+        }
+
+        private static int calculateManaCost(
+            @NotNull IMagicCore core,
+            @NotNull Set<IMagicAttribute> attributes,
+            @Nullable IMagicStructure structure
+        ) {
+            int totalCost = core.getManaCost();
+
+            for (IMagicAttribute attribute : attributes) {
+                totalCost += attribute.getManaCost();
+            }
+
+            if (structure!=null)
+                totalCost += structure.getManaCost();
+
+            return totalCost;
+        }
+
+        private static int calculateParticleSpeed(@NotNull Set<IMagicAttribute> attributes) {
+            for (var attribute : attributes) {
+                if (attribute instanceof IMagicParticleSpeed particleSpeedAttribute) {
+                    return particleSpeedAttribute.getParticleSpeed();
+                }
+            }
+
+            return 0;
+        }
+
+        private static int calculateParticleLifeTime(@NotNull IMagicCore core) {
+            return core.getParticleLifeTime();
+        }
+
+        public Builder magicAttributes(@NotNull Collection<IMagicAttribute> attrs) {
+            for (IMagicAttribute attr : attrs) {
+                boolean exists = attributes.stream().anyMatch(a -> a.getClass()==attr.getClass());
+                if (!exists)
+                    attributes.add(attr);
+            }
+
+            return this;
+        }
+
+        public Builder magicAttributes(@NotNull IMagicAttribute... attrs) {
+            return magicAttributes(Arrays.asList(attrs));
+        }
+
+        public Builder magicStructure(@NotNull IMagicStructure structure) {
+            this.structure = structure;
+            return this;
+        }
+
+        @NotNull
+        public Spell build() {
+            int manaCost = calculateManaCost(core, attributes, structure);
+            int particleSpeed = calculateParticleSpeed(attributes);
+            int particleLifeTime = calculateParticleLifeTime(core);
+
+            return new Spell(
+                core,
+                attributes,
+                structure,
+                ownerUUID,
+                manaCost,
+                particleSpeed,
+                particleLifeTime
+            );
+        }
     }
 }

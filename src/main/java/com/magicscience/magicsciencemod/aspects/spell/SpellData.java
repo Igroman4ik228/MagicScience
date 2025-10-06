@@ -16,7 +16,8 @@ public record SpellData(
     int particleSpeed,
     int particleLifeTime
 ) {
-    public static SpellData decode(FriendlyByteBuf buf) {
+    @NotNull
+    public static SpellData decode(@NotNull FriendlyByteBuf buf) {
         return new SpellData(
             buf.readUUID(),               // ownerUUID
             buf.readVarInt(),            // coreId
@@ -30,7 +31,7 @@ public record SpellData(
         );
     }
 
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(@NotNull FriendlyByteBuf buf) {
         buf.writeUUID(this.ownerUUID());
         buf.writeVarInt(this.coreId());
         buf.writeVarInt(this.coreStack());

@@ -1,19 +1,18 @@
 package com.magicscience.magicsciencemod.math;
 
+import net.minecraft.util.RandomSource;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
-import java.util.Random;
-
 public class MathUtil {
-    public static double @NotNull [] randomAngles(Random random) {
+    public static double @NotNull [] randomAngles(@NotNull RandomSource random) {
         double theta = Math.acos(2 * random.nextDouble() - 1); // [0, π]
         double phi = 2 * Math.PI * random.nextDouble();      // [0, 2π)
         return new double[]{theta, phi};
     }
 
     @NotNull
-    public static Vec3 sphericalCoordinatesXYZ(Vec3 basePosition, double r, double theta, double phi) {
+    public static Vec3 sphericalCoordinatesXYZ(@NotNull Vec3 basePosition, double r, double theta, double phi) {
         double x = r * Math.sin(theta) * Math.cos(phi);
         double y = r * Math.sin(theta) * Math.sin(phi);
         double z = r * Math.cos(theta);
@@ -21,7 +20,7 @@ public class MathUtil {
     }
 
     @NotNull
-    public static Vec3[] localSystemCoordinatesUpRight(Vec3 lookDir, Vec3 worldUp) {
+    public static Vec3[] localSystemCoordinatesUpRight(@NotNull Vec3 lookDir, @NotNull Vec3 worldUp) {
         // Vector pointing to the right relative to lookDir
         Vec3 right = lookDir.cross(worldUp);
         if (right.lengthSqr() < 1e-6) {
@@ -35,7 +34,7 @@ public class MathUtil {
         return new Vec3[]{right, up};
     }
 
-    public static double[] offsetTwoAxes(Random random, double halfWidth, double halfHeight) {
+    public static double[] offsetTwoAxes(@NotNull RandomSource random, double halfWidth, double halfHeight) {
         double offsetRight = (random.nextDouble() - 0.5) * halfWidth;
         double offsetUp = (random.nextDouble() - 0.5) * halfHeight;
         return new double[]{offsetRight, offsetUp};

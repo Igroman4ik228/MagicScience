@@ -5,7 +5,6 @@ import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.AspectProcessor;
 import com.magicscience.magicsciencemod.util.ParticleCollisionHelper;
-import com.mojang.logging.LogUtils;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
@@ -14,12 +13,10 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-import org.slf4j.Logger;
 
 import java.util.UUID;
 
 public class MagicParticle extends TextureSheetParticle {
-    private static final Logger LOGGER = LogUtils.getLogger();
     private static final int FRAME_COUNT = 3;
     private static final double MAXIMUM_COLLISION_VELOCITY_SQUARED = Mth.square(100.0D);
     private static final float COLLISION_EPSILON = 1.0E-5F;
@@ -79,7 +76,7 @@ public class MagicParticle extends TextureSheetParticle {
 
     private void initGravity() {
         var spell = SpellConverter.toSpell(spellData);
-        var gravityAttribute = spell.getMagicAttributes(GravityAttribute.class);
+        var gravityAttribute = spell.getMagicAttribute(GravityAttribute.class);
         if (gravityAttribute!=null) {
             this.gravity = gravityAttribute.getGravity();
         }
@@ -109,6 +106,7 @@ public class MagicParticle extends TextureSheetParticle {
         double originalDy = dy;
         double originalDz = dz;
 
+        // Check and handle potential block collisions
         if (this.shouldAttemptCollision(dx, dy, dz)) {
             Vec3 collided = ParticleCollisionHelper.collideWithBlock(
                 new Vec3(dx, dy, dz),
@@ -121,23 +119,40 @@ public class MagicParticle extends TextureSheetParticle {
             dz = collided.z;
         }
 
+        // Apply movement if the particle has any motion
+        applyMovement(dx, dy, dz);
+
+        // Update particle state after movement
+        // (collision stop detection, ground check, velocity reset)
+        updateCollisionState(originalDx, originalDy, originalDz, dx, dy, dz);
+    }
+
+    private void applyMovement(double dx, double dy, double dz) {
         if (hasMovement(dx, dy, dz)) {
             this.setBoundingBox(this.getBoundingBox().move(dx, dy, dz));
             this.setLocationFromBoundingbox();
         }
+    }
 
-        if (Math.abs(originalDy) >= (double) COLLISION_EPSILON && Math.abs(dy) < (double) COLLISION_EPSILON) {
-            this.stoppedByCollision = true;
-        }
+    private void updateCollisionState(
+        double originalDx, double originalDy, double originalDz,
+        double newDx, double newDy, double newDz
+    ) {
+        checkCollisionStop(originalDy, newDy);
 
-        this.onGround = originalDy!=dy && originalDy < 0.0D;
-
-        if (originalDx!=dx) {
+        this.onGround = originalDy!=newDy && originalDy < 0.0D;
+        if (originalDx!=newDx)
             this.xd = 0.0D;
-        }
-
-        if (originalDz!=dz) {
+        if (originalDz!=newDz)
             this.zd = 0.0D;
+    }
+
+    private void checkCollisionStop(double originalDy, double newDy) {
+        boolean hadVerticalMovement = Math.abs(originalDy) >= COLLISION_EPSILON;
+        boolean lostVerticalMovement = Math.abs(newDy) < COLLISION_EPSILON;
+
+        if (hadVerticalMovement && lostVerticalMovement) {
+            this.stoppedByCollision = true;
         }
     }
 
@@ -163,6 +178,7 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public int getLightColor(float partialTick) {
+        // Max brightness
         return 0xF000F0;
     }
 
