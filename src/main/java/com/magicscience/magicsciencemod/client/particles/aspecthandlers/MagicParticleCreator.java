@@ -5,27 +5,30 @@ import com.magicscience.magicsciencemod.aspects.attributes.SpreadingAttribute;
 import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
+import com.magicscience.magicsciencemod.aspects.structures.StructureContext;
+import com.magicscience.magicsciencemod.aspects.structures.dynamic.DynamicStructureContext;
 import com.magicscience.magicsciencemod.aspects.structures.dynamic.IDynamicMagicStructure;
 import com.magicscience.magicsciencemod.client.particles.MagicParticleOptions;
+import com.magicscience.magicsciencemod.items.cast.CastData;
 import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.phys.Vec3;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
+import java.util.Random;
+
 public class MagicParticleCreator {
-    private final @NotNull SpellData spellData;
-    private final @NotNull Vec3 position;
-    private final @NotNull Vec3 direction;
+    private final @NotNull CastData castData;
+    private final @NotNull Random random;
     private final @NotNull MagicParticleOptions particleOptions;
 
-    public MagicParticleCreator(@NotNull SpellData spellData, @NotNull Vec3 position, @NotNull Vec3 direction) {
-        this.spellData = spellData;
-        this.position = position;
-        this.direction = direction;
+    public MagicParticleCreator(@NotNull CastData castData) {
+        this.castData = castData;
+        this.random = new Random(castData.randomData().seed());
 
+        SpellData spellData = castData.spellData();
         this.particleOptions = new MagicParticleOptions(
             spellData.ownerUUID(),
             spellData.coreId(),
@@ -41,25 +44,25 @@ public class MagicParticleCreator {
 
     @OnlyIn(Dist.CLIENT)
     public void create() {
-        Minecraft mc = Minecraft.getInstance();
-        LocalPlayer player = mc.player;
-        if (player==null) return;
-        ClientLevel level = mc.level;
+        ClientLevel level = Minecraft.getInstance().level;
         if (level==null) return;
 
-        var spell = SpellConverter.toSpell(spellData);
+        var spell = SpellConverter.toSpell(castData.spellData());
+
         boolean isSpreading = containsSpreadingAttribute(spell.getMagicAttributes());
-        Vec3 baseVelocity = getBaseVelocity(isSpreading);
+
+        Vec3 baseVelocity = getBaseVelocity(castData.lookAngel(), isSpreading);
 
         IMagicStructure structure = spell.getStructure();
         if (structure==null) {
-            spawnSingleParticle(level, player, baseVelocity);
+            spawnSingleParticle(level, castData.eyePosition(), baseVelocity);
         } else {
-            spawnStructuredParticles(level, player, structure, isSpreading, baseVelocity);
+            spawnStructuredParticles(level, structure, isSpreading, baseVelocity);
         }
     }
 
-    private Vec3 getBaseVelocity(boolean isSpreading) {
+    @NotNull
+    private Vec3 getBaseVelocity(@NotNull Vec3 direction, boolean isSpreading) {
         var directionY = direction.y;
         if (isSpreading)
             directionY = 0;
@@ -71,32 +74,38 @@ public class MagicParticleCreator {
         );
     }
 
-    private void spawnSingleParticle(@NotNull ClientLevel level, @NotNull LocalPlayer player, @NotNull Vec3 velocity) {
-        Vec3 playerPos = player.position().add(0, 1, 0);
+    private void spawnSingleParticle(@NotNull ClientLevel level, @NotNull Vec3 pos, @NotNull Vec3 velocity) {
         level.addParticle(
             particleOptions,
-            playerPos.x, playerPos.y, playerPos.z,
+            pos.x, pos.y, pos.z,
             velocity.x, velocity.y, velocity.z
         );
     }
 
     private void spawnStructuredParticles(
         @NotNull ClientLevel level,
-        @NotNull LocalPlayer player,
         @NotNull IMagicStructure structure,
         boolean isSpreading,
         @NotNull Vec3 baseVelocity
     ) {
         for (int i = 0; i < structure.getCountParticles(); i++) {
-            Vec3 startPos = structure.calculateStartParticlePosition(position);
-            // For dynamic structure
-            Vec3 offset = calculateOffset(structure, startPos, player);
+            Vec3 startPos = structure.calculateStartParticlePosition(
+                new StructureContext(
+                    random,
+                    castData.eyePosition(),
+                    castData.eyePosition(),
+                    castData.lookAngel()
+                )
+            );
 
-            Vec3 velocity = baseVelocity.add(offset);
+            // For dynamic structure
+            Vec3 velocityOffset = calculateOffset(structure, startPos);
+
+            Vec3 velocity = baseVelocity.add(velocityOffset);
 
             double pY = startPos.y;
             if (isSpreading) {
-                pY = player.position().y;
+                pY = castData.eyePosition().y;
             }
 
             level.addParticle(
@@ -107,10 +116,19 @@ public class MagicParticleCreator {
         }
     }
 
-    private Vec3 calculateOffset(@NotNull IMagicStructure structure, @NotNull Vec3 startPos, @NotNull LocalPlayer player) {
+    private Vec3 calculateOffset(@NotNull IMagicStructure structure, @NotNull Vec3 startPos) {
         if (structure instanceof IDynamicMagicStructure dynamicStructure) {
-            return dynamicStructure.calculateStartParticleVectors(startPos, player);
+            return dynamicStructure.calculateStartParticleVectors(
+                new DynamicStructureContext(
+                    random,
+                    startPos,
+                    castData.eyePosition(),
+                    castData.lookAngel(),
+                    castData.centerPosition()
+                )
+            );
         }
+
         return Vec3.ZERO;
     }
 

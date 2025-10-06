@@ -23,7 +23,7 @@ public class AspectProcessor {
         ClientLevel level = particle.getLevel();
 
         var entityFilter = new ConfigEntityFilter()
-            .and(new AttributeEntityFilter(spellData.attributeIds()))
+            .and(new AttributeEntityFilter(spellData.attributeIds(), spellData.ownerUUID()))
             .and(new InvulnerableEntityFilter());
 
         var blockFilter = new ConfigBlockFilter()

@@ -15,5 +15,5 @@ public interface IMagicStructure extends IMagicAspect {
     int getSize();
 
     @NotNull
-    Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition);
+    Vec3 calculateStartParticlePosition(@NotNull StructureContext context);
 }

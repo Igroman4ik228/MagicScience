@@ -2,8 +2,7 @@ package com.magicscience.magicsciencemod.aspects.structures;
 
 import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
 import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
-import com.magicscience.magicsciencemod.mathutils.MathUtils;
-import net.minecraft.client.Minecraft;
+import com.magicscience.magicsciencemod.math.MathUtil;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -15,6 +14,7 @@ public class WallStructure extends BaseMagicStructure {
     public static final double BASE_HALF_HEIGHT = 1.2;
     public static final double HEIGHT_PER_PARTICLE = 0.30;
     public static final double HEIGHT_PER_SIZE = 0.5;
+
     private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.WALL);
 
     public WallStructure(@NotNull BaseStructureData baseStructureData, int stack) {
@@ -37,14 +37,11 @@ public class WallStructure extends BaseMagicStructure {
 
     @Override
     @NotNull
-    public Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
-        var mc = Minecraft.getInstance();
-        if (mc.player==null) return basePosition;
-
-        Vec3 lookDir = mc.player.getLookAngle().normalize();
+    public Vec3 calculateStartParticlePosition(@NotNull StructureContext context) {
+        Vec3 lookDir = context.lookAngel();
         Vec3 worldUp = new Vec3(0.0, 1.0, 0.0);
 
-        Vec3[] basis = MathUtils.localSystemCoordinatesUpRight(lookDir, worldUp);
+        Vec3[] basis = MathUtil.localSystemCoordinatesUpRight(lookDir, worldUp);
         Vec3 right = basis[0];
         Vec3 upDir = basis[1];
 
@@ -55,11 +52,11 @@ public class WallStructure extends BaseMagicStructure {
         double halfWidth = BASE_HALF_WIDTH + baseSpread * WIDTH_PER_PARTICLE + size * WIDTH_PER_SIZE;
         double halfHeight = BASE_HALF_HEIGHT + baseSpread * HEIGHT_PER_PARTICLE + size * HEIGHT_PER_SIZE;
 
-        double[] offsets = MathUtils.offsetTwoAxes(halfWidth, halfHeight);
+        double[] offsets = MathUtil.offsetTwoAxes(context.random(), halfWidth, halfHeight);
         double offsetRight = offsets[0];
         double offsetUp = offsets[1];
 
-        Vec3 wallCenter = basePosition.add(lookDir.scale(BASE_FORWARD_DISTANCE));
+        Vec3 wallCenter = context.basePosition().add(lookDir.scale(BASE_FORWARD_DISTANCE));
         return wallCenter.add(right.scale(offsetRight)).add(upDir.scale(offsetUp));
     }
 }

@@ -1,16 +1,10 @@
 package com.magicscience.magicsciencemod.aspects.structures.dynamic;
 
-import com.magicscience.magicsciencemod.aspects.structures.BaseMagicStructure;
-import com.magicscience.magicsciencemod.aspects.structures.BaseStructureData;
-import com.magicscience.magicsciencemod.aspects.structures.IMagicStructure;
-import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import com.magicscience.magicsciencemod.aspects.structures.*;
 import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
 import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
-import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
-
-import java.util.concurrent.ThreadLocalRandom;
 
 public class ConeStructure extends BaseMagicStructure implements IDynamicMagicStructure {
     private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.CONE);
@@ -33,16 +27,14 @@ public class ConeStructure extends BaseMagicStructure implements IDynamicMagicSt
     }
 
     @Override
-    public @NotNull Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
-        return basePosition;
+    public @NotNull Vec3 calculateStartParticlePosition(@NotNull StructureContext context) {
+        return context.basePosition();
     }
 
     @Override
-    public @NotNull Vec3 calculateStartParticleVectors(Vec3 startPosition, Player player) {
-        ThreadLocalRandom rnd = ThreadLocalRandom.current();
-
-        Vec3 look = player.getLookAngle().normalize();
-        Vec3 eyePos = player.getEyePosition();
+    public @NotNull Vec3 calculateStartParticleVectors(@NotNull DynamicStructureContext context) {
+        Vec3 look = context.lookDirection();
+        Vec3 eyePos = context.eyePosition();
 
         double dist = 5.0 * CONFIG.toData().size();
         Vec3 center = eyePos.add(look.scale(dist));
@@ -56,8 +48,9 @@ public class ConeStructure extends BaseMagicStructure implements IDynamicMagicSt
         Vec3 forward = look.cross(right).normalize();
 
         double radius = CONFIG.toData().size();
-        double angle = rnd.nextDouble(0, 2 * Math.PI);
-        double r = radius * Math.sqrt(rnd.nextDouble()); // равномерное распределение по кругу
+
+        double angle = context.random().nextDouble() * (2 * Math.PI);  // [0, 2π)
+        double r = radius * Math.sqrt(context.random().nextDouble()); // равномерное распределение по кругу
 
         Vec3 randomPoint = center
             .add(right.scale(r * Math.cos(angle)))

@@ -1,6 +1,5 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
-import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public abstract class BaseMagicStructure implements IMagicStructure {
@@ -34,7 +33,4 @@ public abstract class BaseMagicStructure implements IMagicStructure {
     public int getSize() {
         return baseStructureData.size() * stack;
     }
-
-    @NotNull
-    public abstract Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition);
 }
