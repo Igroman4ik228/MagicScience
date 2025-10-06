@@ -5,6 +5,7 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public interface IFilterMagicAttribute {
@@ -14,5 +15,5 @@ public interface IFilterMagicAttribute {
     }
 
     @NotNull
-    Predicate<Entity> getEntityFilter(@NotNull Collection<Integer> targetIds);
+    Predicate<Entity> getEntityFilter(@NotNull Collection<UUID> targetIds);
 }

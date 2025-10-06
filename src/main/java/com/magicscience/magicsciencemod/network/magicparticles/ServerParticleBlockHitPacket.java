@@ -37,14 +37,16 @@ public class ServerParticleBlockHitPacket implements IServerPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(@NotNull FriendlyByteBuf buf) {
         buf.writeBlockHitResult(blockHitResult);
         buf.writeUUID(particleUUID);
         buf.writeInt(coreId);
     }
 
     @Override
-    public void handle(ServerPlayer player) {
+    public void handle(@NotNull ServerPlayer player) {
+//        LOGGER.info("ServerParticleBlockHitPacket name player: {}", player.getName());
+
         var level = player.serverLevel();
         var blockPos = blockHitResult.getBlockPos();
         BlockState state = level.getBlockState(blockPos);

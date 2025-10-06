@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.cores;
 
-import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import com.magicscience.magicsciencemod.aspects.IMagicType;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
@@ -27,7 +27,14 @@ public enum CoreTypes implements IMagicType<IMagicCore> {
     }
 
     @Override
+    @NotNull
+    public Class<? extends IMagicCore> getTypeClass() {
+        return prototype.get().getClass();
+    }
+
+    @Override
     public int getId() {
+        // +1 because don't have NONE (core is required)
         return ordinal() + 1;
     }
 }

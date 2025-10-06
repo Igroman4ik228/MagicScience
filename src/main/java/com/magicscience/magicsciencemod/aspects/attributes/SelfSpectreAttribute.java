@@ -3,14 +3,13 @@ package com.magicscience.magicsciencemod.aspects.attributes;
 import com.magicscience.magicsciencemod.aspects.attributes.unique.IFilterMagicAttribute;
 import com.magicscience.magicsciencemod.config.server.attribute.AttributeConfig;
 import com.magicscience.magicsciencemod.config.server.attribute.IBaseAttributeConfig;
-import net.minecraft.client.Minecraft;
-import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraftforge.api.distmarker.Dist;
 import net.minecraftforge.api.distmarker.OnlyIn;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Collection;
+import java.util.UUID;
 import java.util.function.Predicate;
 
 public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterMagicAttribute {
@@ -31,12 +30,8 @@ public class SelfSpectreAttribute extends BaseMagicAttribute implements IFilterM
     @Override
     @NotNull
     @OnlyIn(Dist.CLIENT)
-    public Predicate<Entity> getEntityFilter(@NotNull Collection<Integer> targetIds) {
-        LocalPlayer player = Minecraft.getInstance().player;
-        if (player==null)
-            return entity -> true;
-
-        return entity -> !(player.getUUID()==entity.getUUID());
+    public Predicate<Entity> getEntityFilter(@NotNull Collection<UUID> targetIds) {
+        return entity -> !targetIds.contains(entity.getUUID());
     }
 
     @Override

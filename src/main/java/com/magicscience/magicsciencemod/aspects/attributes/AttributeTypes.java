@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.attributes;
 
-import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import com.magicscience.magicsciencemod.aspects.IMagicType;
 
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
@@ -31,6 +31,13 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     public IMagicAttribute newInstance(Object... args) {
         if (prototype==null) return null;
         return prototype.get().cloneWithArguments(args);
+    }
+
+    @Override
+    @Nullable
+    public Class<? extends IMagicAttribute> getTypeClass() {
+        if (prototype==null) return null;
+        return prototype.get().getClass();
     }
 
     @Override

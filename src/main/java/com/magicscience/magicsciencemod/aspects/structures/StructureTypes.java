@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.aspects.structures;
 
-import com.magicscience.magicsciencemod.aspects.factories.IMagicType;
+import com.magicscience.magicsciencemod.aspects.IMagicType;
 import com.magicscience.magicsciencemod.aspects.structures.dynamic.ConeStructure;
 import com.magicscience.magicsciencemod.aspects.structures.dynamic.WaveStructure;
 import org.jetbrains.annotations.Nullable;
@@ -34,6 +34,13 @@ public enum StructureTypes implements IMagicType<IMagicStructure> {
     public IMagicStructure newInstance(Object... args) {
         if (prototype==null) return null;
         return prototype.get().cloneWithArguments(args);
+    }
+
+    @Override
+    @Nullable
+    public Class<? extends IMagicStructure> getTypeClass() {
+        if (prototype==null) return null;
+        return prototype.get().getClass();
     }
 
     @Override

@@ -3,6 +3,7 @@ package com.magicscience.magicsciencemod.network.magicparticles;
 import com.magicscience.magicsciencemod.client.particles.MagicParticle;
 import com.magicscience.magicsciencemod.client.particles.ParticleRegistry;
 import com.magicscience.magicsciencemod.network.IClientPacket;
+import net.minecraft.client.player.LocalPlayer;
 import net.minecraft.network.FriendlyByteBuf;
 import org.jetbrains.annotations.NotNull;
 
@@ -20,12 +21,12 @@ public class ClientRemoveParticlePacket implements IClientPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(@NotNull FriendlyByteBuf buf) {
         buf.writeUUID(particleUUID);
     }
 
     @Override
-    public void handle() {
+    public void handle(@NotNull LocalPlayer player) {
         MagicParticle particle = ParticleRegistry.get(particleUUID);
         if (particle==null) return;
         particle.remove();

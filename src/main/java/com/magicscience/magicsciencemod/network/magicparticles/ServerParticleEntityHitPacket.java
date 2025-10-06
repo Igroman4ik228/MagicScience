@@ -35,7 +35,7 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
     }
 
     @Override
-    public void encode(FriendlyByteBuf buf) {
+    public void encode(@NotNull FriendlyByteBuf buf) {
         buf.writeInt(entityId);
         buf.writeInt(coreId);
         buf.writeFloat(damage);
@@ -43,7 +43,7 @@ public class ServerParticleEntityHitPacket implements IServerPacket {
     }
 
     @Override
-    public void handle(ServerPlayer player) {
+    public void handle(@NotNull ServerPlayer player) {
         // get entity with collision
         var level = player.serverLevel();
         Entity target = level.getEntity(entityId);

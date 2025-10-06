@@ -75,14 +75,14 @@ public class MagicStick extends Item implements ICast {
         return InteractionResultHolder.sidedSuccess(castStack, level.isClientSide());
     }
 
-    private boolean hasEnoughMana(Player player, int manaCost) {
+    private boolean hasEnoughMana(@NotNull Player player, int manaCost) {
         if (player.isCreative()) return true;
         return ManaCapabilityHelper.canRemove(player, manaCost);
     }
 
     @Override
     @OnlyIn(Dist.CLIENT)
-    public void castClient(LocalPlayer player) {
+    public void castClient(@NotNull LocalPlayer player) {
         player.playSound(SoundEvents.FIRECHARGE_USE, 1.0F, 1.0F);
     }
 
@@ -99,9 +99,13 @@ public class MagicStick extends Item implements ICast {
         ModNetwork.CHANNEL.send(
             PacketDistributor.TRACKING_ENTITY_AND_SELF.with(() -> player),
             new ClientSpawnParticlePacket(
-                spellData,
-                player.position().add(0, player.getEyeHeight(), 0),
-                player.getLookAngle().normalize().scale(spell.getParticleSpeed())
+                new CastData(
+                    spellData,
+                    new RandomData(spell.hashCode()),
+                    player.getEyePosition(),
+                    player.getLookAngle().normalize(),
+                    player.position().add(0, player.getBbHeight() / 2.0, 0)
+                )
             )
         );
     }

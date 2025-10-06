@@ -2,7 +2,7 @@ package com.magicscience.magicsciencemod.aspects.structures;
 
 import com.magicscience.magicsciencemod.config.server.structure.IBaseStructureConfig;
 import com.magicscience.magicsciencemod.config.server.structure.StructureConfig;
-import com.magicscience.magicsciencemod.mathutils.MathUtils;
+import com.magicscience.magicsciencemod.math.MathUtil;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,9 +29,9 @@ public class SphereStructure extends BaseMagicStructure {
 
     @Override
     @NotNull
-    public Vec3 calculateStartParticlePosition(@NotNull Vec3 basePosition) {
+    public Vec3 calculateStartParticlePosition(@NotNull StructureContext context) {
         double radius = 0.3 * getSize();
-        double[] angles = MathUtils.randomAngles();
-        return MathUtils.sphericalCoordinatesXYZ(basePosition, radius, angles[0], angles[1]);
+        double[] angles = MathUtil.randomAngles(context.random());
+        return MathUtil.sphericalCoordinatesXYZ(context.basePosition(), radius, angles[0], angles[1]);
     }
 }

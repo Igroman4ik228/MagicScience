@@ -1,6 +1,7 @@
 package com.magicscience.magicsciencemod.network;
 
 import net.minecraft.network.FriendlyByteBuf;
+import org.jetbrains.annotations.NotNull;
 
 public interface IPacket {
     /**
@@ -18,5 +19,5 @@ public interface IPacket {
         return true;
     }
 
-    void encode(FriendlyByteBuf buf);
+    void encode(@NotNull FriendlyByteBuf buf);
 }
