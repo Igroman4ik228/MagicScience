@@ -10,7 +10,8 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
     VECTOR(VectorAttribute::new),
     SELF_SPECTRE(SelfSpectreAttribute::new),
     SPREADING(SpreadingAttribute::new),
-    GRAVITY(GravityAttribute::new);
+    GRAVITY(GravityAttribute::new),
+    DIVISION(DivisionAttribute::new);
 
     private final @Nullable Supplier<IMagicAttribute> prototype;
 
