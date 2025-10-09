@@ -17,7 +17,7 @@ public class FireCoreConfig extends BaseCoreConfig {
 
         burnDuration = builder
             .comment("fire burn duration in ticks")
-            .defineInRange("burnDuration", 100, 0, Integer.MAX_VALUE);
+            .defineInRange("burnDuration", 4, 0, Integer.MAX_VALUE);
 
         builder.pop();
     }

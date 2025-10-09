@@ -5,7 +5,6 @@ import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.block.CoreBlockFilter;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity.AttributeEntityFilter;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity.ConfigEntityFilter;
-import com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.entity.InvulnerableEntityFilter;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers.BlockCollisionHandler;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers.EntityCollisionHandler;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers.ICollisionHandler;
@@ -23,8 +22,7 @@ public class AspectProcessor {
         ClientLevel level = particle.getLevel();
 
         var entityFilter = new ConfigEntityFilter()
-            .and(new AttributeEntityFilter(spellData.attributeIds(), spellData.ownerUUID()))
-            .and(new InvulnerableEntityFilter());
+            .and(new AttributeEntityFilter(spellData.attributeIds(), spellData.ownerUUID()));
 
         var blockFilter = new ConfigBlockFilter()
             .and(new CoreBlockFilter(spellData.coreId()));

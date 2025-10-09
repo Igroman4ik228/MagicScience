@@ -84,15 +84,16 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        // ToDo: Вызов в зависимости от скорости партикла (выбрать подходящую зависимость)
+        // ToDo: Вызов в зависимости от скорости партикла (выбрать подходящую зависимость) ВЫЗЫВАЕТ РАССИНХРОН
         // Скорости нет = 4 тика
-        if (!this.hasMovement() || stoppedByCollision) {
-            if (this.age % 4==0) {
-                aspectProcessor.process();
-            }
-        } else {
-            aspectProcessor.process();
-        }
+//        if (!this.hasMovement() || stoppedByCollision) {
+//            if (this.age % 4==0) {
+//                aspectProcessor.process();
+//            }
+//        } else {
+//            aspectProcessor.process();
+//        }
+        aspectProcessor.process();
 
         super.tick();
     }
