@@ -1,12 +1,15 @@
 package com.magicscience.magicsciencemod.registry;
 
 import com.magicscience.magicsciencemod.MagicScienceMod;
+import com.magicscience.magicsciencemod.client.particles.MagicParticle;
 import com.magicscience.magicsciencemod.client.particles.MagicParticleType;
 import net.minecraft.core.particles.ParticleType;
 import net.minecraft.core.registries.Registries;
 import net.minecraftforge.eventbus.api.IEventBus;
 import net.minecraftforge.registries.DeferredRegister;
 import net.minecraftforge.registries.RegistryObject;
+
+import java.util.List;
 
 public class ModParticles {
     public static final DeferredRegister<ParticleType<?>> PARTICLE_TYPES =

@@ -5,6 +5,8 @@ import com.magicscience.magicsciencemod.aspects.spell.SpellConverter;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.client.particles.aspecthandlers.AspectProcessor;
 import com.magicscience.magicsciencemod.util.ParticleCollisionHelper;
+import com.mojang.logging.LogUtils;
+import net.minecraft.client.Minecraft;
 import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
@@ -13,10 +15,13 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.UUID;
 
 public class MagicParticle extends TextureSheetParticle {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
     private static final int FRAME_COUNT = 3;
     private static final double MAXIMUM_COLLISION_VELOCITY_SQUARED = Mth.square(100.0D);
     private static final float COLLISION_EPSILON = 1.0E-5F;
@@ -24,6 +29,7 @@ public class MagicParticle extends TextureSheetParticle {
     private final @NotNull UUID particleUUID = UUID.randomUUID();
     private final @NotNull SpellData spellData;
     private final @NotNull AspectProcessor aspectProcessor;
+    private @NotNull UUID observerClientUUID;
 
     private boolean stoppedByCollision;
 
@@ -40,6 +46,7 @@ public class MagicParticle extends TextureSheetParticle {
         this.zd = zd;
         this.lifetime = spellData.particleLifeTime();
         this.spellData = spellData;
+        this.observerClientUUID = this.spellData.ownerUUID(); // Position warning!
 
         this.setSize(0.1f, 0.1f);
 
@@ -93,10 +100,33 @@ public class MagicParticle extends TextureSheetParticle {
 //        } else {
 //            aspectProcessor.process();
 //        }
-        aspectProcessor.process();
+
+        observerProcessing();
 
         super.tick();
     }
+
+    private void observerProcessing() {
+        var mc = Minecraft.getInstance();
+        if (mc.player == null) return;
+
+        UUID clientUUID = mc.player.getUUID();
+
+        if (clientUUID.equals(this.observerClientUUID)) {
+            aspectProcessor.process();
+        }
+    }
+
+    public @NotNull UUID getObserverClientUUID() {
+        return this.observerClientUUID;
+    }
+
+    public void setObserverClientUUID(@NotNull UUID newObserver) {
+        LOGGER.info("{} -> {}", this.observerClientUUID, newObserver);
+
+        this.observerClientUUID = newObserver;
+    }
+
 
     @Override
     public void move(double dx, double dy, double dz) {
