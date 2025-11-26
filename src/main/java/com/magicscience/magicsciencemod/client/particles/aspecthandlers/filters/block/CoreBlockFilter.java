@@ -15,6 +15,9 @@ public class CoreBlockFilter implements Predicate<BlockState> {
         CoreTypes.FIRE.getId(), Set.of(
             Blocks.TNT.getClass(),
             Blocks.WATER.getClass()
+        ),
+        CoreTypes.WATER.getId(), Set.of(
+            Blocks.FIRE.getClass()
         )
     );
 

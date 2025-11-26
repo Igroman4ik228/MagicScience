@@ -67,6 +67,7 @@ public class FireCore extends BaseMagicCore {
         }
     }
 
+    @Override
     protected void commonProcessingEntity(
         @NotNull Entity entity,
         @NotNull ServerPlayer sender,

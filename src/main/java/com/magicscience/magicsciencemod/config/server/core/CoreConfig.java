@@ -34,6 +34,14 @@ public class CoreConfig {
             )
         );
 
+        add(
+            new BaseCoreConfig(
+                builder,
+                CoreTypes.WATER,
+                new BaseCoreData(5, 5, 300, 12, 1.0f)
+            )
+        );
+
         builder.pop();
     }
 }
