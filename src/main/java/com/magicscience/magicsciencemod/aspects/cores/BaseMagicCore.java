@@ -95,7 +95,7 @@ public abstract class BaseMagicCore implements IMagicCore {
         @NotNull ServerPlayer sender,
         Objects... objects
     );
-
+    
     @Override
     public void processingEntity(
         @NotNull Entity entity,

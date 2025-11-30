@@ -7,7 +7,8 @@ import java.util.function.Supplier;
 
 public enum CoreTypes implements IMagicType<IMagicCore> {
     FIRE(FireCore::new),
-    GROUND(GroundCore::new);
+    GROUND(GroundCore::new),
+    WATER(WaterCore::new);
 
     private final @NotNull Supplier<IMagicCore> prototype;
 
