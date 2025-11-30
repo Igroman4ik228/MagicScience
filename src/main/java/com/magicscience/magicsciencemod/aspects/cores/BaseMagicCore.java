@@ -3,11 +3,13 @@ package com.magicscience.magicsciencemod.aspects.cores;
 import com.magicscience.magicsciencemod.aspects.cores.collisions.IActions.IActionBlock;
 import com.magicscience.magicsciencemod.aspects.cores.collisions.IActions.IActionEntity;
 import com.magicscience.magicsciencemod.aspects.cores.effects.IMagicEffect;
+import com.mojang.logging.LogUtils;
 import net.minecraft.server.level.ServerPlayer;
 import net.minecraft.world.entity.Entity;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.phys.BlockHitResult;
 import org.jetbrains.annotations.NotNull;
+import org.slf4j.Logger;
 
 import java.util.Collection;
 import java.util.HashMap;
@@ -16,6 +18,9 @@ import java.util.Objects;
 import java.util.function.Predicate;
 
 public abstract class BaseMagicCore implements IMagicCore {
+    private static final Logger LOGGER = LogUtils.getLogger();
+
+
     protected final @NotNull Map<Class<? extends Block>, IActionBlock> blockActions = new HashMap<>();
     protected final @NotNull Map<Class<? extends Entity>, IActionEntity> entityActions = new HashMap<>();
 
@@ -77,7 +82,10 @@ public abstract class BaseMagicCore implements IMagicCore {
             groupAction.execute(blockHitResult, sender, objects);
         }
 
+        LOGGER.info("!!!");
+
         if (blockAction==null && groupAction==null) {
+            LOGGER.info("###");
             commonProcessingBlock(blockHitResult, sender, objects);
         }
     }

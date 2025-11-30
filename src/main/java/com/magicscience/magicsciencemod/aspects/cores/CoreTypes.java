@@ -6,7 +6,8 @@ import org.jetbrains.annotations.NotNull;
 import java.util.function.Supplier;
 
 public enum CoreTypes implements IMagicType<IMagicCore> {
-    FIRE(FireCore::new);
+    FIRE(FireCore::new),
+    GROUND(GroundCore::new);
 
     private final @NotNull Supplier<IMagicCore> prototype;
 

@@ -33,6 +33,13 @@ public class CoreConfig {
                 new BaseCoreData(10, 12, 300, 12, 1.0f)
             )
         );
+        add(
+                new GroundCoreConfig(
+                        builder,
+                        CoreTypes.GROUND,
+                        new BaseCoreData(15, 8, 300, 10, 1.0f)
+                )
+        );
 
         builder.pop();
     }

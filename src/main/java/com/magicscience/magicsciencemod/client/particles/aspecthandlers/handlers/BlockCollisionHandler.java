@@ -77,7 +77,7 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
         var blockState = level.getBlockState(blockPos);
 
         if (blockState.isAir()) return;
-        if (filter.test(blockState)) return;
+        //if (filter.test(blockState)) return;
 
         if (spellData.coreId()==CoreTypes.FIRE.getId()) {
             if (blockState.getBlock()==Blocks.WATER) {
