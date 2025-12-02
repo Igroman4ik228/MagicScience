@@ -1,7 +1,16 @@
 {
   "textures": [
-    "magicscience:magic_1",
-    "magicscience:magic_2",
-    "magicscience:magic_3"
+    "magicscience:magic_1_0",
+    "magicscience:magic_1_1",
+    "magicscience:magic_1_2",
+    "magicscience:magic_2_0",
+    "magicscience:magic_2_1",
+    "magicscience:magic_2_2",
+    "magicscience:magic_3_0",
+    "magicscience:magic_3_1",
+    "magicscience:magic_3_2",
+    "magicscience:magic_4_0",
+    "magicscience:magic_4_1",
+    "magicscience:magic_4_2"
   ]
 }

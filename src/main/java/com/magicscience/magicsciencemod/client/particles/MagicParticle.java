@@ -11,7 +11,6 @@ import net.minecraft.client.multiplayer.ClientLevel;
 import net.minecraft.client.particle.ParticleRenderType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.particle.TextureSheetParticle;
-import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.Mth;
 import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
@@ -50,12 +49,9 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.setSize(0.1f, 0.1f);
 
-        // ToDo: В будущем может быть усложнение взятия индекса спрайта
-        int spriteIndex = Math.max(spellData.coreId() - 1, 0);
         this.setSprite(
-            selectSprite(
-                spriteIndex,
-                lifetime,
+            TextureParticleService.selectSprite(
+                spellData.coreId(),
                 sprites
             )
         );
@@ -65,16 +61,6 @@ public class MagicParticle extends TextureSheetParticle {
         ParticleRegistry.register(this);
 
         this.aspectProcessor = new AspectProcessor(this);
-    }
-
-    @NotNull
-    private static TextureAtlasSprite selectSprite(
-        int index,
-        int lifetime,
-        @NotNull SpriteSet sprites
-    ) {
-        int ageForSprite = index * lifetime / (FRAME_COUNT - 1);
-        return sprites.get(ageForSprite, lifetime);
     }
 
     public static boolean hasMovement(double xd, double yd, double zd) {
@@ -108,7 +94,7 @@ public class MagicParticle extends TextureSheetParticle {
 
     private void observerProcessing() {
         var mc = Minecraft.getInstance();
-        if (mc.player == null) return;
+        if (mc.player==null) return;
 
         UUID clientUUID = mc.player.getUUID();
 
