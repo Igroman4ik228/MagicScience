@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class ConeStructure extends BaseMagicStructure implements IDynamicMagicStructure {
-    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.CONE);
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureType.CONE);
 
     public ConeStructure(BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);

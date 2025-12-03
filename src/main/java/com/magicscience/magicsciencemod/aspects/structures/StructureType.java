@@ -7,7 +7,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.function.Supplier;
 
-public enum StructureTypes implements IMagicType<IMagicStructure> {
+public enum StructureType implements IMagicType<IMagicStructure> {
     NONE(null),
     CLOT(ClotStructure::new),
     SPHERE(SphereStructure::new),
@@ -18,7 +18,7 @@ public enum StructureTypes implements IMagicType<IMagicStructure> {
 
     private final @Nullable Supplier<IMagicStructure> prototype;
 
-    StructureTypes(@Nullable Supplier<IMagicStructure> prototype) {
+    StructureType(@Nullable Supplier<IMagicStructure> prototype) {
         this.prototype = prototype;
     }
 

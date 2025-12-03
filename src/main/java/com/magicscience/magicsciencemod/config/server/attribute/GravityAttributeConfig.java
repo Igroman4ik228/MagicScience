@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.config.server.attribute;
 
-import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeType;
 import com.magicscience.magicsciencemod.aspects.attributes.BaseAttributeData;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
@@ -10,7 +10,7 @@ public class GravityAttributeConfig extends BaseAttributeConfig {
 
     public GravityAttributeConfig(
         @NotNull ForgeConfigSpec.Builder builder,
-        @NotNull AttributeTypes sectionType,
+        @NotNull AttributeType sectionType,
         @NotNull BaseAttributeData defaults
     ) {
         super(builder, sectionType, defaults, false);

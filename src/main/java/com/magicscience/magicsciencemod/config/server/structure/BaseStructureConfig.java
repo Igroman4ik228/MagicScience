@@ -1,12 +1,12 @@
 package com.magicscience.magicsciencemod.config.server.structure;
 
 import com.magicscience.magicsciencemod.aspects.structures.BaseStructureData;
-import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import com.magicscience.magicsciencemod.aspects.structures.StructureType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 public class BaseStructureConfig implements IBaseStructureConfig {
-    private final @NotNull StructureTypes sectionType;
+    private final @NotNull StructureType sectionType;
 
     private final @NotNull ForgeConfigSpec.IntValue manaCost;
     private final @NotNull ForgeConfigSpec.IntValue countParticles;
@@ -14,7 +14,7 @@ public class BaseStructureConfig implements IBaseStructureConfig {
 
     public BaseStructureConfig(
         @NotNull ForgeConfigSpec.Builder builder,
-        @NotNull StructureTypes sectionType,
+        @NotNull StructureType sectionType,
         @NotNull BaseStructureData defaults,
         boolean autoPop
     ) {
@@ -38,7 +38,7 @@ public class BaseStructureConfig implements IBaseStructureConfig {
 
     public BaseStructureConfig(
         @NotNull ForgeConfigSpec.Builder builder,
-        @NotNull StructureTypes sectionType,
+        @NotNull StructureType sectionType,
         @NotNull BaseStructureData defaults
     ) {
         this(builder, sectionType, defaults, true);
@@ -46,7 +46,7 @@ public class BaseStructureConfig implements IBaseStructureConfig {
 
     @Override
     @NotNull
-    public StructureTypes getType() {
+    public StructureType getType() {
         return sectionType;
     }
 

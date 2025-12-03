@@ -11,7 +11,7 @@ public class RayStructure extends BaseMagicStructure {
     public static final double MAX_OFFSET_Y = 0.10;
     public static final double MAX_OFFSET_Z = 0.10;
 
-    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.RAY);
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureType.RAY);
 
     public RayStructure(@NotNull BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);

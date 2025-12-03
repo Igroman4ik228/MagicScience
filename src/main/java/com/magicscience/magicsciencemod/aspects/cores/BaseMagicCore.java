@@ -20,7 +20,6 @@ import java.util.function.Predicate;
 public abstract class BaseMagicCore implements IMagicCore {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-
     protected final @NotNull Map<Class<? extends Block>, IActionBlock> blockActions = new HashMap<>();
     protected final @NotNull Map<Class<? extends Entity>, IActionEntity> entityActions = new HashMap<>();
 
@@ -95,7 +94,7 @@ public abstract class BaseMagicCore implements IMagicCore {
         @NotNull ServerPlayer sender,
         Objects... objects
     );
-    
+
     @Override
     public void processingEntity(
         @NotNull Entity entity,

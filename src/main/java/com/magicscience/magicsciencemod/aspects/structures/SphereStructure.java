@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class SphereStructure extends BaseMagicStructure {
-    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.SPHERE);
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureType.SPHERE);
 
     public SphereStructure(@NotNull BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);

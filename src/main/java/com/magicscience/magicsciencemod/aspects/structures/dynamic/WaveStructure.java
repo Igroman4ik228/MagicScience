@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class WaveStructure extends BaseMagicStructure implements IDynamicMagicStructure {
-    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.WAVE);
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureType.WAVE);
 
     public WaveStructure(BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);

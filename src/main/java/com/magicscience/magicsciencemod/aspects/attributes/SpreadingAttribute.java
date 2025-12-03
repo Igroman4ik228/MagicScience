@@ -5,7 +5,7 @@ import com.magicscience.magicsciencemod.config.server.attribute.IBaseAttributeCo
 import org.jetbrains.annotations.NotNull;
 
 public class SpreadingAttribute extends BaseMagicAttribute {
-    private static final IBaseAttributeConfig CONFIG = AttributeConfig.get(AttributeTypes.SPREADING);
+    private static final IBaseAttributeConfig CONFIG = AttributeConfig.get(AttributeType.SPREADING);
 
     public SpreadingAttribute(@NotNull BaseAttributeData baseAttributeData, int stack) {
         super(baseAttributeData, stack);

@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class StructureTypeHelper {
-    private static final Class<StructureTypes> enumClass = StructureTypes.class;
+    private static final Class<StructureType> enumClass = StructureType.class;
 
     @Nullable
     public static IMagicStructure findInstance(int id) {
-        if (id==StructureTypes.NONE.getId())
+        if (id==StructureType.NONE.getId())
             return null;
 
         return MagicTypeHelper.findInstance(id, enumClass);
@@ -17,13 +17,13 @@ public final class StructureTypeHelper {
 
     public static int findId(@Nullable IMagicStructure structure) {
         if (structure==null)
-            return StructureTypes.NONE.getId();
+            return StructureType.NONE.getId();
 
         return MagicTypeHelper.findId(structure, enumClass);
     }
 
     @NotNull
-    public static StructureTypes findType(int id) {
+    public static StructureType findType(int id) {
         return MagicTypeHelper.findType(id, enumClass);
     }
 }

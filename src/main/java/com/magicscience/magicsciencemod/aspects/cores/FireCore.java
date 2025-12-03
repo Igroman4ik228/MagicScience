@@ -19,7 +19,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class FireCore extends BaseMagicCore {
-    private static final FireCoreConfig CONFIG = (FireCoreConfig) CoreConfig.get(CoreTypes.FIRE);
+    private static final FireCoreConfig CONFIG = (FireCoreConfig) CoreConfig.get(CoreType.FIRE);
 
     private final int burnDuration;
 

@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.aspects.attributes.unique;
 
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreType;
 
 public interface ISpecCoreAttribute {
-    public CoreTypes getSpecCore();
+    CoreType getSpecCore();
 }

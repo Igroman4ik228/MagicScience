@@ -5,14 +5,14 @@ import org.jetbrains.annotations.NotNull;
 
 import java.util.function.Supplier;
 
-public enum CoreTypes implements IMagicType<IMagicCore> {
+public enum CoreType implements IMagicType<IMagicCore> {
     FIRE(FireCore::new),
     GROUND(GroundCore::new),
     WATER(WaterCore::new);
 
     private final @NotNull Supplier<IMagicCore> prototype;
 
-    CoreTypes(@NotNull Supplier<IMagicCore> prototype) {
+    CoreType(@NotNull Supplier<IMagicCore> prototype) {
         this.prototype = prototype;
     }
 

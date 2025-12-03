@@ -7,7 +7,7 @@ import net.minecraft.world.phys.Vec3;
 import org.jetbrains.annotations.NotNull;
 
 public class ClotStructure extends BaseMagicStructure {
-    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.CLOT);
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureType.CLOT);
 
     public ClotStructure(@NotNull BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);

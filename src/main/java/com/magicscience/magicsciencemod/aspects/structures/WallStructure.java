@@ -15,7 +15,7 @@ public class WallStructure extends BaseMagicStructure {
     public static final double HEIGHT_PER_PARTICLE = 0.30;
     public static final double HEIGHT_PER_SIZE = 0.5;
 
-    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureTypes.WALL);
+    private static final IBaseStructureConfig CONFIG = StructureConfig.get(StructureType.WALL);
 
     public WallStructure(@NotNull BaseStructureData baseStructureData, int stack) {
         super(baseStructureData, stack);

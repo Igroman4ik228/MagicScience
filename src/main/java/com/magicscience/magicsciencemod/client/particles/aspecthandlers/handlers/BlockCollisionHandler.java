@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.client.particles.aspecthandlers.handlers;
 
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreType;
 import com.magicscience.magicsciencemod.aspects.spell.SpellData;
 import com.magicscience.magicsciencemod.client.particles.MagicParticle;
 import com.magicscience.magicsciencemod.network.magicparticles.ServerParticleBlockHitPacket;
@@ -79,7 +79,7 @@ public class BlockCollisionHandler extends BaseCollisionHandler<BlockState> {
         if (blockState.isAir()) return;
         //if (filter.test(blockState)) return;
 
-        if (spellData.coreId()==CoreTypes.FIRE.getId()) {
+        if (spellData.coreId()==CoreType.FIRE.getId()) {
             if (blockState.getBlock()==Blocks.WATER) {
                 particle.remove();
                 return;

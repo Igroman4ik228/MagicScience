@@ -1,12 +1,12 @@
 package com.magicscience.magicsciencemod.config.server.core;
 
 import com.magicscience.magicsciencemod.aspects.cores.BaseCoreData;
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 public class BaseCoreConfig implements IBaseCoreConfig {
-    private final @NotNull CoreTypes sectionType;
+    private final @NotNull CoreType sectionType;
 
     private final @NotNull ForgeConfigSpec.IntValue manaCost;
     private final @NotNull ForgeConfigSpec.IntValue damage;
@@ -16,7 +16,7 @@ public class BaseCoreConfig implements IBaseCoreConfig {
 
     public BaseCoreConfig(
         @NotNull ForgeConfigSpec.Builder builder,
-        @NotNull CoreTypes sectionType,
+        @NotNull CoreType sectionType,
         @NotNull BaseCoreData defaults,
         boolean autoPop
     ) {
@@ -46,7 +46,7 @@ public class BaseCoreConfig implements IBaseCoreConfig {
 
     public BaseCoreConfig(
         @NotNull ForgeConfigSpec.Builder builder,
-        @NotNull CoreTypes sectionType,
+        @NotNull CoreType sectionType,
         @NotNull BaseCoreData defaults
     ) {
         this(builder, sectionType, defaults, true);
@@ -54,7 +54,7 @@ public class BaseCoreConfig implements IBaseCoreConfig {
 
     @Override
     @NotNull
-    public CoreTypes getType() {
+    public CoreType getType() {
         return sectionType;
     }
 

@@ -1,16 +1,16 @@
 package com.magicscience.magicsciencemod.client.particles;
 
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreType;
 import net.minecraft.client.particle.SpriteSet;
 import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.util.RandomSource;
 
-public class TextureParticleService {
+public class TextureParticleHelper {
     private static final RandomSource rnd = RandomSource.create();
     private static final int VARIANTS = 3;
 
     public static TextureAtlasSprite selectSprite(int coreId, SpriteSet sprites) {
-        int coreCount = CoreTypes.values().length + 1;
+        int coreCount = CoreType.values().length + 1;
 
         int clampedCoreId = Math.max(Math.min(coreId, coreCount), 1);
         int variant = rnd.nextInt(VARIANTS);

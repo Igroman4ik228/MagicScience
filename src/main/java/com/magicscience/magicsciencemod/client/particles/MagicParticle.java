@@ -21,7 +21,6 @@ import java.util.UUID;
 public class MagicParticle extends TextureSheetParticle {
     private static final Logger LOGGER = LogUtils.getLogger();
 
-    private static final int FRAME_COUNT = 3;
     private static final double MAXIMUM_COLLISION_VELOCITY_SQUARED = Mth.square(100.0D);
     private static final float COLLISION_EPSILON = 1.0E-5F;
 
@@ -43,14 +42,14 @@ public class MagicParticle extends TextureSheetParticle {
         this.xd = xd;
         this.yd = yd;
         this.zd = zd;
-        this.lifetime = spellData.particleLifeTime();
         this.spellData = spellData;
-        this.observerClientUUID = this.spellData.ownerUUID(); // Position warning!
+        this.lifetime = spellData.particleLifeTime();
+        this.observerClientUUID = spellData.ownerUUID();
 
         this.setSize(0.1f, 0.1f);
 
         this.setSprite(
-            TextureParticleService.selectSprite(
+            TextureParticleHelper.selectSprite(
                 spellData.coreId(),
                 sprites
             )
@@ -77,16 +76,6 @@ public class MagicParticle extends TextureSheetParticle {
 
     @Override
     public void tick() {
-        // ToDo: Вызов в зависимости от скорости партикла (выбрать подходящую зависимость) ВЫЗЫВАЕТ РАССИНХРОН
-        // Скорости нет = 4 тика
-//        if (!this.hasMovement() || stoppedByCollision) {
-//            if (this.age % 4==0) {
-//                aspectProcessor.process();
-//            }
-//        } else {
-//            aspectProcessor.process();
-//        }
-
         observerProcessing();
 
         super.tick();
@@ -112,7 +101,6 @@ public class MagicParticle extends TextureSheetParticle {
 
         this.observerClientUUID = newObserver;
     }
-
 
     @Override
     public void move(double dx, double dy, double dz) {

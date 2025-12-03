@@ -6,7 +6,7 @@ import com.magicscience.magicsciencemod.config.server.attribute.VectorAttributeC
 import org.jetbrains.annotations.NotNull;
 
 public class VectorAttribute extends BaseMagicAttribute implements IMagicParticleSpeed {
-    private static final VectorAttributeConfig CONFIG = (VectorAttributeConfig) AttributeConfig.get(AttributeTypes.VECTOR);
+    private static final VectorAttributeConfig CONFIG = (VectorAttributeConfig) AttributeConfig.get(AttributeType.VECTOR);
 
     private final int particleSpeed;
 

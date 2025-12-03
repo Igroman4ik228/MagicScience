@@ -4,7 +4,7 @@ import com.magicscience.magicsciencemod.aspects.MagicTypeHelper;
 import org.jetbrains.annotations.NotNull;
 
 public final class CoreTypeHelper {
-    private static final Class<CoreTypes> enumClass = CoreTypes.class;
+    private static final Class<CoreType> enumClass = CoreType.class;
 
     @NotNull
     public static IMagicCore findInstance(int id) {
@@ -16,7 +16,7 @@ public final class CoreTypeHelper {
     }
 
     @NotNull
-    public static CoreTypes findType(int id) {
+    public static CoreType findType(int id) {
         return MagicTypeHelper.findType(id, enumClass);
     }
 }

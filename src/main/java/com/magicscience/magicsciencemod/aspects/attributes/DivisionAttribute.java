@@ -5,7 +5,7 @@ import com.magicscience.magicsciencemod.config.server.attribute.DivisionAttribut
 import org.jetbrains.annotations.NotNull;
 
 public class DivisionAttribute extends BaseMagicAttribute {
-    private static final DivisionAttributeConfig CONFIG = (DivisionAttributeConfig) AttributeConfig.get(AttributeTypes.DIVISION);
+    private static final DivisionAttributeConfig CONFIG = (DivisionAttributeConfig) AttributeConfig.get(AttributeType.DIVISION);
 
     private final int multiplier;
 

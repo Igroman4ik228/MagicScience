@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.config.server.core;
 
 import com.magicscience.magicsciencemod.aspects.cores.BaseCoreData;
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,14 +9,14 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class CoreConfig {
-    private static final @NotNull Map<CoreTypes, IBaseCoreConfig> CONFIGS = new EnumMap<>(CoreTypes.class);
+    private static final @NotNull Map<CoreType, IBaseCoreConfig> CONFIGS = new EnumMap<>(CoreType.class);
 
     private static void add(@NotNull IBaseCoreConfig config) {
         CONFIGS.put(config.getType(), config);
     }
 
     @NotNull
-    public static IBaseCoreConfig get(@NotNull CoreTypes sectionType) {
+    public static IBaseCoreConfig get(@NotNull CoreType sectionType) {
         var cfg = CONFIGS.get(sectionType);
         if (cfg==null)
             throw new IllegalStateException("No core config for type: " + sectionType);
@@ -29,22 +29,22 @@ public class CoreConfig {
         add(
             new FireCoreConfig(
                 builder,
-                CoreTypes.FIRE,
+                CoreType.FIRE,
                 new BaseCoreData(10, 12, 300, 12, 1.0f)
             )
         );
         add(
-                new GroundCoreConfig(
-                        builder,
-                        CoreTypes.GROUND,
-                        new BaseCoreData(15, 8, 300, 10, 1.0f)
-                )
+            new GroundCoreConfig(
+                builder,
+                CoreType.GROUND,
+                new BaseCoreData(15, 8, 300, 10, 1.0f)
+            )
         );
 
         add(
             new BaseCoreConfig(
                 builder,
-                CoreTypes.WATER,
+                CoreType.WATER,
                 new BaseCoreData(5, 5, 300, 12, 1.0f)
             )
         );

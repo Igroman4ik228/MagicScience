@@ -5,11 +5,11 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public final class AttributeTypeHelper {
-    private static final Class<AttributeTypes> enumClass = AttributeTypes.class;
+    private static final Class<AttributeType> enumClass = AttributeType.class;
 
     @Nullable
     public static IMagicAttribute findInstance(int id) {
-        if (id==AttributeTypes.NONE.getId())
+        if (id==AttributeType.NONE.getId())
             return null;
 
         return MagicTypeHelper.findInstance(id, enumClass);
@@ -17,13 +17,13 @@ public final class AttributeTypeHelper {
 
     public static int findId(@Nullable IMagicAttribute attribute) {
         if (attribute==null)
-            return AttributeTypes.NONE.getId();
+            return AttributeType.NONE.getId();
 
         return MagicTypeHelper.findId(attribute, enumClass);
     }
 
     @NotNull
-    public static AttributeTypes findType(int id) {
+    public static AttributeType findType(int id) {
         return MagicTypeHelper.findType(id, enumClass);
     }
 }

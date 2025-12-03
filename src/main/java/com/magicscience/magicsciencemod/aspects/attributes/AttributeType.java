@@ -5,7 +5,7 @@ import com.magicscience.magicsciencemod.aspects.IMagicType;
 import javax.annotation.Nullable;
 import java.util.function.Supplier;
 
-public enum AttributeTypes implements IMagicType<IMagicAttribute> {
+public enum AttributeType implements IMagicType<IMagicAttribute> {
     NONE(null),
     VECTOR(VectorAttribute::new),
     SELF_SPECTRE(SelfSpectreAttribute::new),
@@ -15,7 +15,7 @@ public enum AttributeTypes implements IMagicType<IMagicAttribute> {
 
     private final @Nullable Supplier<IMagicAttribute> prototype;
 
-    AttributeTypes(@Nullable Supplier<IMagicAttribute> prototype) {
+    AttributeType(@Nullable Supplier<IMagicAttribute> prototype) {
         this.prototype = prototype;
     }
 

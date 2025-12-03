@@ -1,6 +1,6 @@
 package com.magicscience.magicsciencemod.client.particles.aspecthandlers.filters.block;
 
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.cores.CoreType;
 import net.minecraft.world.level.block.Block;
 import net.minecraft.world.level.block.Blocks;
 import net.minecraft.world.level.block.state.BlockState;
@@ -12,11 +12,11 @@ import java.util.function.Predicate;
 
 public class CoreBlockFilter implements Predicate<BlockState> {
     private static final Map<Integer, Set<Class<? extends Block>>> EXCLUDED_BLOCKS_BY_CORE = Map.of(
-        CoreTypes.FIRE.getId(), Set.of(
+        CoreType.FIRE.getId(), Set.of(
             Blocks.TNT.getClass(),
             Blocks.WATER.getClass()
         ),
-        CoreTypes.WATER.getId(), Set.of(
+        CoreType.WATER.getId(), Set.of(
             Blocks.FIRE.getClass()
         )
     );

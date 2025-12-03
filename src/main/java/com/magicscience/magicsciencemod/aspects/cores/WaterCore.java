@@ -17,7 +17,7 @@ import java.util.List;
 import java.util.Objects;
 
 public class WaterCore extends BaseMagicCore {
-    private static final BaseCoreConfig CONFIG = (BaseCoreConfig) CoreConfig.get(CoreTypes.WATER);
+    private static final BaseCoreConfig CONFIG = (BaseCoreConfig) CoreConfig.get(CoreType.WATER);
     private static final Logger LOGGER = LogUtils.getLogger();
 
     public WaterCore(

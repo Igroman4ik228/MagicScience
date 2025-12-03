@@ -1,7 +1,7 @@
 package com.magicscience.magicsciencemod.config.server.structure;
 
 import com.magicscience.magicsciencemod.aspects.structures.BaseStructureData;
-import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import com.magicscience.magicsciencemod.aspects.structures.StructureType;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
@@ -9,14 +9,14 @@ import java.util.EnumMap;
 import java.util.Map;
 
 public class StructureConfig {
-    private static final @NotNull Map<StructureTypes, IBaseStructureConfig> CONFIGS = new EnumMap<>(StructureTypes.class);
+    private static final @NotNull Map<StructureType, IBaseStructureConfig> CONFIGS = new EnumMap<>(StructureType.class);
 
     private static void add(@NotNull IBaseStructureConfig config) {
         CONFIGS.put(config.getType(), config);
     }
 
     @NotNull
-    public static IBaseStructureConfig get(@NotNull StructureTypes sectionType) {
+    public static IBaseStructureConfig get(@NotNull StructureType sectionType) {
         var cfg = CONFIGS.get(sectionType);
         if (cfg==null)
             throw new IllegalStateException("No structure config for type: " + sectionType);
@@ -29,42 +29,42 @@ public class StructureConfig {
         add(
             new BaseStructureConfig(
                 builder,
-                StructureTypes.CLOT,
+                StructureType.CLOT,
                 new BaseStructureData(20, 10, 1)
             )
         );
         add(
             new BaseStructureConfig(
                 builder,
-                StructureTypes.SPHERE,
+                StructureType.SPHERE,
                 new BaseStructureData(30, 30, 1)
             )
         );
         add(
             new BaseStructureConfig(
                 builder,
-                StructureTypes.RAY,
+                StructureType.RAY,
                 new BaseStructureData(20, 15, 1)
             )
         );
         add(
             new BaseStructureConfig(
                 builder,
-                StructureTypes.WALL,
+                StructureType.WALL,
                 new BaseStructureData(20, 10, 1)
             )
         );
         add(
             new BaseStructureConfig(
                 builder,
-                StructureTypes.WAVE,
+                StructureType.WAVE,
                 new BaseStructureData(30, 25, 1)
             )
         );
         add(
             new BaseStructureConfig(
                 builder,
-                StructureTypes.CONE,
+                StructureType.CONE,
                 new BaseStructureData(30, 25, 1)
             )
         );

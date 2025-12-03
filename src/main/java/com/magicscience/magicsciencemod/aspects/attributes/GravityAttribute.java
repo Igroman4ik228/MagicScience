@@ -5,7 +5,7 @@ import com.magicscience.magicsciencemod.config.server.attribute.GravityAttribute
 import org.jetbrains.annotations.NotNull;
 
 public class GravityAttribute extends BaseMagicAttribute {
-    private static final GravityAttributeConfig CONFIG = (GravityAttributeConfig) AttributeConfig.get(AttributeTypes.GRAVITY);
+    private static final GravityAttributeConfig CONFIG = (GravityAttributeConfig) AttributeConfig.get(AttributeType.GRAVITY);
 
     private final float gravity;
 

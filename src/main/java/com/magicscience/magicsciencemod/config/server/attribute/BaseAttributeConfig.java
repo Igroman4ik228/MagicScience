@@ -1,18 +1,18 @@
 package com.magicscience.magicsciencemod.config.server.attribute;
 
-import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeType;
 import com.magicscience.magicsciencemod.aspects.attributes.BaseAttributeData;
 import net.minecraftforge.common.ForgeConfigSpec;
 import org.jetbrains.annotations.NotNull;
 
 public class BaseAttributeConfig implements IBaseAttributeConfig {
-    private final @NotNull AttributeTypes sectionType;
+    private final @NotNull AttributeType sectionType;
 
     private final @NotNull ForgeConfigSpec.IntValue manaCost;
 
     public BaseAttributeConfig(
         @NotNull ForgeConfigSpec.Builder builder,
-        @NotNull AttributeTypes sectionType,
+        @NotNull AttributeType sectionType,
         @NotNull BaseAttributeData defaults,
         boolean autoPop
     ) {
@@ -30,7 +30,7 @@ public class BaseAttributeConfig implements IBaseAttributeConfig {
 
     public BaseAttributeConfig(
         @NotNull ForgeConfigSpec.Builder builder,
-        @NotNull AttributeTypes sectionType,
+        @NotNull AttributeType sectionType,
         @NotNull BaseAttributeData defaults
     ) {
         this(builder, sectionType, defaults, true);
@@ -38,7 +38,7 @@ public class BaseAttributeConfig implements IBaseAttributeConfig {
 
     @Override
     @NotNull
-    public AttributeTypes getType() {
+    public AttributeType getType() {
         return sectionType;
     }
 

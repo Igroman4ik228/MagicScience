@@ -1,11 +1,11 @@
 package com.magicscience.magicsciencemod.aspects.spell;
 
-import com.magicscience.magicsciencemod.aspects.attributes.AttributeTypes;
-import com.magicscience.magicsciencemod.aspects.cores.CoreTypes;
+import com.magicscience.magicsciencemod.aspects.attributes.AttributeType;
+import com.magicscience.magicsciencemod.aspects.cores.CoreType;
 import com.magicscience.magicsciencemod.aspects.factories.MagicAttributeFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicCoreFactory;
 import com.magicscience.magicsciencemod.aspects.factories.MagicStructureFactory;
-import com.magicscience.magicsciencemod.aspects.structures.StructureTypes;
+import com.magicscience.magicsciencemod.aspects.structures.StructureType;
 import com.magicscience.magicsciencemod.items.Scroll;
 import com.magicscience.magicsciencemod.items.ScrollData;
 import com.magicscience.magicsciencemod.util.ScrollDataUtils;
@@ -192,12 +192,12 @@ public class SpellStorage {
      */
     private static Spell getDefaultSpell(@NotNull Player player) {
         // ToDo: delete this or debug mod
-        return Spell.builder(CORE_FACTORY.create(CoreTypes.FIRE, 1), player.getUUID())
+        return Spell.builder(CORE_FACTORY.create(CoreType.FIRE, 1), player.getUUID())
             .magicAttributes(
-                ATTRIBUTE_FACTORY.create(AttributeTypes.SELF_SPECTRE, 1),
-                ATTRIBUTE_FACTORY.create(AttributeTypes.VECTOR, 1)
+                ATTRIBUTE_FACTORY.create(AttributeType.SELF_SPECTRE, 1),
+                ATTRIBUTE_FACTORY.create(AttributeType.VECTOR, 1)
             )
-            .magicStructure(STRUCTURE_FACTORY.create(StructureTypes.SPHERE, 3))
+            .magicStructure(STRUCTURE_FACTORY.create(StructureType.SPHERE, 3))
             .build();
     }
 }

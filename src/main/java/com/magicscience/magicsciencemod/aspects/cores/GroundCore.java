@@ -17,14 +17,13 @@ import java.util.Objects;
 
 public class GroundCore extends BaseMagicCore {
     private static final Logger LOGGER = LogUtils.getLogger();
-
-
-    private static final GroundCoreConfig CONFIG = (GroundCoreConfig) CoreConfig.get(CoreTypes.GROUND);
+    
+    private static final GroundCoreConfig CONFIG = (GroundCoreConfig) CoreConfig.get(CoreType.GROUND);
 
     public GroundCore(
-            @NotNull BaseCoreData baseCoreData,
-            int stack,
-            @NotNull Collection<IMagicEffect> effects
+        @NotNull BaseCoreData baseCoreData,
+        int stack,
+        @NotNull Collection<IMagicEffect> effects
     ) {
         super(baseCoreData, stack, effects);
         fillBlockActionMaps();
