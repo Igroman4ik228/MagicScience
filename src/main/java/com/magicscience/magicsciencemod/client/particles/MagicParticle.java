@@ -97,7 +97,7 @@ public class MagicParticle extends TextureSheetParticle {
     }
 
     public void setObserverClientUUID(@NotNull UUID newObserver) {
-        LOGGER.info("{} -> {}", this.observerClientUUID, newObserver);
+        LOGGER.info("setObserverClientUUID {} -> {}", this.observerClientUUID, newObserver);
 
         this.observerClientUUID = newObserver;
     }

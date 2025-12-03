@@ -81,10 +81,7 @@ public abstract class BaseMagicCore implements IMagicCore {
             groupAction.execute(blockHitResult, sender, objects);
         }
 
-        LOGGER.info("!!!");
-
         if (blockAction==null && groupAction==null) {
-            LOGGER.info("###");
             commonProcessingBlock(blockHitResult, sender, objects);
         }
     }
